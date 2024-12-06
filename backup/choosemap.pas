@@ -31,8 +31,6 @@ var
 
 implementation
 
-uses
-  Menu;
 
 {$R *.lfm}
 
