@@ -11,6 +11,27 @@ type TPinguin  = class
       bild: Timage;
       constructor create(map: integer);
         end;
+
+      THelmPinguin = class(TPinguin)
+      public
+      //constructor create(map: integer);
+      end;
+
+      TSchildPinguin = class(Tpinguin)
+      public
+      //constructor create(map: integer);
+      end;
+
+      TBossPinguin = class(Tpinguin)
+      public
+      //constructor create(map: integer);
+      end;
+
+      TTarnPinguin = class(Tpinguin)
+      public
+      //constructor create(map: integer);
+      end;
+
 implementation
 
    Uses map2, map1;
@@ -38,6 +59,7 @@ constructor TPinguin.create(map: integer);
 
      self.width := 96;
      self.height := 96;
+     self.currentPath := 1;
 
      // bild erstellen
 
