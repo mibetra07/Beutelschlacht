@@ -1,0 +1,29 @@
+object Form1: TForm1
+  Left = 744
+  Height = 593
+  Top = 262
+  Width = 1103
+  Caption = 'Form1'
+  ClientHeight = 593
+  ClientWidth = 1103
+  LCLVersion = '3.6.0.0'
+  WindowState = wsFullScreen
+  object Button1: TButton
+    Left = 515
+    Height = 25
+    Top = 248
+    Width = 75
+    Caption = 'Button1'
+    TabOrder = 0
+    OnClick = Button1Click
+  end
+  object Button2: TButton
+    Left = 245
+    Height = 25
+    Top = 307
+    Width = 75
+    Caption = 'Button2'
+    TabOrder = 1
+    OnClick = Button2Click
+  end
+end
