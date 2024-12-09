@@ -57,6 +57,7 @@ procedure TForm5.Timer1Timer(Sender: TObject);
 var i: integer;
 begin
            tick(2, 0, 0, 0, 0, 1);
+           if Pinguin[i] <> nil then
            Panel1.caption := inttostr(Pinguin[1].currentPath) + inttostr(Pinguin[2].currentPath);
 end;
 
