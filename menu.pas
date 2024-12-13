@@ -5,7 +5,7 @@ unit Menu;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, chooseMap, tutorial, Options, Credits;
+  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, chooseMap, map1, map2, options, credits, tutorial;
 
 type
 
