@@ -5,10 +5,15 @@ unit Options;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs;
+  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls;
 
 type
+
+  { TForm3 }
+
   TForm3 = class(TForm)
+    Image1: TImage;
+    procedure Image1Click(Sender: TObject);
   private
 
   public
@@ -21,6 +26,13 @@ var
 implementation
 
 {$R *.lfm}
+
+{ TForm3 }
+
+procedure TForm3.Image1Click(Sender: TObject);
+begin
+
+end;
 
 end.
 

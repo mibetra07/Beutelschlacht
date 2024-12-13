@@ -15,10 +15,12 @@ type
   TForm5 = class(TForm)
     Button1: TButton;
     Image1: TImage;
+    Image2: TImage;
     Panel1: TPanel;
     Timer1: TTimer;
     procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure Image2Click(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
   private
 
@@ -51,6 +53,12 @@ begin
    wave := Twave.create(2, 0, 0, 0, 0, 1);
    Timer1.Enabled := false;
    Timer1.interval := 5;
+end;
+
+procedure TForm5.Image2Click(Sender: TObject);
+begin
+  Form1.show;
+  Form5.hide;
 end;
 
 procedure TForm5.Timer1Timer(Sender: TObject);

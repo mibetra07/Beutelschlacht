@@ -1,12 +1,12 @@
 object Form1: TForm1
-  Left = -54
+  Left = 229
   Height = 1061
-  Top = 444
+  Top = 502
   Width = 1920
   Caption = 'Main Menu'
-  ClientHeight = 0
-  ClientWidth = 0
-  LCLVersion = '3.6.0.0'
+  ClientHeight = 1061
+  ClientWidth = 1920
+  LCLVersion = '3.4.0.0'
   WindowState = wsFullScreen
   object Button1: TButton
     Left = 860
