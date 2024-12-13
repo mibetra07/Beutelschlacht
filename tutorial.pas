@@ -25,13 +25,15 @@ var
 
 implementation
 
+uses Menu;
 {$R *.lfm}
 
 { TForm7 }
 
 procedure TForm7.Image1Click(Sender: TObject);
 begin
-
+  Form1.show;
+  Form7.hide;
 end;
 
 end.

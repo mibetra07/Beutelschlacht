@@ -24,14 +24,15 @@ var
   Form3: TForm3;
 
 implementation
-
+uses Menu;
 {$R *.lfm}
 
 { TForm3 }
 
 procedure TForm3.Image1Click(Sender: TObject);
 begin
-
+  Form1.show;
+  Form3.hide;
 end;
 
 end.

@@ -18,7 +18,6 @@ type
     Image2: TImage;
     Image3: TImage;
     Panel1: TPanel;
-    procedure Button1Click(Sender: TObject);
     procedure Image1Click(Sender: TObject);
     procedure Image2Click(Sender: TObject);
     procedure Image3Click(Sender: TObject);
@@ -33,8 +32,7 @@ var
 
 implementation
 
-uses
-  Menu;
+uses Menu;
 
 {$R *.lfm}
 
