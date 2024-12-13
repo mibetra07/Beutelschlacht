@@ -14,8 +14,10 @@ type
   TForm6 = class(TForm)
     Button1: TButton;
     Image1: TImage;
+    Image2: TImage;
   procedure Button1Click(Sender: TObject);
   procedure FormCreate(Sender: TObject);
+  procedure Image2Click(Sender: TObject);
   private
 
   public
@@ -46,10 +48,15 @@ begin
        Pinguin[i] := TPinguin.create(2); //Pinguine erstellen (test)
 end;
 
+procedure TForm6.Image2Click(Sender: TObject);
+begin
+  Form1.show;
+  Form6.hide;
+end;
+
 procedure TForm6.Button1Click(Sender: TObject);
 begin
-   Form1.show;
-   Form6.hide;
+
 end;
 
 end.
