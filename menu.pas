@@ -22,8 +22,10 @@ type
     procedure Button3Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
     procedure Button5Click(Sender: TObject);
+    procedure FormActivate(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
-
+    firstactivate : boolean;
   public
 
   end;
@@ -71,5 +73,33 @@ begin
   Close;
 end;
 
+procedure TForm1.FormCreate(Sender: TObject);
+begin
+  firstactivate:=true;
+end;
+
+//alle Forms laden und schließen
+procedure TForm1.FormActivate(Sender: TObject);
+begin
+  if firstactivate=true then
+  begin
+    Form2.show;
+    Form3.show;
+    Form4.show;
+    Form5.show;
+    Form6.show;
+    Form7.show;
+
+    Form2.hide;
+    Form3.hide;
+    Form4.hide;
+    Form5.hide;
+    Form6.hide;
+    Form7.hide;
+
+    firstactivate:=false;
+  end;
+end;
 end.
+
 
