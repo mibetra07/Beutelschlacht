@@ -6,7 +6,8 @@ object Form4: TForm4
   Caption = 'Form4'
   ClientHeight = 594
   ClientWidth = 1217
-  LCLVersion = '3.4.0.0'
+  LCLVersion = '3.6.0.0'
+  WindowState = wsFullScreen
   object Panel1: TPanel
     Left = 552
     Height = 50

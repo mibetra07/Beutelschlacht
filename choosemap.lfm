@@ -6,7 +6,7 @@ object Form2: TForm2
   Caption = 'Kartenauswahl'
   ClientHeight = 0
   ClientWidth = 0
-  LCLVersion = '3.4.0.0'
+  LCLVersion = '3.6.0.0'
   WindowState = wsFullScreen
   object Image1: TImage
     Left = 416
@@ -2883,15 +2883,6 @@ object Form2: TForm2
     Width = 170
     Caption = 'Karte auswählen'
     TabOrder = 0
-  end
-  object Button1: TButton
-    Left = 912
-    Height = 32
-    Top = 264
-    Width = 78
-    Caption = 'Zurück'
-    TabOrder = 1
-    OnClick = Button1Click
   end
   object Image3: TImage
     Left = 8

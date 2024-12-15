@@ -6,7 +6,8 @@ object Form3: TForm3
   Caption = 'Form3'
   ClientHeight = 240
   ClientWidth = 320
-  LCLVersion = '3.4.0.0'
+  LCLVersion = '3.6.0.0'
+  WindowState = wsFullScreen
   object Image1: TImage
     Left = 8
     Height = 90

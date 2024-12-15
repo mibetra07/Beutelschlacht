@@ -13,7 +13,6 @@ type
   { TForm2 }
 
   TForm2 = class(TForm)
-    Button1: TButton;
     Image1: TImage;
     Image2: TImage;
     Image3: TImage;
