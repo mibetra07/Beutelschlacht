@@ -6,16 +6,40 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
-  Path, Pinguin;
+  ValEdit, Path, Pinguin;
 
 type
 
   { TForm6 }
   TForm6 = class(TForm)
     Button1: TButton;
+    Groupbox1: TGroupBox;
     Image1: TImage;
+    Image2: TImage;
+    Image3: TImage;
+    Image4: TImage;
+    Image5: TImage;
+    Image6: TImage;
+    Image7: TImage;
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
+    Label5: TLabel;
+    Panel1: TPanel;
+    Panel2: TPanel;
+    Panel3: TPanel;
+    Panel4: TPanel;
+    Panel5: TPanel;
+    Shape1: TShape;
+    Shape2: TShape;
+    Shape3: TShape;
+    Shape4: TShape;
+    Shape5: TShape;
+    Timer1: TTimer;
   procedure Button1Click(Sender: TObject);
   procedure FormCreate(Sender: TObject);
+  procedure Image2Click(Sender: TObject);
   private
 
   public
@@ -46,10 +70,15 @@ begin
        Pinguin[i] := TPinguin.create(2); //Pinguine erstellen (test)
 end;
 
+procedure TForm6.Image2Click(Sender: TObject);
+begin
+  Form1.show;
+  Form6.hide;
+end;
+
 procedure TForm6.Button1Click(Sender: TObject);
 begin
-   Form1.show;
-   Form6.hide;
+
 end;
 
 end.

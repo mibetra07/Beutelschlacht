@@ -1,12 +1,12 @@
 object Form7: TForm7
-  Left = 3089
+  Left = 1169
   Height = 240
   Top = 209
   Width = 320
   Caption = 'Form7'
   ClientHeight = 240
   ClientWidth = 320
-  LCLVersion = '3.4.0.0'
+  LCLVersion = '3.6.0.0'
   WindowState = wsFullScreen
   object Image1: TImage
     Left = 8

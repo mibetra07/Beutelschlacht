@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
-  Path, Pinguin;
+  Path, Pinguin, wave;
 
 type
 
@@ -14,14 +14,35 @@ type
 
   TForm5 = class(TForm)
     Button1: TButton;
+    GroupBox1: TGroupBox;
     Image1: TImage;
+    Image2: TImage;
+    Image3: TImage;
+    Image4: TImage;
+    Image5: TImage;
+    Image6: TImage;
+    Image7: TImage;
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
+    Label5: TLabel;
+    Panel1: TPanel;
+    Panel2: TPanel;
+    Panel3: TPanel;
+    Panel4: TPanel;
+    Panel5: TPanel;
+    Timer1: TTimer;
     procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure Image2Click(Sender: TObject);
+    procedure Timer1Timer(Sender: TObject);
   private
 
   public
   var Path: array[1..15] of Tpath;
   var Pinguin: array[1..100] of TPinguin;
+  var wave: Twave;
   end;
 
 var
@@ -39,19 +60,33 @@ begin
    //Weg der Map erstellen (dir, left, top, breit, hoch, map: integer)
    Path[1] := TPath.create(1, 100, 500, 500, 100, 1);
    Path[2] := Tpath.create(2, 600, 500, 100, 400, 1);
-   Path[3] := Tpath.create(1, 300, 900, 400, 500, 1);
-   Path[4] := Tpath.create(2, 300, 200, 100, 800, 1);
+   Path[3] := Tpath.create(3, 300, 900, 400, 500, 1);
+   Path[4] := Tpath.create(4, 300, 200, 100, 800, 1);
    Path[5] := Tpath.create(1, 300, 200, 1000, 100, 1);
    Path[6] := Tpath.create(2, 1300, 200, 100, 500, 1);
    Path[7] := Tpath.create(1, 1300, 700, 1000, 100, 1);
-   for i := 1 to 5 do
-       Pinguin[i] := TPinguin.create(1);  //Pinguine erstellen (test)
+   wave := Twave.create(2, 0, 0, 0, 0, 1);
+   Timer1.Enabled := false;
+   Timer1.interval := 5;
+end;
+
+procedure TForm5.Image2Click(Sender: TObject);
+begin
+  Form1.show;
+  Form5.hide;
+end;
+
+procedure TForm5.Timer1Timer(Sender: TObject);
+var i: integer;
+begin
+           tick(2, 0, 0, 0, 0, 1);
+           if Pinguin[i] <> nil then
+           Panel1.caption := inttostr(Pinguin[1].currentPath) + inttostr(Pinguin[2].currentPath);
 end;
 
 procedure TForm5.Button1Click(Sender: TObject);
 begin
-  Form1.show;
-  Form5.hide;
+  Timer1.enabled := true;
 end;
 
 end.

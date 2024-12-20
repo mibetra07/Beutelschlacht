@@ -1,4 +1,4 @@
-unit Credits;
+unit tutorial;
 
 {$mode ObjFPC}{$H+}
 
@@ -9,14 +9,10 @@ uses
 
 type
 
-  { TForm4 }
+  { TForm7 }
 
-  TForm4 = class(TForm)
+  TForm7 = class(TForm)
     Image1: TImage;
-    Panel1: TPanel;
-    Panel2: TPanel;
-    Panel3: TPanel;
-    Panel4: TPanel;
     procedure Image1Click(Sender: TObject);
   private
 
@@ -25,18 +21,19 @@ type
   end;
 
 var
-  Form4: TForm4;
+  Form7: TForm7;
 
 implementation
+
 uses Menu;
 {$R *.lfm}
 
-{ TForm4 }
+{ TForm7 }
 
-procedure TForm4.Image1Click(Sender: TObject);
+procedure TForm7.Image1Click(Sender: TObject);
 begin
   Form1.show;
-  Form4.hide;
+  Form7.hide;
 end;
 
 end.

@@ -1,12 +1,12 @@
 object Form4: TForm4
-  Left = 700
+  Left = 2614
   Height = 594
   Top = 202
   Width = 1217
   Caption = 'Form4'
-  ClientHeight = 594
-  ClientWidth = 1217
-  LCLVersion = '3.6.0.0'
+  ClientHeight = 0
+  ClientWidth = 0
+  LCLVersion = '3.4.0.0'
   WindowState = wsFullScreen
   object Panel1: TPanel
     Left = 552

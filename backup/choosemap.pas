@@ -6,20 +6,20 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
-  map1, map2;
+  Buttons, map1, map2;
 
 type
 
   { TForm2 }
 
   TForm2 = class(TForm)
-    Button1: TButton;
     Image1: TImage;
     Image2: TImage;
+    Image3: TImage;
     Panel1: TPanel;
-    procedure Button1Click(Sender: TObject);
     procedure Image1Click(Sender: TObject);
     procedure Image2Click(Sender: TObject);
+    procedure Image3Click(Sender: TObject);
   private
 
   public
@@ -31,6 +31,7 @@ var
 
 implementation
 
+uses Menu;
 
 {$R *.lfm}
 
@@ -43,17 +44,19 @@ begin
   Form2.hide;
 end;
 
-//zurück zu Mainmenu
-procedure TForm2.Button1Click(Sender: TObject);
-begin
-  Form1.show;
-  Form2.hide;
-end;
+
 
 //map2
 procedure TForm2.Image2Click(Sender: TObject);
 begin
   Form6.show;
+  Form2.hide;
+end;
+
+//zurück zu Main
+procedure TForm2.Image3Click(Sender: TObject);
+begin
+  Form1.show;
   Form2.hide;
 end;
 

@@ -1,12 +1,12 @@
 object Form2: TForm2
-  Left = 11
+  Left = 1913
   Height = 1017
-  Top = 71
+  Top = 0
   Width = 1920
   Caption = 'Kartenauswahl'
   ClientHeight = 0
   ClientWidth = 0
-  LCLVersion = '3.6.0.0'
+  LCLVersion = '3.4.0.0'
   WindowState = wsFullScreen
   object Image1: TImage
     Left = 416
