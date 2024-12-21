@@ -50,8 +50,8 @@ constructor Tkanguru.create(map : integer);
     attackspeed := 0.2;
     cancamo := false;
     //testkoordinaten
-    self.x := 500;
-    self.y := 600;
+    self.x := 200;
+    self.y := 800;
 
     //Angriffsumkreis erstellen
     if map = 1 then

@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
-  Path, Pinguin, wave;
+  Path, Pinguin, wave, kanguru;
 
 type
 
@@ -49,6 +49,12 @@ type
   var Pinguin: array[1..100] of TPinguin;
   var HelmPinguin: array[1..100] of THelmPinguin;
   var wave: array [1..100] of Twave;
+
+  var Kanguru : array[1..5] of Tkanguru;
+  var Bogenkanguru : array[1..5] of TBogenkanguru;
+  var Zauberkanguru : array[1..5] of TZauberkanguru;
+  var Ninjakanguru : array[1..5] of TNinjakanguru;
+  var Eiskanguru : array[1..5] of TEiskanguru;
   end;
 
 var
@@ -75,6 +81,7 @@ begin
    wave[1] := Twave.create(5, 5, 0, 0, 0, 1);
    Timer1.Enabled := false;
    Timer1.interval := 5;
+   kanguru[1] := Tkanguru.create(1);
 end;
 
 procedure TForm5.Image2Click(Sender: TObject);
@@ -87,12 +94,11 @@ procedure TForm5.Timer1Timer(Sender: TObject);
 var i: integer;
 begin
            tick(5, 5, 0, 0, 0, 1);
-           if Pinguin[i] <> nil then
-           Panel1.caption := inttostr(Pinguin[1].currentPath) + inttostr(Pinguin[2].currentPath);
 end;
 
 procedure TForm5.Button1Click(Sender: TObject);
 begin
+
   Timer1.enabled := true;
 end;
 

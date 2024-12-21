@@ -6,14 +6,14 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
-  ValEdit, Path, Pinguin;
+  Path, Pinguin, wave, kanguru;
 
 type
 
   { TForm6 }
   TForm6 = class(TForm)
     Button1: TButton;
-    Groupbox1: TGroupBox;
+    GroupBox1: TGroupBox;
     Image1: TImage;
     Image2: TImage;
     Image3: TImage;
@@ -40,11 +40,20 @@ type
   procedure Button1Click(Sender: TObject);
   procedure FormCreate(Sender: TObject);
   procedure Image2Click(Sender: TObject);
+  procedure Timer1Timer(Sender: TObject);
   private
 
   public
   var Path: array[1..15] of Tpath;
   var Pinguin: array[1..100] of TPinguin;
+  var HelmPinguin: array[1..100] of THelmPinguin;
+  var wave: array [1..100] of TWave;
+
+  var Kanguru : array[1..5] of Tkanguru;
+  var Bogenkanguru : array[1..5] of TBogenkanguru;
+  var Zauberkanguru : array[1..5] of TZauberkanguru;
+  var Ninjakanguru : array[1..5] of TNinjakanguru;
+  var Eiskanguru : array[1..5] of TEiskanguru;
   end;
 
 var
@@ -62,12 +71,13 @@ begin
   //Weg der Map erstellen (dir, left, top, breit, hoch, map: integer)
    Path[1] := TPath.create(1, 100, 500, 500, 100, 2);
    Path[2] := Tpath.create(2, 600, 500, 100, 400, 2);
-   Path[3] := Tpath.create(1, 300, 900, 400, 500, 2);
-   Path[4] := Tpath.create(2, 300, 200, 100, 800, 2);
+   Path[3] := Tpath.create(3, 300, 900, 400, 500, 2);
+   Path[4] := Tpath.create(4, 300, 200, 100, 800, 2);
    Path[5] := Tpath.create(1, 300, 200, 1000, 100, 2);
    Path[6] := Tpath.create(2, 1300, 200, 100, 1000, 2);
-   for i := 1 to 5 do
-       Pinguin[i] := TPinguin.create(2); //Pinguine erstellen (test)
+    wave[1] := Twave.create(5, 5, 0, 0, 0, 2);
+   Timer1.Enabled := false;
+   Timer1.interval := 5;
 end;
 
 procedure TForm6.Image2Click(Sender: TObject);
@@ -76,9 +86,14 @@ begin
   Form6.hide;
 end;
 
+procedure TForm6.Timer1Timer(Sender: TObject);
+begin
+  tick(5, 5, 0, 0, 0, 2);
+end;
+
 procedure TForm6.Button1Click(Sender: TObject);
 begin
-
+     timer1.enabled := true;
 end;
 
 end.

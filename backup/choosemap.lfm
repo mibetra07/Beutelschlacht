@@ -1,11 +1,11 @@
 object Form2: TForm2
-  Left = 11
+  Left = 1913
   Height = 1017
-  Top = 71
+  Top = 0
   Width = 1920
   Caption = 'Kartenauswahl'
-  ClientHeight = 0
-  ClientWidth = 0
+  ClientHeight = 1017
+  ClientWidth = 1920
   LCLVersion = '3.6.0.0'
   WindowState = wsFullScreen
   object Image1: TImage
@@ -2943,5 +2943,14 @@ object Form2: TForm2
       ED7FE9FD079A585AFE7BE5E7370000000049454E44AE426082
     }
     Stretch = True
+  end
+  object Shape1: TShape
+    Left = 200
+    Height = 100
+    Top = 224
+    Width = 100
+    Brush.Color = clGray
+    Brush.Style = bsCross
+    Shape = stCircle
   end
 end

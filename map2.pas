@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
-  Path, Pinguin, wave;
+  Path, Pinguin, wave, kanguru;
 
 type
 
@@ -48,6 +48,12 @@ type
   var Pinguin: array[1..100] of TPinguin;
   var HelmPinguin: array[1..100] of THelmPinguin;
   var wave: array [1..100] of TWave;
+
+  var Kanguru : array[1..5] of Tkanguru;
+  var Bogenkanguru : array[1..5] of TBogenkanguru;
+  var Zauberkanguru : array[1..5] of TZauberkanguru;
+  var Ninjakanguru : array[1..5] of TNinjakanguru;
+  var Eiskanguru : array[1..5] of TEiskanguru;
   end;
 
 var

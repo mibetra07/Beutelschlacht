@@ -1,13 +1,13 @@
 object Form6: TForm6
-  Left = 2041
+  Left = 2122
   Height = 772
-  Top = 175
+  Top = 185
   Width = 1679
   Caption = 'Form6'
-  ClientHeight = 0
-  ClientWidth = 0
+  ClientHeight = 772
+  ClientWidth = 1679
   OnCreate = FormCreate
-  LCLVersion = '3.4.0.0'
+  LCLVersion = '3.6.0.0'
   WindowState = wsFullScreen
   object Image1: TImage
     Left = 0

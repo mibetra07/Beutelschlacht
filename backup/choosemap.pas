@@ -17,6 +17,7 @@ type
     Image2: TImage;
     Image3: TImage;
     Panel1: TPanel;
+    Shape1: TShape;
     procedure Image1Click(Sender: TObject);
     procedure Image2Click(Sender: TObject);
     procedure Image3Click(Sender: TObject);
