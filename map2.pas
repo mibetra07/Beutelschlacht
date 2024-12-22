@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
-  Path, Pinguin, wave, kanguru;
+  ComCtrls, Path, Pinguin, wave, kanguru;
 
 type
 
@@ -88,13 +88,16 @@ end;
 
 procedure TForm6.Timer1Timer(Sender: TObject);
 begin
-  tick(5, 5, 0, 0, 0, 2);
+  tick(5, 0, 0, 0 ,0, 2);
 end;
 
-procedure TForm6.Button1Click(Sender: TObject);
+ procedure TForm6.Button1Click(Sender: TObject);
 begin
-     timer1.enabled := true;
+     Timer1.enabled := true;
+     Pinguin[10] := Tpinguin.create(2, 0);
 end;
+
+
 
 end.
 
