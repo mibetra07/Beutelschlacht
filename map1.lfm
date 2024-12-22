@@ -1,11 +1,11 @@
 object Form5: TForm5
-  Left = 2047
-  Height = 992
-  Top = 88
-  Width = 1662
+  Left = 1912
+  Height = 1009
+  Top = -8
+  Width = 1920
   Caption = 'Form5'
-  ClientHeight = 0
-  ClientWidth = 0
+  ClientHeight = 1009
+  ClientWidth = 1920
   OnCreate = FormCreate
   LCLVersion = '3.6.0.0'
   WindowState = wsFullScreen
@@ -412,6 +412,7 @@ object Form5: TForm5
       Height = 106
       Top = 32
       Width = 106
+      OnClick = Image3Click
       Picture.Data = {
         1754506F727461626C654E6574776F726B477261706869638505000089504E47
         0D0A1A0A0000000D4948445200000020000000200806000000737A7AF4000001
@@ -467,6 +468,7 @@ object Form5: TForm5
       Height = 106
       Top = 160
       Width = 106
+      OnClick = Image4Click
       Picture.Data = {
         1754506F727461626C654E6574776F726B477261706869634206000089504E47
         0D0A1A0A0000000D4948445200000020000000200806000000737A7AF4000001
@@ -527,6 +529,7 @@ object Form5: TForm5
       Height = 106
       Top = 416
       Width = 106
+      OnClick = Image6Click
       Picture.Data = {
         1754506F727461626C654E6574776F726B47726170686963F004000089504E47
         0D0A1A0A0000000D4948445200000020000000200806000000737A7AF4000001
@@ -577,6 +580,7 @@ object Form5: TForm5
       Height = 106
       Top = 544
       Width = 106
+      OnClick = Image7Click
       Picture.Data = {
         1754506F727461626C654E6574776F726B477261706869635705000089504E47
         0D0A1A0A0000000D4948445200000020000000200806000000737A7AF4000001
@@ -626,31 +630,31 @@ object Form5: TForm5
       Stretch = True
     end
     object Label1: TLabel
-      Left = 66
+      Left = 272
       Height = 15
-      Top = 123
+      Top = 112
       Width = 30
       Caption = '1000$'
       ParentFont = False
     end
     object Label2: TLabel
-      Left = 66
+      Left = 272
       Height = 15
-      Top = 251
+      Top = 240
       Width = 30
       Caption = '2000$'
     end
     object Label4: TLabel
-      Left = 66
+      Left = 272
       Height = 15
-      Top = 507
+      Top = 496
       Width = 30
       Caption = '5000$'
     end
     object Label5: TLabel
-      Left = 66
+      Left = 272
       Height = 15
-      Top = 635
+      Top = 624
       Width = 30
       Caption = '8000$'
     end
@@ -695,7 +699,7 @@ object Form5: TForm5
       Height = 50
       Top = 568
       Width = 170
-      Caption = 'Piet'
+      Caption = 'Zauberkänguru'
       ParentBackground = False
       TabOrder = 4
     end
@@ -710,6 +714,7 @@ object Form5: TForm5
       Height = 106
       Top = 288
       Width = 106
+      OnClick = Image5Click
       Picture.Data = {
         1754506F727461626C654E6574776F726B477261706869635205000089504E47
         0D0A1A0A0000000D4948445200000020000000200806000000737A7AF4000001
@@ -759,11 +764,216 @@ object Form5: TForm5
       Stretch = True
     end
     object Label3: TLabel
-      Left = 66
+      Left = 272
       Height = 15
-      Top = 379
+      Top = 368
       Width = 30
       Caption = '3000$'
+    end
+  end
+  object GroupBox2: TGroupBox
+    Left = 1184
+    Height = 264
+    Top = 48
+    Width = 265
+    ClientHeight = 244
+    ClientWidth = 261
+    TabOrder = 2
+    object Memo1: TMemo
+      Left = 16
+      Height = 149
+      Top = 80
+      Width = 230
+      Lines.Strings = (
+        'Memo1'
+      )
+      ReadOnly = True
+      TabOrder = 0
+    end
+    object Button2: TButton
+      Left = 208
+      Height = 40
+      Top = 8
+      Width = 40
+      Caption = 'X'
+      TabOrder = 1
+      OnClick = Button2Click
+    end
+    object Panel6: TPanel
+      Left = 16
+      Height = 50
+      Top = 8
+      Width = 170
+      BevelColor = clMenu
+      Caption = 'Boxerkänguru'
+      Color = clWhite
+      ParentBackground = False
+      ParentColor = False
+      TabOrder = 2
+    end
+  end
+  object GroupBox3: TGroupBox
+    Left = 1184
+    Height = 264
+    Top = 176
+    Width = 265
+    ClientHeight = 244
+    ClientWidth = 261
+    TabOrder = 3
+    object Memo2: TMemo
+      Left = 16
+      Height = 149
+      Top = 80
+      Width = 230
+      Lines.Strings = (
+        'Memo1'
+      )
+      ReadOnly = True
+      TabOrder = 0
+    end
+    object Button3: TButton
+      Left = 208
+      Height = 40
+      Top = 8
+      Width = 40
+      Caption = 'X'
+      TabOrder = 1
+      OnClick = Button3Click
+    end
+    object Panel7: TPanel
+      Left = 16
+      Height = 50
+      Top = 8
+      Width = 170
+      BevelColor = clMenu
+      Caption = 'Bogenkänguru'
+      Color = clWhite
+      ParentBackground = False
+      ParentColor = False
+      TabOrder = 2
+    end
+  end
+  object GroupBox4: TGroupBox
+    Left = 1184
+    Height = 264
+    Top = 304
+    Width = 265
+    ClientHeight = 244
+    ClientWidth = 261
+    TabOrder = 4
+    object Memo3: TMemo
+      Left = 16
+      Height = 149
+      Top = 80
+      Width = 230
+      Lines.Strings = (
+        'Memo1'
+      )
+      ReadOnly = True
+      TabOrder = 0
+    end
+    object Button4: TButton
+      Left = 208
+      Height = 40
+      Top = 8
+      Width = 40
+      Caption = 'X'
+      TabOrder = 1
+      OnClick = Button4Click
+    end
+    object Panel8: TPanel
+      Left = 16
+      Height = 50
+      Top = 8
+      Width = 170
+      BevelColor = clMenu
+      Caption = 'Eiskänguru'
+      Color = clWhite
+      ParentBackground = False
+      ParentColor = False
+      TabOrder = 2
+    end
+  end
+  object GroupBox5: TGroupBox
+    Left = 1184
+    Height = 264
+    Top = 432
+    Width = 265
+    ClientHeight = 244
+    ClientWidth = 261
+    TabOrder = 5
+    object Memo4: TMemo
+      Left = 16
+      Height = 149
+      Top = 80
+      Width = 230
+      Lines.Strings = (
+        'Memo1'
+      )
+      ReadOnly = True
+      TabOrder = 0
+    end
+    object Button5: TButton
+      Left = 208
+      Height = 40
+      Top = 8
+      Width = 40
+      Caption = 'X'
+      TabOrder = 1
+      OnClick = Button5Click
+    end
+    object Panel9: TPanel
+      Left = 16
+      Height = 50
+      Top = 8
+      Width = 170
+      BevelColor = clMenu
+      Caption = 'Ninjakänguru'
+      Color = clWhite
+      ParentBackground = False
+      ParentColor = False
+      TabOrder = 2
+    end
+  end
+  object GroupBox6: TGroupBox
+    Left = 1184
+    Height = 264
+    Top = 560
+    Width = 265
+    ClientHeight = 244
+    ClientWidth = 261
+    TabOrder = 6
+    object Memo5: TMemo
+      Left = 16
+      Height = 149
+      Top = 80
+      Width = 230
+      Lines.Strings = (
+        'Memo1'
+      )
+      ReadOnly = True
+      TabOrder = 0
+    end
+    object Button6: TButton
+      Left = 208
+      Height = 40
+      Top = 8
+      Width = 40
+      Caption = 'X'
+      TabOrder = 1
+      OnClick = Button6Click
+    end
+    object Panel10: TPanel
+      Left = 16
+      Height = 50
+      Top = 8
+      Width = 170
+      BevelColor = clMenu
+      Caption = 'Zauberkänguru'
+      Color = clWhite
+      ParentBackground = False
+      ParentColor = False
+      TabOrder = 2
     end
   end
   object Timer1: TTimer
