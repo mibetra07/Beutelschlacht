@@ -71,7 +71,7 @@ begin
   end;
 end;
 procedure tick(normal, helm, schild, boss, tarn, map: integer);
-var i, speed: integer;
+var i, j, speed: integer;
 begin
  { speed := 20;
   if map = 1 then
@@ -129,9 +129,12 @@ begin
   if map = 1 then
   begin
   for i := 1 to normal do
+      begin
       Form5.Pinguin[i].laufen(1);
+      Form5.Pinguin[i].attackcheck(1);
+      end;
   for i := 1 to helm do
-      Form5.HelmPinguin[i].laufen(1);
+      //Form5.HelmPinguin[i].laufen(1);
   end
   else if map = 2 then
   begin
@@ -139,7 +142,8 @@ begin
       Form6.Pinguin[i].laufen(2);
   for i := 1 to helm do
       Form6.HelmPinguin[i].laufen(2);
-  end
+  end;
+
 end;
 
 end.
