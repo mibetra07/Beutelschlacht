@@ -106,6 +106,15 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit>
+      <Unit>
+        <Filename Value="buy.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="collision.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="Collision"/>
+      </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

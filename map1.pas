@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
-  Menus, Path, Pinguin, wave, kanguru;
+  Menus, Path, Pinguin, wave, kanguru, Collision;
 
 type
 
@@ -19,7 +19,6 @@ type
     Button4: TButton;
     Button5: TButton;
     Button6: TButton;
-    GroupBox1: TGroupBox;
     GroupBox2: TGroupBox;
     GroupBox3: TGroupBox;
     GroupBox4: TGroupBox;
@@ -57,6 +56,7 @@ type
     Shape3: TShape;
     Shape4: TShape;
     Shape5: TShape;
+    Shape6: TShape;
     Timer1: TTimer;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
@@ -72,19 +72,34 @@ type
     procedure Image6Click(Sender: TObject);
     procedure Image7Click(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
-  private
+    procedure Image3MouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure Image3MouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer
+      );
+    procedure Image3MouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
 
+  private
+  //fürs Platzieren
+  var isDragging, DragThresholdReached : boolean;
+  var StartX, StartY : integer;
+  const DragThreshold = 96; //minimale Mausbewegung in px, um Dragging/kaufen zu starten
+  var Kanguruzahl, Bogenkanguruzahl, Eiskanguruzahl, Ninjakanguruzahl, Zauberkanguruzahl : integer;
   public
+  var coins : integer;
   var Path: array[1..15] of Tpath;
   var Pinguin: array[1..100] of TPinguin;
   var HelmPinguin: array[1..100] of THelmPinguin;
   var wave: array [1..100] of Twave;
 
-  var Kanguru : array[1..5] of Tkanguru;
-  var Bogenkanguru : array[1..5] of TBogenkanguru;
-  var Zauberkanguru : array[1..5] of TZauberkanguru;
-  var Ninjakanguru : array[1..5] of TNinjakanguru;
-  var Eiskanguru : array[1..5] of TEiskanguru;
+  var Kanguru : array[1..100] of Tkanguru;
+  var Bogenkanguru : array[1..100] of TBogenkanguru;
+  var Zauberkanguru : array[1..100] of TZauberkanguru;
+  var Ninjakanguru : array[1..100] of TNinjakanguru;
+  var Eiskanguru : array[1..100] of TEiskanguru;
+
+  //Positionsvariablen zum platzieren der Kängurus
+  var dx, dy : integer;
   end;
 
 var
@@ -96,8 +111,10 @@ uses Menu;
 
 { TForm5 }
 
+
+
 procedure TForm5.FormCreate(Sender: TObject);
-var i, coins : integer;
+var i : integer;
 begin
   randomize();
    //Weg der Map erstellen (dir, left, top, breit, hoch, map: integer)
@@ -112,6 +129,15 @@ begin
    Timer1.Enabled := false;
    Timer1.interval := 5;
 
+   //Känguruzählervariablen
+   Kanguruzahl := 0;
+   Bogenkanguruzahl := 0;
+   Eiskanguruzahl := 0;
+   Ninjakanguruzahl := 0;
+   Zauberkanguruzahl := 0;
+
+   //Platzieren
+   isDragging := false;
 
    //Memos mit Känguruinfos
    //Boxerkänguru
@@ -163,12 +189,85 @@ begin
    Groupbox6.visible:=false;
 end;
 
+//Form wechseln
 procedure TForm5.Image2Click(Sender: TObject);
 begin
   Form1.show;
   Form5.hide;
 end;
 
+//Känguru platzieren mit Kollisionsabfrage
+procedure TForm5.Image3MouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  if Button = mbLeft then
+  begin
+    isDragging := true;
+    DragThresholdReached := false;
+    //Startposition der Maus speichern
+    StartX := X;
+    StartY := Y;
+
+  end;
+end;
+
+procedure TForm5.Image3MouseMove(Sender: TObject; Shift: TShiftState; X,
+  Y: Integer);
+begin
+  if isDragging = true then
+  begin
+    if not DragThresholdReached then
+    begin
+      if (Abs(X - StartX) > DragThreshold) or (Abs(Y - StartY) > DragThreshold) then
+      begin
+        DragThresholdReached := true;
+        inc(kanguruzahl);
+        kanguru[Kanguruzahl] := Tkanguru.create(1, Mouse.CursorPos.X, Mouse.CursorPos.Y);
+      end;
+    end;
+    if DragThresholdReached then
+    begin
+      kanguru[kanguruzahl].bild.left := Mouse.CursorPos.X;
+      kanguru[kanguruzahl].bild.top := Mouse.CursorPos.Y;
+      kanguru[kanguruzahl].attackradius.left := (Mouse.CursorPos.X + 48 - kanguru[kanguruzahl].range);
+      kanguru[kanguruzahl].attackradius.Top := (Mouse.CursorPos.Y + 48 - kanguru[kanguruzahl].range);
+    end;
+  end;
+end;
+
+procedure TForm5.Image3MouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+var Collision, MapCollision : boolean;
+begin
+  if (Button = mbLeft) and (DragThresholdReached = true) then
+  begin
+    Collision := false;
+    isDragging := False;
+    DragThresholdReached := False;
+    //Schleife zur Kollisionsabfrage mit (fast) allen anderen Bildern
+    CheckCollision(kanguru[kanguruzahl].bild, Image2, Collision);
+
+    CheckMapCollision(kanguru[kanguruzahl].bild, MapCollision);
+
+    if (Collision = true) or (MapCollision = true) then
+    begin
+      kanguru[kanguruzahl].attackradius.free; //in destructor auslagern
+      kanguru[kanguruzahl].bild.free;
+      kanguru[kanguruzahl].Free;
+      dec(kanguruzahl);
+    end
+    else
+    begin
+      coins := coins - 1000;
+      kanguru[kanguruzahl].attackradius.visible := false;
+      kanguru[kanguruzahl].active := true;
+    end;
+  end;
+end;
+
+
+
+//Zwischen Beschreibungen wechseln
 procedure TForm5.Image3Click(Sender: TObject);
 begin
   Groupbox2.visible:=true;
@@ -214,6 +313,7 @@ begin
   Groupbox2.visible:=false;
 end;
 
+//Timer
 procedure TForm5.Timer1Timer(Sender: TObject);
 var i: integer;
 begin
@@ -226,6 +326,7 @@ begin
   Timer1.enabled := true;
 end;
 
+//Beschreibungen schließen
 procedure TForm5.Button2Click(Sender: TObject);
 begin
   Groupbox2.visible := false;

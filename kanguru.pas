@@ -9,14 +9,14 @@ uses
 
 type TKanguru = class
   public
-    x, y, width, height : integer;
+    width, height : integer;
     bild: Timage;
     attackradius : TShape;
     damage, range : integer;
     attackspeed : real;
     cancamo : boolean;
-
-    constructor create(map : integer);
+    active : boolean;
+    constructor create(map, x, y : integer);
     procedure attack();
   end;
 
@@ -40,7 +40,7 @@ implementation
 
   Uses map2, map1;
 
-constructor Tkanguru.create(map : integer);
+constructor Tkanguru.create(map, x, y : integer);
   begin
     inherited create;
 
@@ -49,9 +49,9 @@ constructor Tkanguru.create(map : integer);
     range := 150;
     attackspeed := 0.2;
     cancamo := false;
+    active := false;
     //testkoordinaten
-    self.x := 500;
-    self.y := 600;
+
 
     //Angriffsumkreis erstellen
     if map = 1 then
@@ -70,8 +70,8 @@ constructor Tkanguru.create(map : integer);
     self.attackradius.shape := stCircle;
     self.attackradius.brush.color := clGray;
     self.attackradius.brush.style := bsCross;
-    self.attackradius.left := self.x + 48 - range; //range muss vielleicht geändert werden, dass hier ist falls 1 range = 1 pixel
-    self.attackradius.top := self.y + 48 - range; //ebd.
+    self.attackradius.left := x + 48 - range; //range muss vielleicht geändert werden, dass hier ist falls 1 range = 1 pixel
+    self.attackradius.top := y + 48 - range; //ebd.
     self.attackradius.visible := true;
 
     //bild erstellen
@@ -92,8 +92,8 @@ constructor Tkanguru.create(map : integer);
     self.bild.Height := 96;
     self.bild.stretch := true;
     self.bild.Picture.LoadFromFile('images\Boxerkanguru.png');
-    self.bild.left := self.x;
-    self.bild.top := self.y;
+    self.bild.left := x;
+    self.bild.top := y;
     self.bild.Visible := True;
 
 
