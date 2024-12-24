@@ -4,15 +4,16 @@ unit Pinguin;
 
 interface
 
-Uses Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls, Path, ComCtrls, kanguru;
+Uses Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls, Path, ComCtrls;
 type TPinguin  = class
       public
       x, y, width, height, art, armorlvl, hp, moved, currentPath, position, speed:integer;
+      slowed: boolean;
       bild: Timage;
       hpBar: TProgressBar;
       constructor create(map, offset: integer);
       procedure laufen(map: integer);
-      procedure attackcheck(map: integer; Kanguru: Tkanguru; Kanguruart: string);
+     // procedure attackcheck(map: integer; Kanguru: Tkanguru; Kanguruart: string);
         end;
 
       THelmPinguin = class(TPinguin)
@@ -85,7 +86,7 @@ constructor TPinguin.create(map, offset: integer);
      self.bild.top := self.y;
      self.bild.Visible := True;
      self.hp := 1000;
-     self.speed := 1;
+     self.speed := 3;
      end;
 constructor THelmPinguin.create(map, offset: integer);
    begin
@@ -110,17 +111,27 @@ constructor THelmPinguin.create(map, offset: integer);
      self.width := 96;
      self.height := 96;
      self.currentPath := 1;
-
+     self.width := 96;
+     self.height := 96;
+     self.currentPath := 1;
+     self.hpBar.left := self.x + 24;
+     self.hpBar.top := self.y - 10;
+     self.hpBar.width := 50;
+     self.hpBar.height := 10;
+     self.hpBar.Visible := true;
+     self.hpBar.Position := 100;
+     self.hpBar.color := clred;
      // bild erstellen
 
      self.bild.Width := 96;
      self.bild.Height := 96;
      self.bild.stretch := true;
-     self.bild.Picture.LoadFromFile('images\Pinguin helm.png');
+     self.bild.Picture.LoadFromFile('images\Pinguin_helm.png');
      self.bild.left := self.x;
      self.bild.top := self.y;
      self.bild.Visible := True;
      self.hp := 150;
+     self.speed := 2;
    end;
 
 procedure TPinguin.laufen(map: integer);
@@ -242,7 +253,7 @@ begin
            end;
   end;
 end;
-procedure Tpinguin.attackcheck(map: integer; Kanguru: TKanguru; Kanguruart: string);
+{procedure Tpinguin.attackcheck(map: integer; Kanguru: TKanguru; Kanguruart: string);
 var i, j: integer;
 begin
   begin
@@ -267,7 +278,7 @@ end;
 
 
 end;
-  end;
+  end; }
 
 end.
 
