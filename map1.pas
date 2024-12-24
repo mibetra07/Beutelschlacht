@@ -89,13 +89,13 @@ type
     procedure Image6MouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure Image7Click(Sender: TObject);
-    procedure Timer1Timer(Sender: TObject);
     procedure Image3MouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure Image3MouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer
       );
     procedure Image3MouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
+    procedure Timer1Timer(Sender: TObject);
 
   private
   //fürs Platzieren
@@ -115,7 +115,7 @@ type
   var Zauberkanguru : array[1..100] of TZauberkanguru;
   var Ninjakanguru : array[1..100] of TNinjakanguru;
   var Eiskanguru : array[1..100] of TEiskanguru;
-
+      ticksPassed: integer;
   //Positionsvariablen zum platzieren der Kängurus
   var dx, dy : integer;
   procedure InitDrag(X, Y : integer; Button : TMouseButton);
@@ -288,6 +288,59 @@ begin
     end;
   end;
 end;
+
+procedure TForm5.Timer1Timer(Sender: TObject);
+  var i, j, switch: integer;
+begin
+           for i := 1 to 5 do
+           tick(5, 0, 0, 0, 0, 1, Pinguin[i]);
+           inc(ticksPassed);
+           for i := 1 to 100 do
+           if Pinguin[i] <> nil then
+           Pinguin[i].position := i;
+           for i := 1 to 100 do
+           if Pinguin[i] <> nil then
+           for j := 1 to 100 do
+               if Pinguin[j] <> nil then
+               begin
+               if (Pinguin[i].currentPath < 100) AND (Pinguin[i].currentPath > Pinguin[j].currentpath) AND (Pinguin[i].position < Pinguin[j].position) AND (Pinguin[i] <> nil) AND (Pinguin[j] <> nil) then
+                begin
+                  switch := Pinguin[i].Position;
+                  Pinguin[i].position := Pinguin[j].position;
+                  Pinguin[j].position := switch
+                end
+                else if (Pinguin[i].currentPath = Pinguin[j].currentPath)  AND (Pinguin[i] <> nil) AND (Pinguin[j] <> nil) then
+                begin
+                     if (Pinguin[i].currentPath < 100) AND (Path[Pinguin[i].currentPath].direction = 1) AND (Pinguin[i].x < Pinguin[j].x) AND (Pinguin[i] <> nil) AND (Pinguin[j] <> nil) then
+                     begin
+                  switch := Pinguin[i].Position;
+                  Pinguin[i].position := Pinguin[j].position;
+                  Pinguin[j].position := switch
+                     end
+                     else if (Pinguin[i].currentPath < 100) AND (Path[Pinguin[i].currentPath].direction = 2) AND (Pinguin[i].y < Pinguin[j].x) AND (Pinguin[i] <> nil) AND (Pinguin[j] <> nil) then
+                     begin
+                  switch := Pinguin[i].Position;
+                  Pinguin[i].position := Pinguin[j].position;
+                  Pinguin[j].position := switch
+                     end
+                     else if (Pinguin[i].currentPath < 100) AND (Path[Pinguin[i].currentPath].direction = 3) AND (Pinguin[i].y > Pinguin[j].x) AND (Pinguin[i] <> nil) AND (Pinguin[j] <> nil) then
+                     begin
+                  switch := Pinguin[i].Position;
+                  Pinguin[i].position := Pinguin[j].position;
+                  Pinguin[j].position := switch
+                     end
+                     else if (Pinguin[i].currentPath < 100) AND (Path[Pinguin[i].currentPath].direction = 4) AND (Pinguin[i].y < Pinguin[j].x) AND (Pinguin[i] <> nil) AND (Pinguin[j] <> nil) then
+                     begin
+                  switch := Pinguin[i].Position;
+                  Pinguin[i].position := Pinguin[j].position;
+                  Pinguin[j].position := switch
+                     end;
+
+                end;
+                end;
+
+end;
+
 //Bogen
 procedure TForm5.Image4MouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
@@ -514,13 +567,7 @@ begin
 end;
 
 //Timer
-procedure TForm5.Timer1Timer(Sender: TObject);
-var i: integer;
-begin
-           for i := 1 to 5 do
-           tick(5, 0, 0, 0, 0, 1, Pinguin[i]);
-           inc(ticksPassed);
-end;
+
 
 procedure TForm5.Button1Click(Sender: TObject);
 begin

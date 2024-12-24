@@ -4,15 +4,15 @@ unit Pinguin;
 
 interface
 
-Uses Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls, Path, ComCtrls;
+Uses Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls, Path, ComCtrls, kanguru;
 type TPinguin  = class
       public
-      x, y, width, height, art, armorlvl, hp, moved, currentPath:integer;
+      x, y, width, height, art, armorlvl, hp, moved, currentPath, position, speed:integer;
       bild: Timage;
       hpBar: TProgressBar;
       constructor create(map, offset: integer);
       procedure laufen(map: integer);
-      procedure attackcheck(map: integer);
+      procedure attackcheck(map: integer; Kanguru: Tkanguru; Kanguruart: string);
         end;
 
       THelmPinguin = class(TPinguin)
@@ -37,7 +37,7 @@ type TPinguin  = class
 
 implementation
 
-   Uses map2, map1, kanguru;
+   Uses map2, map1;
 
 constructor TPinguin.create(map, offset: integer);
    begin
@@ -85,6 +85,7 @@ constructor TPinguin.create(map, offset: integer);
      self.bild.top := self.y;
      self.bild.Visible := True;
      self.hp := 1000;
+     self.speed := 1;
      end;
 constructor THelmPinguin.create(map, offset: integer);
    begin
@@ -123,9 +124,9 @@ constructor THelmPinguin.create(map, offset: integer);
    end;
 
 procedure TPinguin.laufen(map: integer);
-var i, speed, normal: integer;
+var i, normal: integer;
 begin
-  speed := 5;
+  speed := self.speed;
   if map = 1 then
   begin
          if self.currentPath < 7 then
@@ -241,29 +242,30 @@ begin
            end;
   end;
 end;
-procedure Tpinguin.attackcheck(map: integer);
+procedure Tpinguin.attackcheck(map: integer; Kanguru: TKanguru; Kanguruart: string);
 var i, j: integer;
 begin
   begin
   // Prüfen, ob irgendein Teil von `self` innerhalb des Kreises liegt (von chatgpt)
-  for i := 1 to 5 do
-  begin
-  if Form5.Kanguru[i] <> nil then
+  if Kanguru <> nil then
     begin
-  if (Sqr(self.X + 48 - (Form5.Kanguru[1].attackradius.Left + Form5.Kanguru[1].attackradius.Width div 2)) +
-      Sqr(self.Y + 48 - (Form5.Kanguru[1].attackradius.Top + Form5.Kanguru[1].attackradius.Height div 2))
-      <= Sqr(Form5.Kanguru[1].attackradius.Width div 2)) or
-     (Sqr(self.X - (Form5.Kanguru[1].attackradius.Left + Form5.Kanguru[1].attackradius.Width div 2)) +
-      Sqr(self.Y - (Form5.Kanguru[1].attackradius.Top + Form5.Kanguru[1].attackradius.Height div 2))
-      <= Sqr(Form5.Kanguru[1].attackradius.Width div 2)) then
+  if (Sqr(self.X + 48 - (Kanguru.attackradius.Left + Kanguru.attackradius.Width div 2)) +
+      Sqr(self.Y + 48 - (Kanguru.attackradius.Top + Kanguru.attackradius.Height div 2))
+      <= Sqr(Kanguru.attackradius.Width div 2)) or
+     (Sqr(self.X - (Kanguru.attackradius.Left + Kanguru.attackradius.Width div 2)) +
+      Sqr(self.Y - (Kanguru.attackradius.Top + Kanguru.attackradius.Height div 2))
+      <= Sqr(Kanguru.attackradius.Width div 2)) then
   begin
-    self.hp := self.hp - 100;
+        self.hp := self.hp - Kanguru.damage div 5;
        self.hpBar.position := self.hp div 10;
-       Form5.Kanguru[1].bild.picture.LoadFromFile('Images\Pinguinboxer_Attack.png');
+       if Kanguruart = 'boxer' then
+          Kanguru.bild.picture.LoadFromFile('Images\Pinguinboxer_Attack.png')
+       else if Kanguruart = 'Bogen' then
+            Kanguru.bild.picture.LoadFromFile('Images\Bogenguru_Attack.png')
   end;
 end;
 
-end;
+
 end;
   end;
 
