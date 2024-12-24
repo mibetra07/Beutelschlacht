@@ -1,11 +1,11 @@
 object Form5: TForm5
-  Left = 1912
+  Left = -6
   Height = 991
-  Top = 0
+  Top = 1
   Width = 1902
   Caption = 'Form5'
-  ClientHeight = 991
-  ClientWidth = 1902
+  ClientHeight = 0
+  ClientWidth = 0
   OnCreate = FormCreate
   LCLVersion = '3.6.0.0'
   WindowState = wsFullScreen
@@ -614,6 +614,9 @@ object Form5: TForm5
     Top = 176
     Width = 106
     OnClick = Image4Click
+    OnMouseDown = Image4MouseDown
+    OnMouseMove = Image4MouseMove
+    OnMouseUp = Image4MouseUp
     Picture.Data = {
       1754506F727461626C654E6574776F726B477261706869634206000089504E47
       0D0A1A0A0000000D4948445200000020000000200806000000737A7AF4000001
@@ -675,6 +678,9 @@ object Form5: TForm5
     Top = 432
     Width = 106
     OnClick = Image6Click
+    OnMouseDown = Image6MouseDown
+    OnMouseMove = Image6MouseMove
+    OnMouseUp = Image6MouseUp
     Picture.Data = {
       1754506F727461626C654E6574776F726B47726170686963F004000089504E47
       0D0A1A0A0000000D4948445200000020000000200806000000737A7AF4000001
@@ -860,6 +866,9 @@ object Form5: TForm5
     Top = 304
     Width = 106
     OnClick = Image5Click
+    OnMouseDown = Image5MouseDown
+    OnMouseMove = Image5MouseMove
+    OnMouseUp = Image5MouseUp
     Picture.Data = {
       1754506F727461626C654E6574776F726B477261706869635205000089504E47
       0D0A1A0A0000000D4948445200000020000000200806000000737A7AF4000001

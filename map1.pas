@@ -68,8 +68,26 @@ type
     procedure Image2Click(Sender: TObject);
     procedure Image3Click(Sender: TObject);
     procedure Image4Click(Sender: TObject);
+    procedure Image4MouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure Image4MouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer
+      );
+    procedure Image4MouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
     procedure Image5Click(Sender: TObject);
+    procedure Image5MouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure Image5MouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer
+      );
+    procedure Image5MouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
     procedure Image6Click(Sender: TObject);
+    procedure Image6MouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure Image6MouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer
+      );
+    procedure Image6MouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
     procedure Image7Click(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure Image3MouseDown(Sender: TObject; Button: TMouseButton;
@@ -92,7 +110,7 @@ type
   var HelmPinguin: array[1..100] of THelmPinguin;
   var wave: array [1..100] of Twave;
 
-  var Kanguru : array[1..100] of Tkanguru;
+  var Kanguru : array[1..100] of TBoxerkanguru;
   var Bogenkanguru : array[1..100] of TBogenkanguru;
   var Zauberkanguru : array[1..100] of TZauberkanguru;
   var Ninjakanguru : array[1..100] of TNinjakanguru;
@@ -100,6 +118,7 @@ type
 
   //Positionsvariablen zum platzieren der Kängurus
   var dx, dy : integer;
+  procedure InitDrag(X, Y : integer; Button : TMouseButton);
   end;
 
 var
@@ -197,8 +216,9 @@ begin
 end;
 
 //Känguru platzieren mit Kollisionsabfrage
-procedure TForm5.Image3MouseDown(Sender: TObject; Button: TMouseButton;
-  Shift: TShiftState; X, Y: Integer);
+
+//Boxer
+procedure Tform5.InitDrag(X, Y : integer; Button : TMouseButton);
 begin
   if Button = mbLeft then
   begin
@@ -207,8 +227,13 @@ begin
     //Startposition der Maus speichern
     StartX := X;
     StartY := Y;
-
   end;
+end;
+
+procedure TForm5.Image3MouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  initDrag(X,Y,Button);
 end;
 
 procedure TForm5.Image3MouseMove(Sender: TObject; Shift: TShiftState; X,
@@ -222,15 +247,15 @@ begin
       begin
         DragThresholdReached := true;
         inc(kanguruzahl);
-        kanguru[Kanguruzahl] := Tkanguru.create(1, Mouse.CursorPos.X, Mouse.CursorPos.Y);
+        kanguru[Kanguruzahl] := TBoxerkanguru.create(1, Mouse.CursorPos.X, Mouse.CursorPos.Y);
       end;
     end;
     if DragThresholdReached then
     begin
       kanguru[kanguruzahl].bild.left := Mouse.CursorPos.X;
       kanguru[kanguruzahl].bild.top := Mouse.CursorPos.Y;
-      kanguru[kanguruzahl].attackradius.left := (Mouse.CursorPos.X + 48 - kanguru[kanguruzahl].range);
-      kanguru[kanguruzahl].attackradius.Top := (Mouse.CursorPos.Y + 48 - kanguru[kanguruzahl].range);
+      kanguru[kanguruzahl].attackradius.left := (Mouse.CursorPos.X + 48 - kanguru[kanguruzahl].range2);
+      kanguru[kanguruzahl].attackradius.Top := (Mouse.CursorPos.Y + 48 - kanguru[kanguruzahl].range2);
     end;
   end;
 end;
@@ -246,12 +271,11 @@ begin
     DragThresholdReached := False;
     //Schleife zur Kollisionsabfrage mit (fast) allen anderen Bildern
     CheckCollision(kanguru[kanguruzahl].bild, Image2, Collision);
-
     CheckMapCollision(kanguru[kanguruzahl].bild, MapCollision);
 
     if (Collision = true) or (MapCollision = true) then
     begin
-      kanguru[kanguruzahl].attackradius.free; //in destructor auslagern
+      kanguru[kanguruzahl].attackradius.free;
       kanguru[kanguruzahl].bild.free;
       kanguru[kanguruzahl].Free;
       dec(kanguruzahl);
@@ -264,8 +288,184 @@ begin
     end;
   end;
 end;
+//Bogen
+procedure TForm5.Image4MouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  InitDrag(X, Y, Button);
+end;
 
+procedure TForm5.Image4MouseMove(Sender: TObject; Shift: TShiftState; X,
+  Y: Integer);
+begin
+  if isDragging = true then
+  begin
+    if not DragThresholdReached then
+    begin
+      if (Abs(X - StartX) > DragThreshold) or (Abs(Y - StartY) > DragThreshold) then
+      begin
+        DragThresholdReached := true;
+        inc(bogenkanguruzahl);
+        bogenkanguru[bogenKanguruzahl] := TBogenkanguru.create(1, Mouse.CursorPos.X, Mouse.CursorPos.Y);
+      end;
+    end;
+    if DragThresholdReached then
+    begin
+      bogenkanguru[bogenkanguruzahl].bild.left := Mouse.CursorPos.X;
+      bogenkanguru[bogenkanguruzahl].bild.top := Mouse.CursorPos.Y;
+      bogenkanguru[bogenkanguruzahl].attackradius.left := (Mouse.CursorPos.X + 48 - bogenkanguru[bogenkanguruzahl].range2);
+      bogenkanguru[bogenkanguruzahl].attackradius.Top := (Mouse.CursorPos.Y + 48 - bogenkanguru[bogenkanguruzahl].range2);
+    end;
+  end;
+end;
 
+procedure TForm5.Image4MouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+var Collision, MapCollision : boolean;
+begin
+  if (Button = mbLeft) and (DragThresholdReached = true) then
+  begin
+    Collision := false;
+    isDragging := False;
+    DragThresholdReached := False;
+
+    //Schleife zur Kollisionsabfrage mit (fast) allen anderen Bildern
+    CheckCollision(kanguru[kanguruzahl].bild, Image2, Collision);
+    CheckMapCollision(kanguru[kanguruzahl].bild, MapCollision);
+
+    if (Collision = true) or (MapCollision = true) then
+    begin
+      bogenkanguru[bogenkanguruzahl].attackradius.free;
+      bogenkanguru[bogenkanguruzahl].bild.free;
+      bogenkanguru[bogenkanguruzahl].Free;
+      dec(bogenkanguruzahl);
+    end
+    else
+    begin
+      coins := coins - 2000;
+      bogenkanguru[bogenkanguruzahl].attackradius.visible := false;
+      bogenkanguru[bogenkanguruzahl].active := true;
+    end;
+  end;
+end;
+//Eis
+procedure TForm5.Image5MouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  initDrag(X,Y,Button);
+end;
+
+procedure TForm5.Image5MouseMove(Sender: TObject; Shift: TShiftState; X,
+  Y: Integer);
+begin
+  if isDragging = true then
+  begin
+    if not DragThresholdReached then
+    begin
+      if (Abs(X - StartX) > DragThreshold) or (Abs(Y - StartY) > DragThreshold) then
+      begin
+        DragThresholdReached := true;
+        inc(Eiskanguruzahl);
+        Eiskanguru[EisKanguruzahl] := TEiskanguru.create(1, Mouse.CursorPos.X, Mouse.CursorPos.Y);
+      end;
+    end;
+    if DragThresholdReached then
+    begin
+      Eiskanguru[Eiskanguruzahl].bild.left := Mouse.CursorPos.X;
+      Eiskanguru[Eiskanguruzahl].bild.top := Mouse.CursorPos.Y;
+      Eiskanguru[Eiskanguruzahl].attackradius.left := (Mouse.CursorPos.X + 48 - Eiskanguru[Eiskanguruzahl].range2);
+      Eiskanguru[Eiskanguruzahl].attackradius.Top := (Mouse.CursorPos.Y + 48 - Eiskanguru[Eiskanguruzahl].range2);
+    end;
+  end;
+end;
+
+procedure TForm5.Image5MouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+var Collision, MapCollision : boolean;
+begin
+  if (Button = mbLeft) and (DragThresholdReached = true) then
+  begin
+    Collision := false;
+    isDragging := False;
+    DragThresholdReached := False;
+    //Schleife zur Kollisionsabfrage mit (fast) allen anderen Bildern
+    CheckCollision(kanguru[kanguruzahl].bild, Image2, Collision);
+    CheckMapCollision(kanguru[kanguruzahl].bild, MapCollision);
+
+    if (Collision = true) or (MapCollision = true) then
+    begin
+      Eiskanguru[Eiskanguruzahl].attackradius.free;
+      Eiskanguru[Eiskanguruzahl].bild.free;
+      Eiskanguru[Eiskanguruzahl].Free;
+      dec(Eiskanguruzahl);
+    end
+    else
+    begin
+      coins := coins - 3000;
+      Eiskanguru[Eiskanguruzahl].attackradius.visible := false;
+      Eiskanguru[Eiskanguruzahl].active := true;
+    end;
+  end;
+end;
+//Ninja
+procedure TForm5.Image6MouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  initDrag(X,Y,Button);
+end;
+
+procedure TForm5.Image6MouseMove(Sender: TObject; Shift: TShiftState; X,
+  Y: Integer);
+begin
+  if isDragging = true then
+  begin
+    if not DragThresholdReached then
+    begin
+      if (Abs(X - StartX) > DragThreshold) or (Abs(Y - StartY) > DragThreshold) then
+      begin
+        DragThresholdReached := true;
+        inc(Ninjakanguruzahl);
+        Ninjakanguru[NinjaKanguruzahl] := TNinjakanguru.create(1, Mouse.CursorPos.X, Mouse.CursorPos.Y);
+      end;
+    end;
+    if DragThresholdReached then
+    begin
+      Ninjakanguru[Ninjakanguruzahl].bild.left := Mouse.CursorPos.X;
+      Ninjakanguru[Ninjakanguruzahl].bild.top := Mouse.CursorPos.Y;
+      Ninjakanguru[Ninjakanguruzahl].attackradius.left := (Mouse.CursorPos.X + 48 - Ninjakanguru[Ninjakanguruzahl].range2);
+      Ninjakanguru[Ninjakanguruzahl].attackradius.Top := (Mouse.CursorPos.Y + 48 - Ninjakanguru[Ninjakanguruzahl].range2);
+    end;
+  end;
+end;
+
+procedure TForm5.Image6MouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+var Collision, MapCollision : boolean;
+begin
+  if (Button = mbLeft) and (DragThresholdReached = true) then
+  begin
+    Collision := false;
+    isDragging := False;
+    DragThresholdReached := False;
+    //Schleife zur Kollisionsabfrage mit (fast) allen anderen Bildern
+    CheckCollision(Ninjakanguru[Ninjakanguruzahl].bild, Image2, Collision);
+    CheckMapCollision(Ninjakanguru[Ninjakanguruzahl].bild, MapCollision);
+
+    if (Collision = true) or (MapCollision = true) then
+    begin
+      Ninjakanguru[Ninjakanguruzahl].attackradius.free;
+      Ninjakanguru[Ninjakanguruzahl].bild.free;
+      Ninjakanguru[Ninjakanguruzahl].Free;
+      dec(Ninjakanguruzahl);
+    end
+    else
+    begin
+      coins := coins - 5000;
+      Ninjakanguru[Ninjakanguruzahl].attackradius.visible := false;
+      Ninjakanguru[Ninjakanguruzahl].active := true;
+    end;
+  end;
+end;
 
 //Zwischen Beschreibungen wechseln
 procedure TForm5.Image3Click(Sender: TObject);
