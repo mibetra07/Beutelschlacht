@@ -177,10 +177,10 @@ begin
          end
          else if self.currentPath >= 7 then
            begin
-           {self.currentPath := 100;
+           self.currentPath := 100;
            self.x := -10000;
            self.bild.left := self.x;
-           self.hpBar.Left := self.x; }
+           self.hpBar.Left := self.x;
            end;
   end
     else if map = 2 then
@@ -245,21 +245,27 @@ procedure Tpinguin.attackcheck(map: integer);
 var i, j: integer;
 begin
   begin
-  // Prüfen, ob irgendein Teil von `self` innerhalb des Kreises liegt von chatgpt
+  // Prüfen, ob irgendein Teil von `self` innerhalb des Kreises liegt (von chatgpt)
+  for i := 1 to 5 do
+  begin
+  if Form5.Kanguru[i] <> nil then
+    begin
   if (Sqr(self.X + 48 - (Form5.Kanguru[1].attackradius.Left + Form5.Kanguru[1].attackradius.Width div 2)) +
       Sqr(self.Y + 48 - (Form5.Kanguru[1].attackradius.Top + Form5.Kanguru[1].attackradius.Height div 2))
       <= Sqr(Form5.Kanguru[1].attackradius.Width div 2)) or
-
      (Sqr(self.X - (Form5.Kanguru[1].attackradius.Left + Form5.Kanguru[1].attackradius.Width div 2)) +
       Sqr(self.Y - (Form5.Kanguru[1].attackradius.Top + Form5.Kanguru[1].attackradius.Height div 2))
       <= Sqr(Form5.Kanguru[1].attackradius.Width div 2)) then
   begin
-    self.hp := self.hp - 2;
+    self.hp := self.hp - 100;
        self.hpBar.position := self.hp div 10;
+       Form5.Kanguru[1].bild.picture.LoadFromFile('Images\Pinguinboxer_Attack.png');
   end;
 end;
 
 end;
+end;
+  end;
 
 end.
 
