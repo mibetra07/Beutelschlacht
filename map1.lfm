@@ -1,11 +1,11 @@
 object Form5: TForm5
-  Left = -6
+  Left = 730
   Height = 991
-  Top = 1
+  Top = 304
   Width = 1902
   Caption = 'Form5'
-  ClientHeight = 0
-  ClientWidth = 0
+  ClientHeight = 991
+  ClientWidth = 1902
   OnCreate = FormCreate
   LCLVersion = '3.6.0.0'
   WindowState = wsFullScreen
@@ -984,9 +984,8 @@ object Form5: TForm5
     Stretch = True
   end
   object Timer1: TTimer
-    Enabled = False
-    Interval = 1
-    Left = 306
-    Top = 231
+    OnTimer = Timer1Timer
+    Left = 496
+    Top = 528
   end
 end
