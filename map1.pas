@@ -517,7 +517,9 @@ end;
 procedure TForm5.Timer1Timer(Sender: TObject);
 var i: integer;
 begin
-           tick(5, 5, 0, 0, 0, 1);
+           for i := 1 to 5 do
+           tick(5, 0, 0, 0, 0, 1, Pinguin[i]);
+           inc(ticksPassed);
 end;
 
 procedure TForm5.Button1Click(Sender: TObject);
