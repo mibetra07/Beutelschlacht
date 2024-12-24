@@ -73,19 +73,37 @@ end;
 procedure tick(normal, helm, schild, boss, tarn, map: integer; Pinguin: TPinguin);
 var i, j, speed: integer;
 begin
+  if Pinguin.hp <= 0 then
+     Pinguin.currentPath := 100;
   if map = 1 then
   begin
 
   for i := 1 to normal do
       begin
       Pinguin.laufen(1);
+      for j := 1 to 50 do
+          begin
+      if Form5.BogenKanguru[j] <> nil then
+      begin
        if (Form5.ticksPassed mod 20) = 0 then
         begin
-      Pinguin.attackcheck(1);
+      Pinguin.attackcheck(1, Form5.BogenKanguru[i], 'Bogen');
+      if Form5.ticksPassed mod 40 = 0 then
+      Form5.BogenKanguru[1].bild.picture.LoadFromFile('images\Bogenguru.png');
+      end;
+      end;
+       if Form5.Kanguru[j] <> nil then
+      begin
+       if (Form5.ticksPassed mod 20) = 0 then
+        begin
+      Pinguin.attackcheck(1, Form5.Kanguru[i], 'Boxer');
       if Form5.ticksPassed mod 40 = 0 then
       Form5.Kanguru[1].bild.picture.LoadFromFile('images\Boxerkanguru.png');
       end;
+      end;
   end;
+
+      end;
   for i := 1 to helm do
       //Form5.HelmPinguin[i].laufen(1);
   end
@@ -96,7 +114,6 @@ begin
   for i := 1 to helm do
       Form6.HelmPinguin[i].laufen(2);
   end;
-
 end;
 
 end.
