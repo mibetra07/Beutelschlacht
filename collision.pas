@@ -9,6 +9,7 @@ uses
 
 procedure CheckCollision(Image1, Image2 : TImage; var CollisionDetected : boolean);
 procedure CheckMapCollision(Image1 : TImage; var CollisionDetected : boolean);
+
 implementation
 
 uses map1, map2;

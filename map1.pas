@@ -31,11 +31,13 @@ type
     Image5: TImage;
     Image6: TImage;
     Image7: TImage;
+    Image8: TImage;
     Label1: TLabel;
     Label2: TLabel;
     Label3: TLabel;
     Label4: TLabel;
     Label5: TLabel;
+    Label6: TLabel;
     Memo1: TMemo;
     Memo2: TMemo;
     Memo3: TMemo;
@@ -89,13 +91,13 @@ type
     procedure Image6MouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure Image7Click(Sender: TObject);
-    procedure Timer1Timer(Sender: TObject);
     procedure Image3MouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure Image3MouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer
       );
     procedure Image3MouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
+    procedure Timer1Timer(Sender: TObject);
 
   private
   //fürs Platzieren
@@ -104,8 +106,8 @@ type
   const DragThreshold = 96; //minimale Mausbewegung in px, um Dragging/kaufen zu starten
   var Kanguruzahl, Bogenkanguruzahl, Eiskanguruzahl, Ninjakanguruzahl, Zauberkanguruzahl : integer;
   public
-  var coins : integer;
-  var Path: array[1..7] of Tpath; //genau festlegen
+  var coins, ticksPassed : integer;
+  var Path: array[1..7] of Tpath;
   var Pinguin: array[1..100] of TPinguin;
   var HelmPinguin: array[1..100] of THelmPinguin;
   var wave: array [1..100] of Twave;
@@ -115,7 +117,6 @@ type
   var Zauberkanguru : array[1..100] of TZauberkanguru;
   var Ninjakanguru : array[1..100] of TNinjakanguru;
   var Eiskanguru : array[1..100] of TEiskanguru;
-
   //Positionsvariablen zum platzieren der Kängurus
   var dx, dy : integer;
   procedure InitDrag(X, Y : integer; Button : TMouseButton);
@@ -137,6 +138,7 @@ procedure TForm5.FormCreate(Sender: TObject);
 var i : integer;
 begin
   randomize();
+   coins := 3000;
    //Weg der Map erstellen (dir, left, top, breit, hoch, map: integer)
    Path[1] := TPath.create(1, 100, 500, 500, 100, 1);
    Path[2] := Tpath.create(2, 600, 500, 100, 400, 1);
@@ -217,7 +219,6 @@ begin
 end;
 
 //Känguru platzieren mit Kollisionsabfrage
-
 procedure Tform5.CheckAllCollision(firstImage : TImage; var CollisionDetected : boolean);
 var i : integer; Collision : boolean;
 begin
@@ -286,7 +287,7 @@ begin
       exit();
     end;
   end;
-  //Pfad
+  //Pfade
   for i:=1 to (Length(Path)) do
   begin
     CheckCollision(firstImage, Path[i].bild, Collision);
@@ -359,7 +360,7 @@ begin
     DragThresholdReached := False;
 
     CheckAllCollision(kanguru[kanguruzahl].bild, Collision);
-    if (Collision = true) then
+    if (Collision = true) or (coins - kanguru[kanguruzahl].value < 0) then
     begin
       kanguru[kanguruzahl].attackradius.free;
       kanguru[kanguruzahl].bild.free;
@@ -368,12 +369,65 @@ begin
     end
     else
     begin
-      coins := coins - 1000;
+      coins := coins - kanguru[kanguruzahl].value;
       kanguru[kanguruzahl].attackradius.visible := false;
       kanguru[kanguruzahl].active := true;
     end;
   end;
 end;
+
+procedure TForm5.Timer1Timer(Sender: TObject);
+  var i, j, switch: integer;
+begin
+           {for i := 1 to 5 do
+           tick(5, 0, 0, 0, 0, 1, Pinguin[i]);
+           inc(ticksPassed);
+           for i := 1 to 100 do
+           if Pinguin[i] <> nil then
+           Pinguin[i].position := i;
+           for i := 1 to 100 do
+           if Pinguin[i] <> nil then
+           for j := 1 to 100 do
+               if Pinguin[j] <> nil then
+               begin
+               if (Pinguin[i].currentPath < 100) AND (Pinguin[i].currentPath > Pinguin[j].currentpath) AND (Pinguin[i].position < Pinguin[j].position) AND (Pinguin[i] <> nil) AND (Pinguin[j] <> nil) then
+                begin
+                  switch := Pinguin[i].Position;
+                  Pinguin[i].position := Pinguin[j].position;
+                  Pinguin[j].position := switch
+                end
+                else if (Pinguin[i].currentPath = Pinguin[j].currentPath)  AND (Pinguin[i] <> nil) AND (Pinguin[j] <> nil) then
+                begin
+                     if (Pinguin[i].currentPath < 100) AND (Path[Pinguin[i].currentPath].direction = 1) AND (Pinguin[i].x < Pinguin[j].x) AND (Pinguin[i] <> nil) AND (Pinguin[j] <> nil) then
+                     begin
+                  switch := Pinguin[i].Position;
+                  Pinguin[i].position := Pinguin[j].position;
+                  Pinguin[j].position := switch
+                     end
+                     else if (Pinguin[i].currentPath < 100) AND (Path[Pinguin[i].currentPath].direction = 2) AND (Pinguin[i].y < Pinguin[j].x) AND (Pinguin[i] <> nil) AND (Pinguin[j] <> nil) then
+                     begin
+                  switch := Pinguin[i].Position;
+                  Pinguin[i].position := Pinguin[j].position;
+                  Pinguin[j].position := switch
+                     end
+                     else if (Pinguin[i].currentPath < 100) AND (Path[Pinguin[i].currentPath].direction = 3) AND (Pinguin[i].y > Pinguin[j].x) AND (Pinguin[i] <> nil) AND (Pinguin[j] <> nil) then
+                     begin
+                  switch := Pinguin[i].Position;
+                  Pinguin[i].position := Pinguin[j].position;
+                  Pinguin[j].position := switch
+                     end
+                     else if (Pinguin[i].currentPath < 100) AND (Path[Pinguin[i].currentPath].direction = 4) AND (Pinguin[i].y < Pinguin[j].x) AND (Pinguin[i] <> nil) AND (Pinguin[j] <> nil) then
+                     begin
+                  switch := Pinguin[i].Position;
+                  Pinguin[i].position := Pinguin[j].position;
+                  Pinguin[j].position := switch
+                     end;
+
+                end;
+                end;}
+
+end;
+
 //Bogen
 procedure TForm5.Image4MouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
@@ -383,6 +437,7 @@ end;
 
 procedure TForm5.Image4MouseMove(Sender: TObject; Shift: TShiftState; X,
   Y: Integer);
+var Collision : boolean;
 begin
   if isDragging = true then
   begin
@@ -401,6 +456,12 @@ begin
       bogenkanguru[bogenkanguruzahl].bild.top := Mouse.CursorPos.Y;
       bogenkanguru[bogenkanguruzahl].attackradius.left := (Mouse.CursorPos.X + 48 - bogenkanguru[bogenkanguruzahl].range2);
       bogenkanguru[bogenkanguruzahl].attackradius.Top := (Mouse.CursorPos.Y + 48 - bogenkanguru[bogenkanguruzahl].range2);
+      //Radius rot färben wenn versperrte Position
+      CheckAllCollision(bogenkanguru[bogenkanguruzahl].bild, Collision);
+      if (Collision = true) then
+        bogenkanguru[bogenkanguruzahl].attackradius.brush.Color:=clMaroon
+      else
+        bogenkanguru[bogenkanguruzahl].attackradius.brush.Color:=clGray;
     end;
   end;
 end;
@@ -415,11 +476,8 @@ begin
     isDragging := False;
     DragThresholdReached := False;
 
-    //Schleife zur Kollisionsabfrage mit (fast) allen anderen Bildern
-    CheckCollision(kanguru[kanguruzahl].bild, Image2, Collision);
-    CheckMapCollision(kanguru[kanguruzahl].bild, MapCollision);
-
-    if (Collision = true) or (MapCollision = true) then
+    CheckAllCollision(bogenkanguru[bogenkanguruzahl].bild, Collision);
+    if (Collision = true) or (coins - bogenkanguru[bogenkanguruzahl].value < 0) then
     begin
       bogenkanguru[bogenkanguruzahl].attackradius.free;
       bogenkanguru[bogenkanguruzahl].bild.free;
@@ -428,7 +486,7 @@ begin
     end
     else
     begin
-      coins := coins - 2000;
+      coins := coins - bogenkanguru[bogenkanguruzahl].value;
       bogenkanguru[bogenkanguruzahl].attackradius.visible := false;
       bogenkanguru[bogenkanguruzahl].active := true;
     end;
@@ -443,6 +501,7 @@ end;
 
 procedure TForm5.Image5MouseMove(Sender: TObject; Shift: TShiftState; X,
   Y: Integer);
+var Collision : boolean;
 begin
   if isDragging = true then
   begin
@@ -461,6 +520,12 @@ begin
       Eiskanguru[Eiskanguruzahl].bild.top := Mouse.CursorPos.Y;
       Eiskanguru[Eiskanguruzahl].attackradius.left := (Mouse.CursorPos.X + 48 - Eiskanguru[Eiskanguruzahl].range2);
       Eiskanguru[Eiskanguruzahl].attackradius.Top := (Mouse.CursorPos.Y + 48 - Eiskanguru[Eiskanguruzahl].range2);
+      //Radius rot färben wenn versperrte Position
+      CheckAllCollision(Eiskanguru[Eiskanguruzahl].bild, Collision);
+      if (Collision = true) then
+        Eiskanguru[Eiskanguruzahl].attackradius.brush.Color:=clMaroon
+      else
+        Eiskanguru[Eiskanguruzahl].attackradius.brush.Color:=clGray;
     end;
   end;
 end;
@@ -474,11 +539,9 @@ begin
     Collision := false;
     isDragging := False;
     DragThresholdReached := False;
-    //Schleife zur Kollisionsabfrage mit (fast) allen anderen Bildern
-    CheckCollision(kanguru[kanguruzahl].bild, Image2, Collision);
-    CheckMapCollision(kanguru[kanguruzahl].bild, MapCollision);
 
-    if (Collision = true) or (MapCollision = true) then
+    CheckAllCollision(Eiskanguru[Eiskanguruzahl].bild, Collision);
+    if (Collision = true) or (coins - Eiskanguru[Eiskanguruzahl].value < 0) then
     begin
       Eiskanguru[Eiskanguruzahl].attackradius.free;
       Eiskanguru[Eiskanguruzahl].bild.free;
@@ -487,7 +550,7 @@ begin
     end
     else
     begin
-      coins := coins - 3000;
+      coins := coins - Eiskanguru[Eiskanguruzahl].value;
       Eiskanguru[Eiskanguruzahl].attackradius.visible := false;
       Eiskanguru[Eiskanguruzahl].active := true;
     end;
@@ -502,6 +565,7 @@ end;
 
 procedure TForm5.Image6MouseMove(Sender: TObject; Shift: TShiftState; X,
   Y: Integer);
+var Collision : boolean;
 begin
   if isDragging = true then
   begin
@@ -520,6 +584,12 @@ begin
       Ninjakanguru[Ninjakanguruzahl].bild.top := Mouse.CursorPos.Y;
       Ninjakanguru[Ninjakanguruzahl].attackradius.left := (Mouse.CursorPos.X + 48 - Ninjakanguru[Ninjakanguruzahl].range2);
       Ninjakanguru[Ninjakanguruzahl].attackradius.Top := (Mouse.CursorPos.Y + 48 - Ninjakanguru[Ninjakanguruzahl].range2);
+      //Radius rot färben wenn versperrte Position
+      CheckAllCollision(Ninjakanguru[Ninjakanguruzahl].bild, Collision);
+      if (Collision = true) then
+        Ninjakanguru[Ninjakanguruzahl].attackradius.brush.Color:=clMaroon
+      else
+        Ninjakanguru[Ninjakanguruzahl].attackradius.brush.Color:=clGray;
     end;
   end;
 end;
@@ -533,11 +603,9 @@ begin
     Collision := false;
     isDragging := False;
     DragThresholdReached := False;
-    //Schleife zur Kollisionsabfrage mit (fast) allen anderen Bildern
-    CheckCollision(Ninjakanguru[Ninjakanguruzahl].bild, Image2, Collision);
-    CheckMapCollision(Ninjakanguru[Ninjakanguruzahl].bild, MapCollision);
 
-    if (Collision = true) or (MapCollision = true) then
+    CheckAllCollision(Ninjakanguru[Ninjakanguruzahl].bild, Collision);
+    if (Collision = true) or (coins - Ninjakanguru[Ninjakanguruzahl].value < 0) then
     begin
       Ninjakanguru[Ninjakanguruzahl].attackradius.free;
       Ninjakanguru[Ninjakanguruzahl].bild.free;
@@ -546,12 +614,14 @@ begin
     end
     else
     begin
-      coins := coins - 5000;
+      coins := coins - Ninjakanguru[Ninjakanguruzahl].value;
       Ninjakanguru[Ninjakanguruzahl].attackradius.visible := false;
       Ninjakanguru[Ninjakanguruzahl].active := true;
     end;
   end;
 end;
+//Zauberer
+
 
 //Zwischen Beschreibungen wechseln
 procedure TForm5.Image3Click(Sender: TObject);
@@ -600,11 +670,7 @@ begin
 end;
 
 //Timer
-procedure TForm5.Timer1Timer(Sender: TObject);
-var i: integer;
-begin
-           tick(5, 5, 0, 0, 0, 1);
-end;
+
 
 procedure TForm5.Button1Click(Sender: TObject);
 begin
