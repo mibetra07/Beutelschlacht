@@ -102,23 +102,24 @@ type
   private
   //fürs Platzieren
   var isDragging, DragThresholdReached : boolean;
-  var StartX, StartY : integer;
+      StartX, StartY : integer;
   const DragThreshold = 96; //minimale Mausbewegung in px, um Dragging/kaufen zu starten
   var Kanguruzahl, Bogenkanguruzahl, Eiskanguruzahl, Ninjakanguruzahl, Zauberkanguruzahl : integer;
   public
-  var coins, ticksPassed : integer;
   var Path: array[1..7] of Tpath;
-  var Pinguin: array[1..100] of TPinguin;
-  var HelmPinguin: array[1..100] of THelmPinguin;
-  var wave: array [1..100] of Twave;
+   Pinguin: array[1..100] of TPinguin;
+   HelmPinguin: array[1..100] of THelmPinguin;
+   wave: array [1..100] of Twave;
 
-  var Kanguru : array[1..100] of TBoxerkanguru;
-  var Bogenkanguru : array[1..100] of TBogenkanguru;
-  var Zauberkanguru : array[1..100] of TZauberkanguru;
-  var Ninjakanguru : array[1..100] of TNinjakanguru;
-  var Eiskanguru : array[1..100] of TEiskanguru;
+   Kanguru : array[1..100] of TBoxerkanguru;
+   Bogenkanguru : array[1..100] of TBogenkanguru;
+   Zauberkanguru : array[1..100] of TZauberkanguru;
+   Ninjakanguru : array[1..100] of TNinjakanguru;
+   Eiskanguru : array[1..100] of TEiskanguru;
   //Positionsvariablen zum platzieren der Kängurus
-  var dx, dy : integer;
+  dx, dy: integer;
+  //tick variablen und Münzen
+  ticksPassed, slowedTick, coins: integer;
   procedure InitDrag(X, Y : integer; Button : TMouseButton);
   procedure CheckAllCollision(firstImage : TImage; var CollisionDetected : boolean);
   end;
@@ -138,7 +139,7 @@ procedure TForm5.FormCreate(Sender: TObject);
 var i : integer;
 begin
   randomize();
-   coins := 3000;
+   coins := 300000;
    //Weg der Map erstellen (dir, left, top, breit, hoch, map: integer)
    Path[1] := TPath.create(1, 100, 500, 500, 100, 1);
    Path[2] := Tpath.create(2, 600, 500, 100, 400, 1);
@@ -148,8 +149,9 @@ begin
    Path[6] := Tpath.create(2, 1300, 200, 100, 500, 1);
    Path[7] := Tpath.create(1, 1300, 700, 1000, 100, 1);
    wave[1] := Twave.create(5, 5, 0, 0, 0, 1);
-   Timer1.Enabled := false;
+   Timer1.enabled := false;
    Timer1.interval := 5;
+
 
    //Känguruzählervariablen
    Kanguruzahl := 0;
@@ -211,6 +213,63 @@ begin
    Groupbox6.visible:=false;
 end;
 
+procedure TForm5.Timer1Timer(Sender: TObject);
+var i, j, switch: integer;
+begin
+         for i := 1 to 5 do
+         begin
+         tick(1, Pinguin[i]);
+         //tick(1, HelmPinguin[i]);
+         end;
+         inc(ticksPassed);
+         for i := 1 to 100 do  //Positionssystem --> Rechnet aus welcher Pinguin ganz vorne ist
+         if Pinguin[i] <> nil then
+         begin
+         Pinguin[i].position := i;
+         //HelmPinguin[i].position := i + 5;
+         end;
+         for i := 1 to 100 do
+         if Pinguin[i] <> nil then
+         for j := 1 to 100 do
+             if Pinguin[j] <> nil then
+             begin
+             if (Pinguin[i].currentPath < 100) AND (Pinguin[i].currentPath > Pinguin[j].currentpath) AND (Pinguin[i].position < Pinguin[j].position) AND (Pinguin[i] <> nil) AND (Pinguin[j] <> nil) then
+              begin
+                switch := Pinguin[i].Position;
+                Pinguin[i].position := Pinguin[j].position;
+                Pinguin[j].position := switch
+              end
+              else if (Pinguin[i].currentPath = Pinguin[j].currentPath)  AND (Pinguin[i] <> nil) AND (Pinguin[j] <> nil) then
+              begin
+                   if (Pinguin[i].currentPath < 100) AND (Path[Pinguin[i].currentPath].direction = 1) AND (Pinguin[i].x < Pinguin[j].x) AND (Pinguin[i] <> nil) AND (Pinguin[j] <> nil) then
+                   begin
+                switch := Pinguin[i].Position;
+                Pinguin[i].position := Pinguin[j].position;
+                Pinguin[j].position := switch
+                   end
+                   else if (Pinguin[i].currentPath < 100) AND (Path[Pinguin[i].currentPath].direction = 2) AND (Pinguin[i].y < Pinguin[j].x) AND (Pinguin[i] <> nil) AND (Pinguin[j] <> nil) then
+                   begin
+                switch := Pinguin[i].Position;
+                Pinguin[i].position := Pinguin[j].position;
+                Pinguin[j].position := switch
+                   end
+                   else if (Pinguin[i].currentPath < 100) AND (Path[Pinguin[i].currentPath].direction = 3) AND (Pinguin[i].y > Pinguin[j].x) AND (Pinguin[i] <> nil) AND (Pinguin[j] <> nil) then
+                   begin
+                switch := Pinguin[i].Position;
+                Pinguin[i].position := Pinguin[j].position;
+                Pinguin[j].position := switch
+                   end
+                   else if (Pinguin[i].currentPath < 100) AND (Path[Pinguin[i].currentPath].direction = 4) AND (Pinguin[i].y < Pinguin[j].x) AND (Pinguin[i] <> nil) AND (Pinguin[j] <> nil) then
+                   begin
+                switch := Pinguin[i].Position;
+                Pinguin[i].position := Pinguin[j].position;
+                Pinguin[j].position := switch
+                   end;
+
+              end;
+              end;
+
+end;
 //Form wechseln
 procedure TForm5.Image2Click(Sender: TObject);
 begin
@@ -374,58 +433,6 @@ begin
       kanguru[kanguruzahl].active := true;
     end;
   end;
-end;
-
-procedure TForm5.Timer1Timer(Sender: TObject);
-  var i, j, switch: integer;
-begin
-           {for i := 1 to 5 do
-           tick(5, 0, 0, 0, 0, 1, Pinguin[i]);
-           inc(ticksPassed);
-           for i := 1 to 100 do
-           if Pinguin[i] <> nil then
-           Pinguin[i].position := i;
-           for i := 1 to 100 do
-           if Pinguin[i] <> nil then
-           for j := 1 to 100 do
-               if Pinguin[j] <> nil then
-               begin
-               if (Pinguin[i].currentPath < 100) AND (Pinguin[i].currentPath > Pinguin[j].currentpath) AND (Pinguin[i].position < Pinguin[j].position) AND (Pinguin[i] <> nil) AND (Pinguin[j] <> nil) then
-                begin
-                  switch := Pinguin[i].Position;
-                  Pinguin[i].position := Pinguin[j].position;
-                  Pinguin[j].position := switch
-                end
-                else if (Pinguin[i].currentPath = Pinguin[j].currentPath)  AND (Pinguin[i] <> nil) AND (Pinguin[j] <> nil) then
-                begin
-                     if (Pinguin[i].currentPath < 100) AND (Path[Pinguin[i].currentPath].direction = 1) AND (Pinguin[i].x < Pinguin[j].x) AND (Pinguin[i] <> nil) AND (Pinguin[j] <> nil) then
-                     begin
-                  switch := Pinguin[i].Position;
-                  Pinguin[i].position := Pinguin[j].position;
-                  Pinguin[j].position := switch
-                     end
-                     else if (Pinguin[i].currentPath < 100) AND (Path[Pinguin[i].currentPath].direction = 2) AND (Pinguin[i].y < Pinguin[j].x) AND (Pinguin[i] <> nil) AND (Pinguin[j] <> nil) then
-                     begin
-                  switch := Pinguin[i].Position;
-                  Pinguin[i].position := Pinguin[j].position;
-                  Pinguin[j].position := switch
-                     end
-                     else if (Pinguin[i].currentPath < 100) AND (Path[Pinguin[i].currentPath].direction = 3) AND (Pinguin[i].y > Pinguin[j].x) AND (Pinguin[i] <> nil) AND (Pinguin[j] <> nil) then
-                     begin
-                  switch := Pinguin[i].Position;
-                  Pinguin[i].position := Pinguin[j].position;
-                  Pinguin[j].position := switch
-                     end
-                     else if (Pinguin[i].currentPath < 100) AND (Path[Pinguin[i].currentPath].direction = 4) AND (Pinguin[i].y < Pinguin[j].x) AND (Pinguin[i] <> nil) AND (Pinguin[j] <> nil) then
-                     begin
-                  switch := Pinguin[i].Position;
-                  Pinguin[i].position := Pinguin[j].position;
-                  Pinguin[j].position := switch
-                     end;
-
-                end;
-                end;}
-
 end;
 
 //Bogen

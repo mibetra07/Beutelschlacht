@@ -36,27 +36,30 @@ end;
 procedure tick(map: integer; Pinguin: TPinguin);
 var i, j, speed: integer;
 begin
+  // WITH DO EINFÜGEN !!!!
+  //!!!!!
+  //!!!!!
   Pinguin.laufen(1);
-  if Pinguin.hp <= 0 then
+  if Pinguin.hp <= 0 then //wenn Pinguin tot dann weg
      Pinguin.currentPath := 100;
   if map = 1 then
   begin
       if Pinguin <> nil then
       Pinguin.laufen(1);
-      for j := 1 to 50 do
+      for j := 1 to 50 do   //für hedes Känguru: angriff auf Pinguine; Attackframe rein
           begin
       if Form5.BogenKanguru[j] <> nil then
       begin
-       if (Form5.ticksPassed mod 20) = 0 then
+       if (Form5.ticksPassed mod 20) = 0 then  //alle so und so viel sekunden
         begin
       Form5.BogenKanguru[j].attack(1, Pinguin, 'Bogen');
-      if Form5.ticksPassed mod 40 = 0 then
-      Form5.BogenKanguru[1].bild.picture.LoadFromFile('images\Bogenguru.png');
+      if (Form5.ticksPassed mod 40 = 0) and (Form5.BogenKanguru[j] <> nil) and (Form5.BogenKanguru[j].active = true)then
+      Form5.BogenKanguru[1].bild.picture.LoadFromFile('images\Bogenguru.png'); //alle anderen so und so viel sekunden
       end;
       end;
        if Form5.Kanguru[j] <> nil then
       begin
-       if (Form5.ticksPassed mod 20) = 0 then
+       if (Form5.ticksPassed mod 40 = 0) and (Form5.Kanguru[j] <> nil) and (Form5.Kanguru[j].active = true) then
         begin
       Form5.Kanguru[j].attack(1, Pinguin, 'Boxer');
       if Form5.ticksPassed mod 40 = 0 then
@@ -65,7 +68,7 @@ begin
       end;
        if Form5.EisKanguru[j] <> nil then
       begin
-       if (Form5.ticksPassed mod 20) = 0 then
+       if (Form5.ticksPassed mod 40 = 0) and (Form5.EisKanguru[j] <> nil) and (Form5.EisKanguru[j].active = true) then
         begin
       Form5.EisKanguru[j].attack(1, Pinguin, 'Eis');
       if Form5.ticksPassed mod 40 = 0 then
