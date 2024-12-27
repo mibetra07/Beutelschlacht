@@ -6,24 +6,31 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
-  Menus, Path, Pinguin, wave, kanguru, Collision;
+  Menus, Buttons, Path, Pinguin, wave, kanguru, Collision;
 
 type
 
   { TForm5 }
 
   TForm5 = class(TForm)
+    BitBtn1: TBitBtn;
     Button1: TButton;
     Button2: TButton;
     Button3: TButton;
     Button4: TButton;
     Button5: TButton;
     Button6: TButton;
+    Button7: TButton;
+    Button8: TButton;
+    Button9: TButton;
+    Button10: TButton;
+    Button11: TButton;
     GroupBox2: TGroupBox;
     GroupBox3: TGroupBox;
     GroupBox4: TGroupBox;
     GroupBox5: TGroupBox;
     GroupBox6: TGroupBox;
+    GroupBox7: TGroupBox;
     Image1: TImage;
     Image2: TImage;
     Image3: TImage;
@@ -38,6 +45,11 @@ type
     Label4: TLabel;
     Label5: TLabel;
     Label6: TLabel;
+    Label7: TLabel;
+    Label8: TLabel;
+    Label9: TLabel;
+    Label10: TLabel;
+    Label11: TLabel;
     Memo1: TMemo;
     Memo2: TMemo;
     Memo3: TMemo;
@@ -53,6 +65,11 @@ type
     Panel7: TPanel;
     Panel8: TPanel;
     Panel9: TPanel;
+    Panel11: TPanel;
+    Panel12: TPanel;
+    Panel13: TPanel;
+    Panel14: TPanel;
+    Panel15: TPanel;
     Shape1: TShape;
     Shape2: TShape;
     Shape3: TShape;
@@ -60,12 +77,14 @@ type
     Shape5: TShape;
     Shape6: TShape;
     Timer1: TTimer;
+    procedure BitBtn1Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
     procedure Button5Click(Sender: TObject);
     procedure Button6Click(Sender: TObject);
+    procedure Button7Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure Image2Click(Sender: TObject);
     procedure Image3Click(Sender: TObject);
@@ -122,6 +141,7 @@ type
   ticksPassed, slowedTick, coins: integer;
   procedure InitDrag(X, Y : integer; Button : TMouseButton);
   procedure CheckAllCollision(firstImage : TImage; var CollisionDetected : boolean);
+  //procedure sellKanguru();
   end;
 
 var
@@ -629,6 +649,11 @@ begin
 end;
 //Zauberer
 
+//Känguru verkaufen
+procedure sellKanguru();
+begin
+
+end;
 
 //Zwischen Beschreibungen wechseln
 procedure TForm5.Image3Click(Sender: TObject);
@@ -685,6 +710,11 @@ begin
   Timer1.enabled := true;
 end;
 
+procedure TForm5.BitBtn1Click(Sender: TObject);
+begin
+  sellkanguru();
+end;
+
 //Beschreibungen schließen
 procedure TForm5.Button2Click(Sender: TObject);
 begin
@@ -709,6 +739,11 @@ end;
 procedure TForm5.Button6Click(Sender: TObject);
 begin
   Groupbox6.visible := false;
+end;
+
+procedure TForm5.Button7Click(Sender: TObject);
+begin
+  Groupbox7.visible := false;
 end;
 
 end.

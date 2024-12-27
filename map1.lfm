@@ -1,11 +1,11 @@
 object Form5: TForm5
-  Left = 1903
+  Left = -7
   Height = 991
   Top = 0
   Width = 1902
   Caption = 'Form5'
-  ClientHeight = 991
-  ClientWidth = 1902
+  ClientHeight = 0
+  ClientWidth = 0
   OnCreate = FormCreate
   LCLVersion = '3.6.0.0'
   WindowState = wsFullScreen
@@ -1152,6 +1152,13 @@ object Form5: TForm5
       Width = 17
       Caption = '0/1'
     end
+    object Label11: TLabel
+      Left = 176
+      Height = 15
+      Top = 576
+      Width = 38
+      Caption = '?Value?'
+    end
     object BitBtn1: TBitBtn
       Left = 16
       Height = 36
@@ -1162,13 +1169,6 @@ object Form5: TForm5
       OnClick = BitBtn1Click
       ParentFont = False
       TabOrder = 10
-    end
-    object Label11: TLabel
-      Left = 176
-      Height = 15
-      Top = 576
-      Width = 38
-      Caption = '?Value?'
     end
   end
   object Timer1: TTimer
