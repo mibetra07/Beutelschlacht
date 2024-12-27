@@ -88,7 +88,7 @@ end;
 
 procedure TForm6.Timer1Timer(Sender: TObject);
 begin
-  tick(5, 0, 0, 0 ,0, 2, Pinguin[1]);
+  tick(2, Pinguin[1]);
 end;
 
  procedure TForm6.Button1Click(Sender: TObject);

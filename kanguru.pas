@@ -5,7 +5,7 @@ unit kanguru;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls, Path;
+  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls, Path, Pinguin;
 
 type TKanguru = class
   public
@@ -18,7 +18,7 @@ type TKanguru = class
     cancamo : boolean;
     active : boolean;
     constructor create(map, x, y, range : integer);
-    procedure attack();
+    procedure attack(map: integer; Pinguin: TPinguin; Kanguruart: string);
   end;
 
   TBoxerkanguru = class(TKanguru)
@@ -142,9 +142,34 @@ constructor Tkanguru.create(map, x, y, range : integer);
 
   end;
 
-  procedure Tkanguru.attack();
+  procedure Tkanguru.attack(map: integer; Pinguin: TPinguin; Kanguruart: string);
+  var i, j: integer;
+begin
+  // Prüfen, ob irgendein Teil von `Pinguin` innerhalb des Kreises liegt (von chatgpt)
+  if self <> nil then
+    begin
+  if  (self.active = true)and ((Sqr(Pinguin.X + 48 - (self.attackradius.Left + self.attackradius.Width div 2)) +
+      Sqr(Pinguin.Y + 48 - (self.attackradius.Top + self.attackradius.Height div 2))
+      <= Sqr(self.attackradius.Width div 2)) or
+     (Sqr(Pinguin.X - (self.attackradius.Left + self.attackradius.Width div 2)) +
+      Sqr(Pinguin.Y - (self.attackradius.Top + self.attackradius.Height div 2))
+      <= Sqr(self.attackradius.Width div 2))) then
   begin
-
+       Pinguin.hp := Pinguin.hp - self.damage div 10;
+       Pinguin.hpBar.position := Pinguin.hp div 10;
+       if (Kanguruart = 'Eis') AND (Pinguin.slowed = false)then
+       begin
+       Pinguin.speed := Pinguin.speed div 2;
+       Pinguin.slowed := true;
+       Form5.slowedTick := Form5.ticksPassed;
+       end;
+       if Kanguruart = 'Boxer' then
+          self.bild.picture.LoadFromFile('Images\Pinguinboxer_Attack.png')
+       else if Kanguruart = 'Bogen' then
+            self.bild.picture.LoadFromFile('Images\Bogenguru_Attack.png');
   end;
+  end;
+  end;
+
 end.
 
