@@ -86,6 +86,7 @@ type
     procedure Button6Click(Sender: TObject);
     procedure Button7Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure Image1Click(Sender: TObject);
     procedure Image2Click(Sender: TObject);
     procedure Image3Click(Sender: TObject);
     procedure Image4Click(Sender: TObject);
@@ -119,29 +120,36 @@ type
     procedure Timer1Timer(Sender: TObject);
 
   private
-  //fürs Platzieren
-  var isDragging, DragThresholdReached : boolean;
-      StartX, StartY : integer;
-  const DragThreshold = 96; //minimale Mausbewegung in px, um Dragging/kaufen zu starten
-  var Kanguruzahl, Bogenkanguruzahl, Eiskanguruzahl, Ninjakanguruzahl, Zauberkanguruzahl : integer;
-  public
-  var Path: array[1..7] of Tpath;
-   Pinguin: array[1..100] of TPinguin;
-   HelmPinguin: array[1..100] of THelmPinguin;
-   wave: array [1..100] of Twave;
+    //fürs Platzieren
+    var isDragging, DragThresholdReached : boolean;
+    StartX, StartY : integer;
+    const DragThreshold = 96; //minimale Mausbewegung in px, um Dragging/kaufen zu starten
+    var Kanguruzahl, Bogenkanguruzahl, Eiskanguruzahl, Ninjakanguruzahl, Zauberkanguruzahl : integer;
 
-   Kanguru : array[1..100] of TBoxerkanguru;
-   Bogenkanguru : array[1..100] of TBogenkanguru;
-   Zauberkanguru : array[1..100] of TZauberkanguru;
-   Ninjakanguru : array[1..100] of TNinjakanguru;
-   Eiskanguru : array[1..100] of TEiskanguru;
+  public
+    var Path: array[1..7] of Tpath;
+    Pinguin: array[1..100] of TPinguin;
+    HelmPinguin: array[1..100] of THelmPinguin;
+    wave: array [1..100] of Twave;
+
+    Kanguru : array[1..100] of TBoxerkanguru;
+    Bogenkanguru : array[1..100] of TBogenkanguru;
+    Zauberkanguru : array[1..100] of TZauberkanguru;
+    Ninjakanguru : array[1..100] of TNinjakanguru;
+    Eiskanguru : array[1..100] of TEiskanguru;
   //Positionsvariablen zum platzieren der Kängurus
-  dx, dy: integer;
+    dx, dy: integer;
   //tick variablen und Münzen
-  ticksPassed, slowedTick, coins: integer;
-  procedure InitDrag(X, Y : integer; Button : TMouseButton);
-  procedure CheckAllCollision(firstImage : TImage; var CollisionDetected : boolean);
-  //procedure sellKanguru();
+    ticksPassed, slowedTick, coins: integer;
+    procedure InitDrag(X, Y : integer; Button : TMouseButton);
+    procedure CheckAllCollision(firstImage : TImage; var CollisionDetected : boolean; Sender : string);
+  //KanguruClick und Menü-Zeugs
+    var
+    selectedKangurutype : string;
+    selectedKanguruNumber : integer;
+    procedure KanguruClick(Sender: TObject);
+    procedure ShowMenu(kangurutype : string; damage, range: integer; attackspeed : real);
+    procedure sellKanguru();
   end;
 
 var
@@ -233,6 +241,28 @@ begin
    Groupbox6.visible:=false;
 end;
 
+//Angriffsbereich unsichtbar machen
+procedure TForm5.Image1Click(Sender: TObject);
+var i: integer;
+begin
+  for i:=1 to kanguruzahl do
+  begin
+    kanguru[i].attackradius.visible:=false;
+  end;
+  for i:=1 to bogenkanguruzahl do
+  begin
+    bogenkanguru[i].attackradius.visible:=false;
+  end;
+  for i:=1 to eiskanguruzahl do
+  begin
+    eiskanguru[i].attackradius.visible:=false;
+  end;
+  for i:=1 to ninjakanguruzahl do
+  begin
+    ninjakanguru[i].attackradius.visible:=false;
+  end;
+end;
+
 procedure TForm5.Timer1Timer(Sender: TObject);
 var i, j, switch: integer;
 begin
@@ -298,7 +328,7 @@ begin
 end;
 
 //Känguru platzieren mit Kollisionsabfrage
-procedure Tform5.CheckAllCollision(firstImage : TImage; var CollisionDetected : boolean);
+procedure Tform5.CheckAllCollision(firstImage : TImage; var CollisionDetected : boolean; Sender : string);
 var i : integer; Collision : boolean;
 begin
   CollisionDetected := false;
@@ -316,54 +346,128 @@ begin
     exit();
   end;
   //Kängurus
-  for i:=1 to (kanguruzahl-1) do
+  if Sender = 'boxer' then
   begin
-    CheckCollision(firstImage, kanguru[i].bild, Collision);
-    if Collision = true then
+    for i:=1 to (kanguruzahl-1) do
     begin
-      Collisiondetected := true;
-      exit();
+      CheckCollision(firstImage, kanguru[i].bild, Collision);
+      if Collision = true then
+      begin
+        Collisiondetected := true;
+        exit();
+      end;
+    end;
+  end
+  else
+  begin
+  for i:=1 to (kanguruzahl) do
+    begin
+      CheckCollision(firstImage, kanguru[i].bild, Collision);
+      if Collision = true then
+      begin
+        Collisiondetected := true;
+        exit();
+      end;
     end;
   end;
 
-  for i:=1 to (bogenkanguruzahl-1) do
+  if Sender = 'bogen' then
   begin
-    CheckCollision(firstImage, bogenkanguru[i].bild, Collision);
-    if Collision = true then
+    for i:=1 to (bogenkanguruzahl-1) do
     begin
-      Collisiondetected := true;
-      exit();
+      CheckCollision(firstImage, bogenkanguru[i].bild, Collision);
+      if Collision = true then
+      begin
+        Collisiondetected := true;
+        exit();
+      end;
+    end;
+  end
+  else
+  begin
+  for i:=1 to (bogenkanguruzahl) do
+    begin
+      CheckCollision(firstImage, bogenkanguru[i].bild, Collision);
+      if Collision = true then
+      begin
+        Collisiondetected := true;
+        exit();
+      end;
     end;
   end;
 
-  for i:=1 to (Eiskanguruzahl-1) do
+  if Sender = 'eis' then
   begin
-    CheckCollision(firstImage, Eiskanguru[i].bild, Collision);
-    if Collision = true then
+    for i:=1 to (eiskanguruzahl-1) do
     begin
-      Collisiondetected := true;
-      exit();
+      CheckCollision(firstImage, eiskanguru[i].bild, Collision);
+      if Collision = true then
+      begin
+        Collisiondetected := true;
+        exit();
+      end;
+    end;
+  end
+  else
+  begin
+  for i:=1 to (eiskanguruzahl) do
+    begin
+      CheckCollision(firstImage, eiskanguru[i].bild, Collision);
+      if Collision = true then
+      begin
+        Collisiondetected := true;
+        exit();
+      end;
     end;
   end;
 
-  for i:=1 to (Ninjakanguruzahl-1) do
+  if Sender = 'ninja' then
   begin
-    CheckCollision(firstImage, Ninjakanguru[i].bild, Collision);
-    if Collision = true then
+    for i:=1 to (ninjakanguruzahl-1) do
     begin
-      showmessage(inttostr(i));
-      Collisiondetected := true;
-      exit();
+      CheckCollision(firstImage, ninjakanguru[i].bild, Collision);
+      if Collision = true then
+      begin
+        Collisiondetected := true;
+        exit();
+      end;
+    end;
+  end
+  else
+  begin
+  for i:=1 to (ninjakanguruzahl) do
+    begin
+      CheckCollision(firstImage, ninjakanguru[i].bild, Collision);
+      if Collision = true then
+      begin
+        Collisiondetected := true;
+        exit();
+      end;
     end;
   end;
 
-  for i:=1 to (Zauberkanguruzahl-1) do
+  if Sender = 'zauber' then
   begin
-    CheckCollision(firstImage, Zauberkanguru[i].bild, Collision);
-    if Collision = true then
+    for i:=1 to (zauberkanguruzahl-1) do
     begin
-      Collisiondetected := true;
-      exit();
+      CheckCollision(firstImage, zauberkanguru[i].bild, Collision);
+      if Collision = true then
+      begin
+        Collisiondetected := true;
+        exit();
+      end;
+    end;
+  end
+  else
+  begin
+  for i:=1 to (zauberkanguruzahl) do
+    begin
+      CheckCollision(firstImage, zauberkanguru[i].bild, Collision);
+      if Collision = true then
+      begin
+        Collisiondetected := true;
+        exit();
+      end;
     end;
   end;
   //Pfade
@@ -416,10 +520,10 @@ begin
     begin
       kanguru[kanguruzahl].bild.left := Mouse.CursorPos.X;
       kanguru[kanguruzahl].bild.top := Mouse.CursorPos.Y;
-      kanguru[kanguruzahl].attackradius.left := (Mouse.CursorPos.X + 48 - kanguru[kanguruzahl].range2);
-      kanguru[kanguruzahl].attackradius.Top := (Mouse.CursorPos.Y + 48 - kanguru[kanguruzahl].range2);
+      kanguru[kanguruzahl].attackradius.left := Mouse.CursorPos.X + 48 - kanguru[kanguruzahl].range2;
+      kanguru[kanguruzahl].attackradius.Top := Mouse.CursorPos.Y + 48 - kanguru[kanguruzahl].range2;
       //Radius rot färben wenn versperrte Position
-      CheckAllCollision(kanguru[kanguruzahl].bild, Collision);
+      CheckAllCollision(kanguru[kanguruzahl].bild, Collision, 'boxer');
       if (Collision = true) then
         kanguru[kanguruzahl].attackradius.brush.Color:=clMaroon
       else
@@ -438,19 +542,17 @@ begin
     isDragging := False;
     DragThresholdReached := False;
 
-    CheckAllCollision(kanguru[kanguruzahl].bild, Collision);
+    CheckAllCollision(kanguru[kanguruzahl].bild, Collision, 'boxer');
     if (Collision = true) or (coins - kanguru[kanguruzahl].value < 0) then
     begin
-      kanguru[kanguruzahl].attackradius.free;
-      kanguru[kanguruzahl].bild.free;
-      kanguru[kanguruzahl].Free;
+      kanguru[kanguruzahl].destruct;
       dec(kanguruzahl);
     end
     else
     begin
       coins := coins - kanguru[kanguruzahl].value;
       kanguru[kanguruzahl].attackradius.visible := false;
-      kanguru[kanguruzahl].active := true;
+      kanguru[kanguruzahl].setActive(1);
     end;
   end;
 end;
@@ -484,7 +586,7 @@ begin
       bogenkanguru[bogenkanguruzahl].attackradius.left := (Mouse.CursorPos.X + 48 - bogenkanguru[bogenkanguruzahl].range2);
       bogenkanguru[bogenkanguruzahl].attackradius.Top := (Mouse.CursorPos.Y + 48 - bogenkanguru[bogenkanguruzahl].range2);
       //Radius rot färben wenn versperrte Position
-      CheckAllCollision(bogenkanguru[bogenkanguruzahl].bild, Collision);
+      CheckAllCollision(bogenkanguru[bogenkanguruzahl].bild, Collision, 'bogen');
       if (Collision = true) then
         bogenkanguru[bogenkanguruzahl].attackradius.brush.Color:=clMaroon
       else
@@ -503,19 +605,17 @@ begin
     isDragging := False;
     DragThresholdReached := False;
 
-    CheckAllCollision(bogenkanguru[bogenkanguruzahl].bild, Collision);
+    CheckAllCollision(bogenkanguru[bogenkanguruzahl].bild, Collision, 'bogen');
     if (Collision = true) or (coins - bogenkanguru[bogenkanguruzahl].value < 0) then
     begin
-      bogenkanguru[bogenkanguruzahl].attackradius.free;
-      bogenkanguru[bogenkanguruzahl].bild.free;
-      bogenkanguru[bogenkanguruzahl].Free;
+      bogenkanguru[bogenkanguruzahl].destruct;
       dec(bogenkanguruzahl);
     end
     else
     begin
       coins := coins - bogenkanguru[bogenkanguruzahl].value;
       bogenkanguru[bogenkanguruzahl].attackradius.visible := false;
-      bogenkanguru[bogenkanguruzahl].active := true;
+      bogenkanguru[bogenkanguruzahl].setactive(1);
     end;
   end;
 end;
@@ -548,7 +648,7 @@ begin
       Eiskanguru[Eiskanguruzahl].attackradius.left := (Mouse.CursorPos.X + 48 - Eiskanguru[Eiskanguruzahl].range2);
       Eiskanguru[Eiskanguruzahl].attackradius.Top := (Mouse.CursorPos.Y + 48 - Eiskanguru[Eiskanguruzahl].range2);
       //Radius rot färben wenn versperrte Position
-      CheckAllCollision(Eiskanguru[Eiskanguruzahl].bild, Collision);
+      CheckAllCollision(Eiskanguru[Eiskanguruzahl].bild, Collision, 'eis');
       if (Collision = true) then
         Eiskanguru[Eiskanguruzahl].attackradius.brush.Color:=clMaroon
       else
@@ -567,19 +667,17 @@ begin
     isDragging := False;
     DragThresholdReached := False;
 
-    CheckAllCollision(Eiskanguru[Eiskanguruzahl].bild, Collision);
+    CheckAllCollision(Eiskanguru[Eiskanguruzahl].bild, Collision, 'eis');
     if (Collision = true) or (coins - Eiskanguru[Eiskanguruzahl].value < 0) then
     begin
-      Eiskanguru[Eiskanguruzahl].attackradius.free;
-      Eiskanguru[Eiskanguruzahl].bild.free;
-      Eiskanguru[Eiskanguruzahl].Free;
+      eiskanguru[eiskanguruzahl].destruct;
       dec(Eiskanguruzahl);
     end
     else
     begin
       coins := coins - Eiskanguru[Eiskanguruzahl].value;
       Eiskanguru[Eiskanguruzahl].attackradius.visible := false;
-      Eiskanguru[Eiskanguruzahl].active := true;
+      Eiskanguru[Eiskanguruzahl].setactive(1);
     end;
   end;
 end;
@@ -612,7 +710,7 @@ begin
       Ninjakanguru[Ninjakanguruzahl].attackradius.left := (Mouse.CursorPos.X + 48 - Ninjakanguru[Ninjakanguruzahl].range2);
       Ninjakanguru[Ninjakanguruzahl].attackradius.Top := (Mouse.CursorPos.Y + 48 - Ninjakanguru[Ninjakanguruzahl].range2);
       //Radius rot färben wenn versperrte Position
-      CheckAllCollision(Ninjakanguru[Ninjakanguruzahl].bild, Collision);
+      CheckAllCollision(Ninjakanguru[Ninjakanguruzahl].bild, Collision, 'ninja');
       if (Collision = true) then
         Ninjakanguru[Ninjakanguruzahl].attackradius.brush.Color:=clMaroon
       else
@@ -631,28 +729,184 @@ begin
     isDragging := False;
     DragThresholdReached := False;
 
-    CheckAllCollision(Ninjakanguru[Ninjakanguruzahl].bild, Collision);
+    CheckAllCollision(Ninjakanguru[Ninjakanguruzahl].bild, Collision, 'ninja');
     if (Collision = true) or (coins - Ninjakanguru[Ninjakanguruzahl].value < 0) then
     begin
-      Ninjakanguru[Ninjakanguruzahl].attackradius.free;
-      Ninjakanguru[Ninjakanguruzahl].bild.free;
-      Ninjakanguru[Ninjakanguruzahl].Free;
+      ninjakanguru[ninjakanguruzahl].destruct;
       dec(Ninjakanguruzahl);
     end
     else
     begin
       coins := coins - Ninjakanguru[Ninjakanguruzahl].value;
       Ninjakanguru[Ninjakanguruzahl].attackradius.visible := false;
-      Ninjakanguru[Ninjakanguruzahl].active := true;
+      Ninjakanguru[Ninjakanguruzahl].setactive(1);
     end;
   end;
 end;
 //Zauberer
 
-//Känguru verkaufen
-procedure sellKanguru();
+//Kängurumenü
+procedure Tform5.KanguruClick(Sender: TObject);
+var i : integer;
 begin
+  //alle Angriffsbereiche unsichtbar machen
+  for i:=1 to kanguruzahl do
+  begin
+    kanguru[i].attackradius.visible:=false;
+  end;
+  for i:=1 to bogenkanguruzahl do
+  begin
+    bogenkanguru[i].attackradius.visible:=false;
+  end;
+  for i:=1 to eiskanguruzahl do
+  begin
+    eiskanguru[i].attackradius.visible:=false;
+  end;
+  for i:=1 to ninjakanguruzahl do
+  begin
+    ninjakanguru[i].attackradius.visible:=false;
+  end;
+  //ShowMenu aufrufen und Angriffsbereich sichtbar machen mit Sender-Abfrage
+  for i:=1 to kanguruzahl do
+  begin
+    if Kanguru[i].bild = Sender then
+    begin
+      selectedkangurutype:='boxer';
+      selectedkangurunumber:=i;
+      kanguru[i].attackradius.visible:=true;
+      ShowMenu('boxer', kanguru[i].damage, kanguru[i].range2, kanguru[i].attackspeed);
+    end;
+  end;
+  for i:=1 to bogenkanguruzahl do
+  begin
+    if bogenKanguru[i].bild = Sender then
+    begin
+      selectedkangurutype:='bogen';
+      selectedkangurunumber:=i;
+      bogenkanguru[i].attackradius.visible:=true;
+      ShowMenu('bogen', bogenkanguru[i].damage, bogenkanguru[i].range2, bogenkanguru[i].attackspeed);
+    end;
+  end;
+  for i:=1 to eiskanguruzahl do
+  begin
+    if eisKanguru[i].bild = Sender then
+    begin
+      selectedkangurutype:='eis';
+      selectedkangurunumber:=i;
+      eiskanguru[i].attackradius.visible:=true;
+      ShowMenu('eis', eiskanguru[i].damage, eiskanguru[i].range2, eiskanguru[i].attackspeed);
+    end;
+  end;
+  for i:=1 to ninjakanguruzahl do
+  begin
+    if ninjaKanguru[i].bild = Sender then
+    begin
+      selectedkangurutype:='ninja';
+      selectedkangurunumber:=i;
+      ninjakanguru[i].attackradius.visible:=true;
+      ShowMenu('ninja', ninjakanguru[i].damage, ninjakanguru[i].range2, ninjakanguru[i].attackspeed);
+    end;
+  end;
+  //hier Zauberer noch hinzufügen
 
+  //Kängurus über Angriffsbereich bringen, sodass immer noch ansprechbar
+  for i:=1 to kanguruzahl do
+  begin
+    kanguru[i].bild.bringtofront;
+  end;
+  for i:=1 to bogenkanguruzahl do
+  begin
+    bogenkanguru[i].bild.bringtofront;
+  end;
+  for i:=1 to eiskanguruzahl do
+  begin
+    eiskanguru[i].bild.bringtofront;
+  end;
+  for i:=1 to ninjakanguruzahl do
+  begin
+    ninjakanguru[i].bild.bringtofront;
+  end;
+end;
+
+procedure Tform5.ShowMenu(kangurutype : string; damage, range: integer; attackspeed : real);
+begin
+  Groupbox7.visible:=true;
+  if kangurutype = 'boxer' then
+    panel11.caption:= 'Boxerkänguru'
+  else if  kangurutype = 'bogen' then
+    panel11.caption:= 'Bogenkänguru'
+  else if  kangurutype = 'eis' then
+    panel11.caption:= 'Eiskänguru'
+  else if  kangurutype = 'ninja' then
+    panel11.caption:= 'Ninjakänguru'
+  else if  kangurutype = 'zauber' then
+    panel11.caption:= 'Zauberkänguru';
+  panel12.caption := inttostr(damage);
+  panel13.caption := floattostr(attackspeed);
+  panel14.caption := inttostr(range);
+
+end;
+//Känguru verkaufen
+procedure TForm5.sellKanguru();
+var i : integer;
+begin
+  //halben Känguruwert erstatten, känguru zerstören, leere Position in Känguruarray mit anderem känguru füllen und känguruzahl um 1 verringern
+  if selectedkangurutype = 'boxer' then
+  begin
+    coins:= coins + (kanguru[selectedkangurunumber].value div 2);
+    kanguru[selectedkangurunumber].destruct;
+    //"leere" Position im Array füllen, wenn nicht am Ende vom Array
+    if selectedKanguruNumber <> kanguruzahl then
+    begin
+      for i:=selectedkangurunumber to (kanguruzahl-1) do
+        kanguru[i]:=kanguru[i+1];
+    end;
+    dec(kanguruzahl);
+  end
+  else if  selectedkangurutype = 'bogen' then
+  begin
+    coins:= coins + (bogenkanguru[selectedkangurunumber].value div 2);
+    bogenkanguru[selectedkangurunumber].destruct;
+    if selectedKanguruNumber <> kanguruzahl then
+    begin
+      for i:=selectedkangurunumber to (bogenkanguruzahl-1) do
+        bogenkanguru[i]:=bogenkanguru[i+1];
+    end;
+    dec(bogenkanguruzahl);
+  end
+  else if  selectedkangurutype = 'eis' then
+  begin
+    coins:= coins + (eiskanguru[selectedkangurunumber].value div 2);
+    eiskanguru[selectedkangurunumber].destruct;
+    if selectedKanguruNumber <> eiskanguruzahl then
+    begin
+      for i:=selectedkangurunumber to (eiskanguruzahl-1) do
+        eiskanguru[i]:=eiskanguru[i+1];
+    end;
+    dec(eiskanguruzahl);
+  end
+  else if  selectedkangurutype = 'ninja' then
+  begin
+    coins:= coins + (ninjakanguru[selectedkangurunumber].value div 2);
+    ninjakanguru[selectedkangurunumber].destruct;
+    if selectedKanguruNumber <> ninjakanguruzahl then
+    begin
+      for i:=selectedkangurunumber to (ninjakanguruzahl-1) do
+        ninjakanguru[i]:=ninjakanguru[i+1];
+    end;
+    dec(ninjakanguruzahl);
+  end
+  else if  selectedkangurutype = 'zauber' then
+  begin
+    coins:= coins + (Zauberkanguru[selectedkangurunumber].value div 2);
+    zauberkanguru[selectedkangurunumber].destruct;
+    if selectedKanguruNumber <> zauberkanguruzahl then
+    begin
+      for i:=selectedkangurunumber to (zauberkanguruzahl-1) do
+        zauberkanguru[i]:=zauberkanguru[i+1];
+    end;
+    dec(zauberkanguruzahl);
+  end
 end;
 
 //Zwischen Beschreibungen wechseln

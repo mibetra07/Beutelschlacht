@@ -18,7 +18,11 @@ type TKanguru = class
     cancamo : boolean;
     active : boolean;
     constructor create(map, x, y, range : integer);
+    procedure destruct;
     procedure attack(map: integer; Pinguin: TPinguin; Kanguruart: string);
+    procedure setActive(map : integer);
+  private
+
   end;
 
   TBoxerkanguru = class(TKanguru)
@@ -76,11 +80,13 @@ constructor Tkanguru.create(map, x, y, range : integer);
     begin
       self.bild := TImage.Create(Form5);
       self.bild.Parent := Form5;
+
     end
     else if map = 2 then
     begin
       self.bild := TImage.Create(Form6);
       self.bild.Parent := Form6;
+      //Self.bild.OnClick := @Form6.KanguruClick;
     end;
     //bild formatieren
     self.bild.Width := 96;
@@ -142,8 +148,24 @@ constructor Tkanguru.create(map, x, y, range : integer);
 
   end;
 
-  procedure Tkanguru.attack(map: integer; Pinguin: TPinguin; Kanguruart: string);
-  var i, j: integer;
+procedure TKanguru.destruct();
+begin
+  self.Attackradius.free;
+  self.bild.free;
+  self.Free;
+end;
+
+procedure Tkanguru.setActive(map : integer);
+begin
+  self.active := true;
+  if map = 1 then
+  Self.bild.OnClick := @Form5.KanguruClick
+  else if map = 2 then;
+  //Self.bild.OnClick := @Form6.KanguruClick
+end;
+
+procedure Tkanguru.attack(map: integer; Pinguin: TPinguin; Kanguruart: string);
+var i, j: integer;
 begin
   // Prüfen, ob irgendein Teil von `Pinguin` innerhalb des Kreises liegt (von chatgpt)
   if self <> nil then
