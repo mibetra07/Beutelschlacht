@@ -41,6 +41,7 @@ implementation
    Uses map2, map1;
 
 constructor TPinguin.create(map, offset: integer);
+var i: integer;
    begin
      inherited create;
      //je nach map pinguin auf Path[1] erstellen
@@ -85,52 +86,19 @@ constructor TPinguin.create(map, offset: integer);
      self.bild.left := self.x;
      self.bild.top := self.y;
      self.bild.Visible := True;
-     self.hp := 1000;
+     self.hp := 100;
      self.speed := 3;
      end;
 constructor THelmPinguin.create(map, offset: integer);
    begin
-     //je nach map pinguin auf Path[1] erstellen
 
-     if map = 2 then
-     begin
-     self.x := Form6.Path[1].x - offset;
-     self.y := Form6.Path[1].y;
-     self.bild := TImage.Create(Form6);
-     self.bild.Parent := Form6;
-     end
-     else if map = 1 then
-     begin
-     self.x := Form5.Path[1].x- offset;
-     self.y := Form5.Path[1].y;
-     self.bild := TImage.Create(Form5);
-     self.bild.Parent := Form5;
-     end;
-     //größe
+     inherited create(map, offset);
 
-     self.width := 96;
-     self.height := 96;
-     self.currentPath := 1;
-     self.width := 96;
-     self.height := 96;
-     self.currentPath := 1;
-     self.hpBar.left := self.x + 24;
-     self.hpBar.top := self.y - 10;
-     self.hpBar.width := 50;
-     self.hpBar.height := 10;
-     self.hpBar.Visible := true;
-     self.hpBar.Position := 100;
-     self.hpBar.color := clred;
-     // bild erstellen
-
-     self.bild.Width := 96;
-     self.bild.Height := 96;
-     self.bild.stretch := true;
-     self.bild.Picture.LoadFromFile('images\Pinguin_helm.png');
+     self.bild.Picture.LoadFromFile('images\Pinguin helm.png');
      self.bild.left := self.x;
      self.bild.top := self.y;
      self.bild.Visible := True;
-     self.hp := 150;
+     self.hp := 300;
      self.speed := 2;
    end;
 
