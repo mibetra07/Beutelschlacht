@@ -7,8 +7,8 @@ interface
 Uses Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls, Path, ComCtrls;
 type TPinguin  = class
       public
-      x, y, width, height, art, armorlvl, hp, moved, currentPath, position, speed:integer;
-      slowed: boolean;
+      x, y, width, height, art, armorlvl, hp, moved, currentPath, position, speed, bildOffset:integer;
+      slowed, camo: boolean;
       bild: Timage;
       hpBar: TProgressBar;
       constructor create(map, offset: integer);
@@ -23,17 +23,17 @@ type TPinguin  = class
 
       TSchildPinguin = class(Tpinguin)
       public
-      //constructor create(map: integer);
+      constructor create(map, offset: integer);
       end;
 
       TBossPinguin = class(Tpinguin)
       public
-      //constructor create(map: integer);
+      constructor create(map, offset: integer);
       end;
 
       TTarnPinguin = class(Tpinguin)
       public
-      //constructor create(map: integer);
+      constructor create(map, offset: integer);
       end;
 
 implementation
@@ -41,112 +41,116 @@ implementation
    Uses map2, map1;
 
 constructor TPinguin.create(map, offset: integer);
+var i: integer;
    begin
      inherited create;
      //je nach map pinguin auf Path[1] erstellen
-
+     with self do
+begin
      if map = 2 then
      begin
-     self.x := Form6.Path[1].x - offset;
-     self.y := Form6.Path[1].y;
-     self.bild := TImage.Create(Form6);
-     self.bild.Parent := Form6;
-     self.hpBar := TProgressbar.create(Form6);
-     self.hpBar.parent := Form6;
+     x := Form6.Path[1].x - offset;
+     y := Form6.Path[1].y;
+     bild := TImage.Create(Form6);
+     bild.Parent := Form6;
+     hpBar := TProgressbar.create(Form6);
+     hpBar.parent := Form6;
      end
      else if map = 1 then
      begin
-     self.x := Form5.Path[1].x - offset ;
-     self.y := Form5.Path[1].y;
-     self.bild := TImage.Create(Form5);
-     self.bild.Parent := Form5;
-     self.hpBar := TProgressbar.create(Form5);
-     self.hpBar.parent := Form5;
+     x := Form5.Path[1].x - offset ;
+     y := Form5.Path[1].y;
+     bild := TImage.Create(Form5);
+     bild.Parent := Form5;
+     hpBar := TProgressbar.create(Form5);
+     hpBar.parent := Form5;
      end;
      //größe
 
-     self.width := 96;
-     self.height := 96;
-     self.currentPath := 1;
-     self.hpBar.left := self.x + 24;
-     self.hpBar.top := self.y - 10;
-     self.hpBar.width := 50;
-     self.hpBar.height := 10;
-     self.hpBar.Visible := true;
-     self.hpBar.Position := 100;
-     self.hpBar.color := clred;
+     width := 96;
+     height := 96;
+     currentPath := 1;
+     hpBar.left := x + 24;
+     hpBar.top := y - 10;
+     hpBar.width := 50;
+     hpBar.height := 10;
+     hpBar.Visible := true;
+     hpBar.Position := 100;
+     hpBar.color := clred;
 
      // bild erstellen
 
-     self.bild.Width := 96;
-     self.bild.Height := 96;
-     self.bild.stretch := true;
-     self.bild.Picture.LoadFromFile('images\Pinguin_beutelschlacht.png');
-     self.bild.left := self.x;
-     self.bild.top := self.y;
-     self.bild.Visible := True;
-     self.hp := 1000;
-     self.speed := 3;
+     bild.Width := 96;
+     bild.Height := 96;
+     bild.stretch := true;
+     bild.Picture.LoadFromFile('images\Pinguin_beutelschlacht.png');
+     bild.left := x;
+     bild.top := y;
+     bild.Visible := True;
+     hp := 100;
+     speed := 3;
+     bildOffset := 0;
+     camo := false;
      end;
+   end;
+
 constructor THelmPinguin.create(map, offset: integer);
    begin
-     //je nach map pinguin auf Path[1] erstellen
 
-     if map = 2 then
-     begin
-     self.x := Form6.Path[1].x - offset;
-     self.y := Form6.Path[1].y;
-     self.bild := TImage.Create(Form6);
-     self.bild.Parent := Form6;
-     end
-     else if map = 1 then
-     begin
-     self.x := Form5.Path[1].x- offset;
-     self.y := Form5.Path[1].y;
-     self.bild := TImage.Create(Form5);
-     self.bild.Parent := Form5;
-     end;
-     //größe
+     inherited create(map, offset);
 
-     self.width := 96;
-     self.height := 96;
-     self.currentPath := 1;
-     self.width := 96;
-     self.height := 96;
-     self.currentPath := 1;
-     self.hpBar.left := self.x + 24;
-     self.hpBar.top := self.y - 10;
-     self.hpBar.width := 50;
-     self.hpBar.height := 10;
-     self.hpBar.Visible := true;
-     self.hpBar.Position := 100;
-     self.hpBar.color := clred;
-     // bild erstellen
-
-     self.bild.Width := 96;
-     self.bild.Height := 96;
-     self.bild.stretch := true;
-     self.bild.Picture.LoadFromFile('images\Pinguin_helm.png');
-     self.bild.left := self.x;
-     self.bild.top := self.y;
-     self.bild.Visible := True;
-     self.hp := 150;
+     self.bild.Picture.LoadFromFile('images\Pinguin helm.png');
+     self.hp := 300;
      self.speed := 2;
    end;
+constructor TSchildPinguin.create(map, offset: integer);
+begin
+     inherited create(map, offset);
+     self.bild.picture.loadFromFile('images\Pinguin Helm und Schild.png');
+     self.hp := 500;
+     self.speed := 1;
+end;
+constructor TBossPinguin.create(map, offset: integer);
+begin
+     inherited create(map, offset);
+     with self do
+     begin
+     bild.picture.loadFromFile('images\BossPinguin.png');
+     bild.Width := 192;
+     bild.Height := 192;
+     width := 192;
+     height := 192;
+     bild.left := x;
+     bild.top := y - 48;
+     bild.Visible := True;
+     hp := 1500;
+     speed := 1;
+     bildOffset := 48;
+     end;
+end;
+constructor TTarnPinguin.create(map, offset: integer);
+begin
+     inherited create(map, offset);
+     self.camo := true;
+     self.bild.picture.loadFromFile('images\Tarnguin.png');
+     self.hp := 500;
+     self.speed := 5;
+end;
 
 procedure TPinguin.laufen(map: integer);
 var i, normal: integer;
 begin
-  speed := self.speed;
   if map = 1 then
   begin
+       if ((self.width = 192) AND (Form5.tickspassed mod 4 = 0)) OR (self.width <> 192) then
+       begin
          if self.currentPath < 7 then
          begin
          if Form5.Path[self.currentPath].direction = 1 then  //wenn nach links
          begin
          if self.x <= Form5.Path[self.currentPath].x + Form5.Path[self.currentPath].width then  //damit es nur bis Path Ende geht
            begin
-             self.x := self.x + speed;
+             self.x := self.x + self.speed;
              self.bild.left := self.x;
              self.hpbar.left := self.x + 24;
            end
@@ -157,8 +161,8 @@ begin
            begin
            if self.y <= Form5.Path[self.currentPath].y + Form5.Path[self.currentPath].height then //damit es nur bis Path Ende geht
            begin
-             self.y := self.y + speed;
-             self.bild.top := self.y;
+             self.y := self.y + self.speed;
+             self.bild.top := self.y + self.bildOffset;
              self.hpbar.top := self.y - 10;
            end
            else
@@ -168,7 +172,7 @@ begin
          begin
          if self.x >= Form5.Path[self.currentPath].x then //damit es nur bis Path Ende geht
          begin
-         self.x := self.x - speed;
+         self.x := self.x - self.speed;
          self.bild.left := self.x;
          self.hpbar.left := self.x + 24;
          end
@@ -179,8 +183,8 @@ begin
          begin
          if self.y >= Form5.Path[self.currentPath].y then    //damit es nur bis Path Ende geht
            begin
-           self.y := self.y - speed;
-           self.bild.top := self.y;
+           self.y := self.y - self.speed;
+           self.bild.top := self.y + self.bildOffset;
            self.hpbar.top := self.y - 10;
            end
          else
@@ -194,6 +198,7 @@ begin
            self.bild.left := self.x;
            self.hpBar.Left := self.x;
            end;
+       end;
   end
     else if map = 2 then
   begin
@@ -203,7 +208,7 @@ begin
          begin
          if self.x <= Form6.Path[self.currentPath].x + Form6.Path[self.currentPath].width then  //damit es nur bis Path Ende geht
            begin
-             self.x := self.x + speed;
+             self.x := self.x + self.speed;
              self.bild.left := self.x;
              self.hpBar.left := self.x + 24;
            end
@@ -214,8 +219,8 @@ begin
            begin
            if self.y <= Form6.Path[self.currentPath].y + Form6.Path[self.currentPath].height then //damit es nur bis Path Ende geht
            begin
-             self.y := self.y + speed;
-             self.bild.top := self.y;
+             self.y := self.y + self.speed;
+             self.bild.top := self.y - self.bildOffset;
              self.hpBar.top := self.y - 100;
            end
            else
@@ -225,7 +230,7 @@ begin
          begin
          if self.x >= Form6.Path[self.currentPath].x then //damit es nur bis Path Ende geht
          begin
-         self.x := self.x - speed;
+         self.x := self.x - self.speed;
          self.bild.left := self.x;
          self.hpBar.left := self.x + 24;
          end
@@ -236,8 +241,8 @@ begin
          begin
          if self.y >= Form6.Path[self.currentPath].y then    //damit es nur bis Path Ende geht
            begin
-           self.y := self.y - speed;
-           self.bild.top := self.y;
+           self.y := self.y - self.speed;
+           self.bild.top := self.y - self.bildOffset;
            self.hpBar.top := self.y - 100;
            end
          else
