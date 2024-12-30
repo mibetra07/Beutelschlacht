@@ -130,6 +130,11 @@ type
     var Path: array[1..7] of Tpath;
     Pinguin: array[1..100] of TPinguin;
     HelmPinguin: array[1..100] of THelmPinguin;
+    SchildPinguin: array[1..100] of TSchildPinguin;
+    BossPinguin: array[1..100] of TBossPinguin;
+    TarnPinguin: array[1..100] of TTarnPinguin;
+    AllPinguin: array [1..300] of TPinguin;
+    Pinguincount: integer;
     wave: array [1..100] of Twave;
 
     Kanguru : array[1..100] of TBoxerkanguru;
@@ -168,6 +173,7 @@ var i : integer;
 begin
   randomize();
    coins := 300000;
+   Pinguincount := 0;
    //Weg der Map erstellen (dir, left, top, breit, hoch, map: integer)
    Path[1] := TPath.create(1, 100, 500, 500, 100, 1);
    Path[2] := Tpath.create(2, 600, 500, 100, 400, 1);
@@ -176,9 +182,9 @@ begin
    Path[5] := Tpath.create(1, 300, 200, 1000, 100, 1);
    Path[6] := Tpath.create(2, 1300, 200, 100, 500, 1);
    Path[7] := Tpath.create(1, 1300, 700, 1000, 100, 1);
-   wave[1] := Twave.create(5, 5, 0, 0, 0, 1);
+   wave[1] := Twave.create(5, 4, 3, 1, 2, 1);
    Timer1.enabled := false;
-   Timer1.interval := 5;
+   Timer1.interval := 1;
 
 
    //Känguruzählervariablen
@@ -241,6 +247,73 @@ begin
    Groupbox6.visible:=false;
 end;
 
+procedure TForm5.Timer1Timer(Sender: TObject);
+var i, j, switch: integer;
+begin
+         for i := 1 to 100 do
+         begin
+         if Pinguin[i] <> nil then
+         tick(1, Pinguin[i]);
+         if HelmPinguin[i] <> nil then
+         tick(1, HelmPinguin[i]);
+         if SchildPinguin[i] <> nil then
+         tick(1, SchildPinguin[i]);
+         if BossPinguin[i] <> nil then
+         tick(1, BossPinguin[i]);
+         if TarnPinguin[i] <> nil then
+         tick(1, TarnPinguin[i]);
+         end;
+         inc(ticksPassed);
+         for i := 1 to 100 do  //Positionssystem --> Rechnet aus welcher Pinguin ganz vorne ist
+         if AllPinguin[i] <> nil then
+         begin
+         AllPinguin[i].position := i;
+         end;
+         //Positionssystem muss noch überprft werden
+
+
+         {for i := 1 to 100 do
+         if AllPinguin[i] <> nil then
+         for j := 1 to 100 do
+             if AllPinguin[j] <> nil then
+             begin
+             if (AllPinguin[i].currentPath < 100) AND (AllPinguin[i].currentPath > AllPinguin[j].currentpath) AND (AllPinguin[i].position < AllPinguin[j].position) AND (AllPinguin[i] <> nil) AND (AllPinguin[j] <> nil) then
+              begin
+                switch := AllPinguin[i].Position;
+                AllPinguin[i].position := AllPinguin[j].position;
+                AllPinguin[j].position := switch
+              end
+              else if (AllPinguin[i].currentPath = AllPinguin[j].currentPath)  AND (AllPinguin[i] <> nil) AND (AllPinguin[j] <> nil) then
+              begin
+                   if (AllPinguin[i].currentPath < 100) AND (Path[AllPinguin[i].currentPath].direction = 1) AND (AllPinguin[i].x < AllPinguin[j].x) AND (AllPinguin[i] <> nil) AND (AllPinguin[j] <> nil) then
+                   begin
+                switch := AllPinguin[i].Position;
+                AllPinguin[i].position := AllPinguin[j].position;
+                AllPinguin[j].position := switch
+                   end
+                   else if (AllPinguin[i].currentPath < 100) AND (Path[AllPinguin[i].currentPath].direction = 2) AND (AllPinguin[i].y < AllPinguin[j].x) AND (AllPinguin[i] <> nil) AND (AllPinguin[j] <> nil) then
+                   begin
+                switch := AllPinguin[i].Position;
+                AllPinguin[i].position := AllPinguin[j].position;
+                AllPinguin[j].position := switch
+                   end
+                   else if (AllPinguin[i].currentPath < 100) AND (Path[AllPinguin[i].currentPath].direction = 3) AND (AllPinguin[i].y > AllPinguin[j].x) AND (AllPinguin[i] <> nil) AND (AllPinguin[j] <> nil) then
+                   begin
+                switch := AllPinguin[i].Position;
+                AllPinguin[i].position := AllPinguin[j].position;
+                AllPinguin[j].position := switch
+                   end
+                   else if (AllPinguin[i].currentPath < 100) AND (Path[AllPinguin[i].currentPath].direction = 4) AND (AllPinguin[i].y < AllPinguin[j].x) AND (AllPinguin[i] <> nil) AND (AllPinguin[j] <> nil) then
+                   begin
+                switch := AllPinguin[i].Position;
+                AllPinguin[i].position := AllPinguin[j].position;
+                AllPinguin[j].position := switch
+                   end;
+
+              end;
+              end;}
+
+end;
 //Angriffsbereich unsichtbar machen
 procedure TForm5.Image1Click(Sender: TObject);
 var i: integer;
@@ -261,64 +334,6 @@ begin
   begin
     ninjakanguru[i].attackradius.visible:=false;
   end;
-end;
-
-procedure TForm5.Timer1Timer(Sender: TObject);
-var i, j, switch: integer;
-begin
-         for i := 1 to 5 do
-         begin
-         tick(1, Pinguin[i]);
-         //tick(1, HelmPinguin[i]);
-         end;
-         inc(ticksPassed);
-         for i := 1 to 100 do  //Positionssystem --> Rechnet aus welcher Pinguin ganz vorne ist
-         if Pinguin[i] <> nil then
-         begin
-         Pinguin[i].position := i;
-         //HelmPinguin[i].position := i + 5;
-         end;
-         for i := 1 to 100 do
-         if Pinguin[i] <> nil then
-         for j := 1 to 100 do
-             if Pinguin[j] <> nil then
-             begin
-             if (Pinguin[i].currentPath < 100) AND (Pinguin[i].currentPath > Pinguin[j].currentpath) AND (Pinguin[i].position < Pinguin[j].position) AND (Pinguin[i] <> nil) AND (Pinguin[j] <> nil) then
-              begin
-                switch := Pinguin[i].Position;
-                Pinguin[i].position := Pinguin[j].position;
-                Pinguin[j].position := switch
-              end
-              else if (Pinguin[i].currentPath = Pinguin[j].currentPath)  AND (Pinguin[i] <> nil) AND (Pinguin[j] <> nil) then
-              begin
-                   if (Pinguin[i].currentPath < 100) AND (Path[Pinguin[i].currentPath].direction = 1) AND (Pinguin[i].x < Pinguin[j].x) AND (Pinguin[i] <> nil) AND (Pinguin[j] <> nil) then
-                   begin
-                switch := Pinguin[i].Position;
-                Pinguin[i].position := Pinguin[j].position;
-                Pinguin[j].position := switch
-                   end
-                   else if (Pinguin[i].currentPath < 100) AND (Path[Pinguin[i].currentPath].direction = 2) AND (Pinguin[i].y < Pinguin[j].x) AND (Pinguin[i] <> nil) AND (Pinguin[j] <> nil) then
-                   begin
-                switch := Pinguin[i].Position;
-                Pinguin[i].position := Pinguin[j].position;
-                Pinguin[j].position := switch
-                   end
-                   else if (Pinguin[i].currentPath < 100) AND (Path[Pinguin[i].currentPath].direction = 3) AND (Pinguin[i].y > Pinguin[j].x) AND (Pinguin[i] <> nil) AND (Pinguin[j] <> nil) then
-                   begin
-                switch := Pinguin[i].Position;
-                Pinguin[i].position := Pinguin[j].position;
-                Pinguin[j].position := switch
-                   end
-                   else if (Pinguin[i].currentPath < 100) AND (Path[Pinguin[i].currentPath].direction = 4) AND (Pinguin[i].y < Pinguin[j].x) AND (Pinguin[i] <> nil) AND (Pinguin[j] <> nil) then
-                   begin
-                switch := Pinguin[i].Position;
-                Pinguin[i].position := Pinguin[j].position;
-                Pinguin[j].position := switch
-                   end;
-
-              end;
-              end;
-
 end;
 //Form wechseln
 procedure TForm5.Image2Click(Sender: TObject);
@@ -960,7 +975,6 @@ end;
 
 procedure TForm5.Button1Click(Sender: TObject);
 begin
-
   Timer1.enabled := true;
 end;
 

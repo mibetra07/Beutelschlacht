@@ -20,25 +20,47 @@ begin
   if map = 1 then
   begin
        for i := 1 to normal do
+       begin
            Form5.Pinguin[i] := TPinguin.Create(1, random(offsetmultiplier) * 50);
-      // for i := 1 to helm do
-          // Form5.helmPinguin[i] := THelmPinguin.Create(1, random(offsetmultiplier) * 50 + 100);
+           Form5.AllPinguin[i] := Form5.Pinguin[i];
+       end;
+        for i := 1 to helm do
+        begin
+          Form5.helmPinguin[i] := THelmPinguin.Create(1, random(offsetmultiplier) * 50 + 100);
+          Form5.AllPinguin[i + 5] := Form5.HelmPinguin[i];
+          Form5.Pinguincount := i + helm;
+        end;
+        for i := 1 to schild do
+        begin
+          Form5.SchildPinguin[i] := TSchildPinguin.Create(1, random(offsetmultiplier) * 50 + 100);
+          Form5.AllPinguin[i + 5] := Form5.HelmPinguin[i];
+          Form5.Pinguincount := i + helm + schild;
+        end;
+        for i := 1 to Boss do
+        begin
+          Form5.bossPinguin[i] := TbossPinguin.Create(1, random(offsetmultiplier) * 10 + 100);
+          Form5.AllPinguin[i + 5] := Form5.HelmPinguin[i];
+          Form5.Pinguincount := i + helm + schild + boss;
+        end;
+        for i := 1 to Tarn do
+        begin
+          Form5.tarnPinguin[i] := TtarnPinguin.Create(1, random(offsetmultiplier) * 10 + 100);
+          Form5.AllPinguin[i + 5] := Form5.HelmPinguin[i];
+          Form5.Pinguincount := i + helm + schild + boss + tarn;
+        end;
   end
   else if map = 2 then
   begin
        for i := 1 to normal do
            Form6.Pinguin[i] := TPinguin.Create(2, random(offsetmultiplier) * 50);
-       //for i := 1 to helm do
-        //   Form6.helmPinguin[i] := THelmPinguin.Create(2, random(offsetmultiplier) * 50 + 100);
+       for i := 1 to helm do
+           Form6.helmPinguin[i] := THelmPinguin.Create(2, random(offsetmultiplier) * 50 + 100);
        end;
 end;
 
 procedure tick(map: integer; Pinguin: TPinguin);
 var i, j, speed: integer;
 begin
-  // WITH DO EINFÜGEN !!!!
-  //!!!!!
-  //!!!!!
   Pinguin.laufen(1);
   if Pinguin.hp <= 0 then //wenn Pinguin tot dann weg
      Pinguin.currentPath := 100;
@@ -46,7 +68,7 @@ begin
   begin
       if Pinguin <> nil then
       Pinguin.laufen(1);
-      for j := 1 to 50 do   //für hedes Känguru: angriff auf Pinguine; Attackframe rein
+      for j := 1 to 50 do   //für jedes Känguru: angriff auf Pinguine; Attackframe rein
           begin
       if Form5.BogenKanguru[j] <> nil then
       begin
@@ -78,11 +100,8 @@ begin
         Pinguin.slowed := false;
         Pinguin.speed := 2;
        end;
-
-
       end;
       end;
-
       end;
   end
   else if map = 2 then
