@@ -264,20 +264,31 @@ begin
          tick(1, TarnPinguin[i]);
          end;
          inc(ticksPassed);
-         for i := 1 to 100 do  //Positionssystem --> Rechnet aus welcher Pinguin ganz vorne ist
-         if AllPinguin[i] <> nil then
-         begin
-         AllPinguin[i].position := i;
-         end;
          //Positionssystem muss noch überprft werden
+        { for i := 1 to Pinguincount do
+         begin
+         for j := 1 to Pinguincount do
+         begin
+              if (AllPinguin[i] <> nil) AND (i <> j) AND (AllPinguin[i].currentPath < 100) AND (AllPinguin[i].position < 1000) AND (AllPinguin[i] <> nil) AND (AllPinguin[j] <> nil) AND (AllPinguin[j].position < 999) AND (AllPinguin[i].position < 999)then
+              begin
+              if (AllPinguin[j].currentPath > AllPinguin[i].currentpath) OR
+                 ((AllPinguin[j].currentPath = AllPinguin[i].currentPath) AND
+                 (((Path[AllPinguin[j].currentPath].direction = 1) AND (AllPinguin[j].x > AllPinguin[i].x)) OR
+                  ((Path[AllPinguin[j].currentPath].direction = 2) AND (AllPinguin[j].y > AllPinguin[i].y)) OR
+                  ((Path[AllPinguin[j].currentPath].direction = 3) AND (AllPinguin[j].x < AllPinguin[i].x)) OR
+                  ((Path[AllPinguin[j].currentPath].direction = 4) AND (AllPinguin[j].y < AllPinguin[i].y))))
+              then
+                 switch := AllPinguin[i].position;
+                 AllPinguin[i].position := AllPinguin[j].position;
+                 AllPinguin[j].position := switch;
+                 Panel1.caption := 'switched' + '    ' + inttostr(i) + '     ' + inttostr(j);
+              end;
+         end;
+         end; }
 
-
-         {for i := 1 to 100 do
-         if AllPinguin[i] <> nil then
-         for j := 1 to 100 do
-             if AllPinguin[j] <> nil then
+         { if (AllPinguin[j] <> nil) AND (i <> j) then
              begin
-             if (AllPinguin[i].currentPath < 100) AND (AllPinguin[i].currentPath > AllPinguin[j].currentpath) AND (AllPinguin[i].position < AllPinguin[j].position) AND (AllPinguin[i] <> nil) AND (AllPinguin[j] <> nil) then
+             if (AllPinguin[i].currentPath < 100) AND (AllPinguin[i].position < 1000) AND (AllPinguin[i].currentPath > AllPinguin[j].currentpath) AND (AllPinguin[i].position < AllPinguin[j].position) AND (AllPinguin[i] <> nil) AND (AllPinguin[j] <> nil) then
               begin
                 switch := AllPinguin[i].Position;
                 AllPinguin[i].position := AllPinguin[j].position;
@@ -285,25 +296,25 @@ begin
               end
               else if (AllPinguin[i].currentPath = AllPinguin[j].currentPath)  AND (AllPinguin[i] <> nil) AND (AllPinguin[j] <> nil) then
               begin
-                   if (AllPinguin[i].currentPath < 100) AND (Path[AllPinguin[i].currentPath].direction = 1) AND (AllPinguin[i].x < AllPinguin[j].x) AND (AllPinguin[i] <> nil) AND (AllPinguin[j] <> nil) then
+                   if (AllPinguin[i].currentPath < 100) AND (AllPinguin[i].position < 1000) AND (Path[AllPinguin[i].currentPath].direction = 1) AND (AllPinguin[i].x < AllPinguin[j].x) AND (AllPinguin[i] <> nil) AND (AllPinguin[j] <> nil) then
                    begin
                 switch := AllPinguin[i].Position;
                 AllPinguin[i].position := AllPinguin[j].position;
                 AllPinguin[j].position := switch
                    end
-                   else if (AllPinguin[i].currentPath < 100) AND (Path[AllPinguin[i].currentPath].direction = 2) AND (AllPinguin[i].y < AllPinguin[j].x) AND (AllPinguin[i] <> nil) AND (AllPinguin[j] <> nil) then
+                   else if (AllPinguin[i].currentPath < 100) AND (AllPinguin[i].position < 1000) AND (Path[AllPinguin[i].currentPath].direction = 2) AND (AllPinguin[i].y < AllPinguin[j].y) AND (AllPinguin[i] <> nil) AND (AllPinguin[j] <> nil) then
                    begin
                 switch := AllPinguin[i].Position;
                 AllPinguin[i].position := AllPinguin[j].position;
                 AllPinguin[j].position := switch
                    end
-                   else if (AllPinguin[i].currentPath < 100) AND (Path[AllPinguin[i].currentPath].direction = 3) AND (AllPinguin[i].y > AllPinguin[j].x) AND (AllPinguin[i] <> nil) AND (AllPinguin[j] <> nil) then
+                   else if (AllPinguin[i].currentPath < 100) AND (AllPinguin[i].position < 1000) AND (Path[AllPinguin[i].currentPath].direction = 3) AND (AllPinguin[i].x > AllPinguin[j].x) AND (AllPinguin[i] <> nil) AND (AllPinguin[j] <> nil) then
                    begin
                 switch := AllPinguin[i].Position;
                 AllPinguin[i].position := AllPinguin[j].position;
                 AllPinguin[j].position := switch
                    end
-                   else if (AllPinguin[i].currentPath < 100) AND (Path[AllPinguin[i].currentPath].direction = 4) AND (AllPinguin[i].y < AllPinguin[j].x) AND (AllPinguin[i] <> nil) AND (AllPinguin[j] <> nil) then
+                   else if (AllPinguin[i].currentPath < 100) AND (AllPinguin[i].position < 1000) AND (Path[AllPinguin[i].currentPath].direction = 4) AND (AllPinguin[i].y < AllPinguin[j].y) AND (AllPinguin[i] <> nil) AND (AllPinguin[j] <> nil) then
                    begin
                 switch := AllPinguin[i].Position;
                 AllPinguin[i].position := AllPinguin[j].position;
@@ -311,7 +322,7 @@ begin
                    end;
 
               end;
-              end;}
+              end;  }
 
 end;
 //Angriffsbereich unsichtbar machen

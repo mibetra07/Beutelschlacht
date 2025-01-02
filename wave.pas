@@ -27,26 +27,22 @@ begin
         for i := 1 to helm do
         begin
           Form5.helmPinguin[i] := THelmPinguin.Create(1, random(offsetmultiplier) * 50 + 100);
-          Form5.AllPinguin[i + 5] := Form5.HelmPinguin[i];
-          Form5.Pinguincount := i + helm;
+          Form5.AllPinguin[i + normal] := Form5.HelmPinguin[i];
         end;
         for i := 1 to schild do
         begin
           Form5.SchildPinguin[i] := TSchildPinguin.Create(1, random(offsetmultiplier) * 50 + 100);
-          Form5.AllPinguin[i + 5] := Form5.HelmPinguin[i];
-          Form5.Pinguincount := i + helm + schild;
+          Form5.AllPinguin[i + helm + normal ] := Form5.HelmPinguin[i];
         end;
         for i := 1 to Boss do
         begin
           Form5.bossPinguin[i] := TbossPinguin.Create(1, random(offsetmultiplier) * 10 + 100);
-          Form5.AllPinguin[i + 5] := Form5.HelmPinguin[i];
-          Form5.Pinguincount := i + helm + schild + boss;
+          Form5.AllPinguin[i + helm + normal + schild] := Form5.HelmPinguin[i];
         end;
         for i := 1 to Tarn do
         begin
           Form5.tarnPinguin[i] := TtarnPinguin.Create(1, random(offsetmultiplier) * 10 + 100);
-          Form5.AllPinguin[i + 5] := Form5.HelmPinguin[i];
-          Form5.Pinguincount := i + helm + schild + boss + tarn;
+          Form5.AllPinguin[i + helm + normal + schild + boss] := Form5.TarnPinguin[i];
         end;
   end
   else if map = 2 then
@@ -103,6 +99,7 @@ begin
       end;
       end;
       end;
+      pinguin.lab.caption := inttostr(pinguin.position);
   end
   else if map = 2 then
       Pinguin.laufen(2);
