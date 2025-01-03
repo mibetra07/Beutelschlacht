@@ -17,6 +17,7 @@ type TKanguru = class
     value : integer;
     cancamo : boolean;
     active : boolean;
+    damagelvl, rangelvl, speedlvl : integer;
     constructor create(map, x, y, range : integer);
     procedure destruct;
     procedure attack(map: integer; Pinguin: TPinguin; Kanguruart: string);
@@ -96,6 +97,9 @@ constructor Tkanguru.create(map, x, y, range : integer);
     self.bild.top := y;
     self.bild.Visible := True;
 
+    damagelvl:=0;
+    rangelvl:=0;
+    speedlvl:=0;
     active := false;
   end;
 

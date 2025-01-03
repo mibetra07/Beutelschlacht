@@ -1,13 +1,13 @@
 object Form5: TForm5
-  Left = 368
-  Height = 991
-  Top = 378
-  Width = 1902
+  Left = 1912
+  Height = 1017
+  Top = -8
+  Width = 1920
   Caption = 'Form5'
-  ClientHeight = 991
-  ClientWidth = 1902
+  ClientHeight = 1017
+  ClientWidth = 1920
   OnCreate = FormCreate
-  LCLVersion = '3.6.0.0'
+  LCLVersion = '3.4.0.0'
   WindowState = wsFullScreen
   object Image1: TImage
     Left = 0
@@ -1064,6 +1064,7 @@ object Form5: TForm5
       Width = 120
       Caption = '?Preis?'
       TabOrder = 2
+      OnClick = Button8Click
     end
     object Button9: TButton
       Left = 16
@@ -1072,6 +1073,7 @@ object Form5: TForm5
       Width = 120
       Caption = '?Preis?'
       TabOrder = 3
+      OnClick = Button9Click
     end
     object Button10: TButton
       Left = 16
@@ -1080,6 +1082,7 @@ object Form5: TForm5
       Width = 120
       Caption = '?Preis?'
       TabOrder = 4
+      OnClick = Button10Click
     end
     object Button11: TButton
       Left = 16
@@ -1088,6 +1091,7 @@ object Form5: TForm5
       Width = 120
       Caption = '?Preis?'
       TabOrder = 5
+      OnClick = Button11Click
     end
     object Panel12: TPanel
       Left = 16
