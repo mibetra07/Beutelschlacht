@@ -10,6 +10,7 @@ type TPinguin  = class
       x, y, width, height, art, armorlvl, hp, moved, currentPath, position, speed, bildOffset:integer;
       slowed, camo: boolean;
       bild: Timage;
+      lab: tLabel;
       hpBar: TProgressBar;
       constructor create(map, offset: integer);
       procedure laufen(map: integer);
@@ -35,7 +36,7 @@ type TPinguin  = class
       public
       constructor create(map, offset: integer);
       end;
-
+procedure posUpdate(Pinguin: TPinguin);
 implementation
 
    Uses map2, map1;
@@ -64,6 +65,12 @@ begin
      bild.Parent := Form5;
      hpBar := TProgressbar.create(Form5);
      hpBar.parent := Form5;
+     position := Form5.PinguinCount;
+     inc(Form5.Pinguincount);
+     lab := TLabel.create(Form5);
+     lab.parent := Form5;
+     lab.visible := true;
+     lab.font.color := Clblack;
      end;
      //größe
 
@@ -151,8 +158,6 @@ begin
          if self.x <= Form5.Path[self.currentPath].x + Form5.Path[self.currentPath].width then  //damit es nur bis Path Ende geht
            begin
              self.x := self.x + self.speed;
-             self.bild.left := self.x;
-             self.hpbar.left := self.x + 24;
            end
            else
              inc(self.currentPath); // wenn ende erreicht -> nächster Path
@@ -162,8 +167,6 @@ begin
            if self.y <= Form5.Path[self.currentPath].y + Form5.Path[self.currentPath].height then //damit es nur bis Path Ende geht
            begin
              self.y := self.y + self.speed;
-             self.bild.top := self.y + self.bildOffset;
-             self.hpbar.top := self.y - 10;
            end
            else
           inc(self.currentPath); // wenn ende erreicht -> nächster Path
@@ -173,8 +176,6 @@ begin
          if self.x >= Form5.Path[self.currentPath].x then //damit es nur bis Path Ende geht
          begin
          self.x := self.x - self.speed;
-         self.bild.left := self.x;
-         self.hpbar.left := self.x + 24;
          end
          else
           inc(self.currentPath); // wenn ende erreicht -> nächster Path
@@ -184,17 +185,17 @@ begin
          if self.y >= Form5.Path[self.currentPath].y then    //damit es nur bis Path Ende geht
            begin
            self.y := self.y - self.speed;
-           self.bild.top := self.y + self.bildOffset;
-           self.hpbar.top := self.y - 10;
            end
          else
           inc(self.currentPath); // wenn ende erreicht -> nächster Path
          end;
+         posUpdate(self);
          end
          else if self.currentPath >= 7 then
            begin
            self.currentPath := 100;
            self.x := -10000;
+           self.position := 1000;
            self.bild.left := self.x;
            self.hpBar.Left := self.x;
            end;
@@ -258,6 +259,16 @@ begin
            end;
   end;
 end;
+procedure posUpdate(Pinguin: TPinguin);
+begin
+         Pinguin.bild.left := Pinguin.x;
+         Pinguin.hpBar.left := Pinguin.x + 24 + Pinguin.bildOffset;
+         Pinguin.bild.top := Pinguin.y - Pinguin.bildOffset;
+         Pinguin.hpBar.top := Pinguin.y - 10 - Pinguin.bildOffset;
+         Pinguin.lab.top := Pinguin.y + 100;
+         Pinguin.lab.left := Pinguin.x + 48;
+end;
+
 {procedure Tpinguin.attackcheck(map: integer; Kanguru: TKanguru; Kanguruart: string);
 var i, j: integer;
 begin
