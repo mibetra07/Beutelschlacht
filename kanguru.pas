@@ -13,11 +13,12 @@ type TKanguru = class
     bild: Timage;
     attackradius : TShape;
     damage, range2 : integer; //range2 weil debugger sonst meckert wegen range in create()
-    attackspeed : real;
+    attackspeed : integer;
     value : integer;
     cancamo : boolean;
     active : boolean;
     damagelvl, rangelvl, speedlvl : integer;
+    slowness: integer;
     constructor create(map, x, y, range : integer);
     procedure destruct;
     procedure attack(map: integer; Pinguin: TPinguin; Kanguruart: string);
@@ -101,50 +102,53 @@ constructor Tkanguru.create(map, x, y, range : integer);
     rangelvl:=0;
     speedlvl:=0;
     active := false;
+    slowness := 1;
+    attackspeed := 15;
   end;
 
   constructor TBoxerkanguru.create(map, x, y : integer);
   begin
     damage := 50;
     range2 := 150;
-    attackspeed := 0.5;
     cancamo := false;
     value := 1000;
     inherited create(map, x, y, range2);
     self.bild.Picture.LoadFromFile('images\Boxerkanguru.png');
+    attackspeed := 15;
   end;
 
   constructor TBogenkanguru.create(map, x, y : integer);
   begin
     damage := 150;
     range2 := 300;
-    attackspeed := 1;
     cancamo := false;
     value:= 2000;
     inherited create(map, x, y, range2);
     self.bild.Picture.LoadFromFile('images\Bogenguru.png');
+    attackspeed := 9;
   end;
 
   constructor TEiskanguru.create(map, x, y : integer);
   begin
     damage := 25;
     range2 := 150;
-    attackspeed := 0.5;
     cancamo := false;
     value := 3000;
     inherited create(map, x, y, range2);
     self.bild.Picture.LoadFromFile('images\Eisguru.png');
+    slowness := 2;
+    attackspeed := 2;
   end;
 
   constructor TNinjakanguru.create(map, x, y : integer);
   begin
     damage := 75;
     range2 := 225;
-    attackspeed := 1;
     cancamo := true;
     value := 5000;
     inherited create(map, x, y, range2);
     self.bild.Picture.LoadFromFile('images\Ninja.png');
+    attackspeed := 30;
   end;
 
   constructor TZauberkanguru.create(map, x, y : integer);
@@ -183,11 +187,14 @@ begin
   begin
        Pinguin.hp := Pinguin.hp - self.damage div 10;
        Pinguin.hpBar.position := Pinguin.hp div 10;
-       if (Kanguruart = 'Eis') AND (Pinguin.slowed = false)then
+       if (Kanguruart = 'Eis') AND (Pinguin.slowed = false) AND (Pinguin.canBeSlowed = true) then
        begin
-       Pinguin.speed := Pinguin.speed div 2;
        Pinguin.slowed := true;
-       Form5.slowedTick := Form5.ticksPassed;
+       Pinguin.speed := 0;
+       Pinguin.slowedTick := Form5.ticksPassed;
+       Pinguin.bild.picture.loadFromFile(Pinguin.FileName + '_freeze' + '.png');
+       self.bild.picture.LoadFromFile('Images\Eisguru_Attack.png')
+
        end;
        if Kanguruart = 'Boxer' then
           self.bild.picture.LoadFromFile('Images\Pinguinboxer_Attack.png')
