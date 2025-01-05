@@ -68,34 +68,34 @@ begin
           begin
       if Form5.BogenKanguru[j] <> nil then
       begin
-       if (Form5.ticksPassed mod 20) = 0 then  //alle so und so viel sekunden
+       if Form5.ticksPassed mod (1200 div (Form5.BogenKanguru[j].attackspeed * 20)) = 0 then  //alle so und so viel sekunden
         begin
       Form5.BogenKanguru[j].attack(1, Pinguin, 'Bogen');
-      if (Form5.ticksPassed mod 40 = 0) and (Form5.BogenKanguru[j] <> nil) and (Form5.BogenKanguru[j].active = true)then
+      if (Form5.ticksPassed mod (1200 div (Form5.BogenKanguru[j].attackspeed * 10)) = 0) and (Form5.BogenKanguru[j] <> nil) and (Form5.BogenKanguru[j].active = true)then
       Form5.BogenKanguru[1].bild.picture.LoadFromFile('images\Bogenguru.png'); //alle anderen so und so viel sekunden
       end;
       end;
        if Form5.Kanguru[j] <> nil then
       begin
-       if (Form5.ticksPassed mod 40 = 0) and (Form5.Kanguru[j] <> nil) and (Form5.Kanguru[j].active = true) then
+       if (Form5.ticksPassed mod (1200 div (Form5.Kanguru[j].attackspeed * 20)) = 0) and (Form5.Kanguru[j] <> nil) and (Form5.Kanguru[j].active = true) then
         begin
       Form5.Kanguru[j].attack(1, Pinguin, 'Boxer');
-      if Form5.ticksPassed mod 40 = 0 then
+      if Form5.ticksPassed mod (1200 div (Form5.Kanguru[j].attackspeed * 10)) = 0 then
       Form5.Kanguru[1].bild.picture.LoadFromFile('images\Boxerkanguru.png');
       end;
       end;
        if Form5.EisKanguru[j] <> nil then
       begin
-       if (Form5.ticksPassed mod 40 = 0) and (Form5.EisKanguru[j] <> nil) and (Form5.EisKanguru[j].active = true) then
+       if (Form5.ticksPassed mod (1200 div (Form5.EisKanguru[j].attackspeed * 20)) = 0) and (Form5.EisKanguru[j] <> nil) and (Form5.EisKanguru[j].active = true) AND ((Form5.ticksPassed - Pinguin.slowedTick > 120) OR (Pinguin.slowedTick = 0)) then
         begin
       Form5.EisKanguru[j].attack(1, Pinguin, 'Eis');
-      if Form5.ticksPassed mod 40 = 0 then
+      if Form5.ticksPassed mod (1200 div (Form5.EisKanguru[j].attackspeed * 10)) = 0 then
       Form5.EisKanguru[1].bild.picture.LoadFromFile('images\Eisguru.png');
-      if Form5.ticksPassed - Form5.slowedTick > 20 then
+       end;
+       if Form5.ticksPassed - Pinguin.slowedTick > 35 then
        begin
         Pinguin.slowed := false;
-        Pinguin.speed := 2;
-       end;
+        Pinguin.speed :=  Pinguin.baseSpeed;
       end;
       end;
       end;

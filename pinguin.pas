@@ -7,8 +7,8 @@ interface
 Uses Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls, Path, ComCtrls;
 type TPinguin  = class
       public
-      x, y, width, height, art, armorlvl, hp, moved, currentPath, position, speed, bildOffset:integer;
-      slowed, camo: boolean;
+      x, y, width, height, art, armorlvl, hp, moved, currentPath, position, speed, bildOffset, baseSpeed, slowedTick:integer;
+      slowed, camo, canBeSlowed: boolean;
       bild: Timage;
       lab: tLabel;
       hpBar: TProgressBar;
@@ -95,9 +95,11 @@ begin
      bild.top := y;
      bild.Visible := True;
      hp := 100;
-     speed := 3;
+     baseSpeed := 3;
      bildOffset := 0;
      camo := false;
+     self.speed := self.baseSpeed;
+     canBeSlowed := true;
      end;
    end;
 
@@ -108,14 +110,14 @@ constructor THelmPinguin.create(map, offset: integer);
 
      self.bild.Picture.LoadFromFile('images\Pinguin helm.png');
      self.hp := 300;
-     self.speed := 2;
+     self.baseSpeed := 2;
    end;
 constructor TSchildPinguin.create(map, offset: integer);
 begin
      inherited create(map, offset);
      self.bild.picture.loadFromFile('images\Pinguin Helm und Schild.png');
      self.hp := 500;
-     self.speed := 1;
+     self.baseSpeed := 1;
 end;
 constructor TBossPinguin.create(map, offset: integer);
 begin
@@ -131,8 +133,9 @@ begin
      bild.top := y - 48;
      bild.Visible := True;
      hp := 1500;
-     speed := 1;
+     baseSpeed := 1;
      bildOffset := 48;
+     canBeSlowed := false;
      end;
 end;
 constructor TTarnPinguin.create(map, offset: integer);
@@ -141,7 +144,7 @@ begin
      self.camo := true;
      self.bild.picture.loadFromFile('images\Tarnguin.png');
      self.hp := 500;
-     self.speed := 5;
+     self.baseSpeed := 5;
 end;
 
 procedure TPinguin.laufen(map: integer);
@@ -149,7 +152,7 @@ var i, normal: integer;
 begin
   if map = 1 then
   begin
-       if ((self.width = 192) AND (Form5.tickspassed mod 4 = 0)) OR (self.width <> 192) then
+       if ((self.width = 192) AND (Form5.tickspassed mod 8 = 0)) OR ((self.width <> 192) AND (Form5.tickspassed mod 2 = 0)) then
        begin
          if self.currentPath < 7 then
          begin
