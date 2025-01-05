@@ -7,7 +7,7 @@ object Form5: TForm5
   ClientHeight = 1017
   ClientWidth = 1920
   OnCreate = FormCreate
-  LCLVersion = '3.4.0.0'
+  LCLVersion = '3.6.0.0'
   WindowState = wsFullScreen
   object Image1: TImage
     Left = 0

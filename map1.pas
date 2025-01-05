@@ -130,7 +130,7 @@ type
     const DragThreshold = 96; //minimale Mausbewegung in px, um Dragging/kaufen zu starten
     UpgradeDamage = 25;
     UpgradeRange = 25;
-    UpgradeSpeed = 0.1;
+    UpgradeSpeed = 1;
     var Kanguruzahl, Bogenkanguruzahl, Eiskanguruzahl, Ninjakanguruzahl, Zauberkanguruzahl : integer;
 
   public
