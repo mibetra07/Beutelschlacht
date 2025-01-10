@@ -1,13 +1,13 @@
 object Form5: TForm5
-  Left = 1912
+  Left = 17
   Height = 1017
-  Top = -8
+  Top = 138
   Width = 1920
   Caption = 'Form5'
-  ClientHeight = 1017
-  ClientWidth = 1920
+  ClientHeight = 0
+  ClientWidth = 0
   OnCreate = FormCreate
-  LCLVersion = '3.6.0.0'
+  LCLVersion = '3.4.0.0'
   WindowState = wsFullScreen
   object Image1: TImage
     Left = 0

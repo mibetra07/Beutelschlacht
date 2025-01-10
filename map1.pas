@@ -132,9 +132,22 @@ type
     UpgradeRange = 25;
     UpgradeSpeed = 1;
     var Kanguruzahl, Bogenkanguruzahl, Eiskanguruzahl, Ninjakanguruzahl, Zauberkanguruzahl : integer;
-
+  //Positionsvariablen zum platzieren der Kängurus
+    dx, dy: integer;
+  //tick variablen und Münzen
+    coins: integer;
+    procedure InitDrag(X, Y : integer; Button : TMouseButton);
+    procedure CheckAllCollision(firstImage : TImage; var CollisionDetected : boolean; Sender : string);
+  //KanguruClick und Menü-Zeugs
+    var
+    selectedKangurutype : string;
+    selectedKanguruNumber : integer;
+    procedure ShowMenu(kangurutype : string; damage, range: integer; attackspeed : real);
+    procedure sellKanguru();
   public
-    var Path: array[1..7] of Tpath;
+    var
+    ticksPassed, slowedTick : integer;
+    Path: array[1..7] of Tpath;
     Pinguin: array[1..100] of TPinguin;
     HelmPinguin: array[1..100] of THelmPinguin;
     SchildPinguin: array[1..100] of TSchildPinguin;
@@ -149,19 +162,8 @@ type
     Zauberkanguru : array[1..100] of TZauberkanguru;
     Ninjakanguru : array[1..100] of TNinjakanguru;
     Eiskanguru : array[1..100] of TEiskanguru;
-  //Positionsvariablen zum platzieren der Kängurus
-    dx, dy: integer;
-  //tick variablen und Münzen
-    ticksPassed, slowedTick, coins: integer;
-    procedure InitDrag(X, Y : integer; Button : TMouseButton);
-    procedure CheckAllCollision(firstImage : TImage; var CollisionDetected : boolean; Sender : string);
-  //KanguruClick und Menü-Zeugs
-    var
-    selectedKangurutype : string;
-    selectedKanguruNumber : integer;
     procedure KanguruClick(Sender: TObject);
-    procedure ShowMenu(kangurutype : string; damage, range: integer; attackspeed : real);
-    procedure sellKanguru();
+    procedure ConstructForm();
   end;
 
 var
@@ -176,11 +178,9 @@ uses Menu;
 
 
 procedure TForm5.FormCreate(Sender: TObject);
-var i : integer;
 begin
-  randomize();
-   coins := 300000;
-   Pinguincount := 0;
+   randomize();
+   ConstructForm();
    //Weg der Map erstellen (dir, left, top, breit, hoch, map: integer)
    Path[1] := TPath.create(1, 100, 500, 500, 100, 1);
    Path[2] := Tpath.create(2, 600, 500, 100, 400, 1);
@@ -190,10 +190,15 @@ begin
    Path[6] := Tpath.create(2, 1300, 200, 100, 500, 1);
    Path[7] := Tpath.create(1, 1300, 700, 1000, 100, 1);
    wave[1] := Twave.create(5, 4, 3, 1, 2, 1);
+end;
+
+procedure Tform5.ConstructForm();
+var i : integer;
+begin
+   coins := 10000;
+   Pinguincount := 0;
    Timer1.enabled := false;
    Timer1.interval := 1;
-
-
    //Känguruzählervariablen
    Kanguruzahl := 0;
    Bogenkanguruzahl := 0;
@@ -254,6 +259,7 @@ begin
    Groupbox6.visible:=false;
 
    Groupbox7.visible:=false;
+   //Form leeren (Pinguine und Kängurus)
 end;
 
 procedure TForm5.Timer1Timer(Sender: TObject);
@@ -1081,7 +1087,7 @@ begin
   end;
 
 end;
-
+//Speed
 procedure TForm5.Button9Click(Sender: TObject);
 begin
   if selectedkangurutype = 'boxer' then
@@ -1125,54 +1131,74 @@ begin
       button9.enabled:=false;
   end;
 end;
-//speed
+//range
 procedure TForm5.Button10Click(Sender: TObject);
 begin
-
-end;
-
-procedure TForm5.Button11Click(Sender: TObject);
-begin
-  if selectedkangurutype = 'boxer' then
+  if selectedkangurutype = 'bolefter' then
   begin
-    inc(kanguru[selectedkangurunumber].damagelvl);
-    kanguru[selectedkangurunumber].damage := kanguru[selectedkangurunumber].damage + UpgradeDamage;
-    label7.caption:=inttostr(kanguru[selectedkangurunumber].damagelvl) + '/5';
-    if kanguru[selectedkangurunumber].damagelvl >=5 then
-      button8.enabled:=false;
+    inc(kanguru[selectedkangurunumber].rangelvl);
+    kanguru[selectedkangurunumber].range2 := kanguru[selectedkangurunumber].range2 + UpgradeRange;
+    label9.caption:=inttostr(kanguru[selectedkangurunumber].rangelvl) + '/5';
+    if kanguru[selectedkangurunumber].rangelvl >=5 then
+      button9.enabled:=false;
+    kanguru[selectedkangurunumber].attackradius.Width := kanguru[selectedkangurunumber].range2*2;
+    kanguru[selectedkangurunumber].attackradius.Height := kanguru[selectedkangurunumber].range2*2;
+    kanguru[selectedkangurunumber].attackradius.left := kanguru[selectedkangurunumber].bild.left + 48 - kanguru[selectedkangurunumber].range2;
+    kanguru[selectedkangurunumber].attackradius.top := kanguru[selectedkangurunumber].bild.top + 48 - kanguru[selectedkangurunumber].range2;
   end;
   if selectedkangurutype = 'bogen' then
   begin
-    inc(bogenkanguru[selectedkangurunumber].damagelvl);
-    bogenkanguru[selectedkangurunumber].damage := bogenkanguru[selectedkangurunumber].damage + UpgradeDamage;
-    label7.caption:=inttostr(bogenkanguru[selectedkangurunumber].damagelvl) + '/5';
-    if bogenkanguru[selectedkangurunumber].damagelvl >=5 then
-      button8.enabled:=false;
+    inc(bogenkanguru[selectedkangurunumber].rangelvl);
+    bogenkanguru[selectedkangurunumber].range2 := bogenkanguru[selectedkangurunumber].range2 + UpgradeRange;
+    label9.caption:=inttostr(bogenkanguru[selectedkangurunumber].rangelvl) + '/5';
+    if bogenkanguru[selectedkangurunumber].rangelvl >=5 then
+      button10.enabled:=false;
+    bogenkanguru[selectedkangurunumber].attackradius.Width := bogenkanguru[selectedkangurunumber].range2*2;
+    bogenkanguru[selectedkangurunumber].attackradius.Height := bogenkanguru[selectedkangurunumber].range2*2;
+    bogenkanguru[selectedkangurunumber].attackradius.left := bogenkanguru[selectedkangurunumber].bild.left + 48 - bogenkanguru[selectedkangurunumber].range2;
+    bogenkanguru[selectedkangurunumber].attackradius.top := bogenkanguru[selectedkangurunumber].bild.top + 48 - bogenkanguru[selectedkangurunumber].range2;
   end;
   if selectedkangurutype = 'eis' then
   begin
-    inc(eiskanguru[selectedkangurunumber].damagelvl);
-    eiskanguru[selectedkangurunumber].damage := eiskanguru[selectedkangurunumber].damage + UpgradeDamage;
-    label7.caption:=inttostr(eiskanguru[selectedkangurunumber].damagelvl) + '/5';
-    if eiskanguru[selectedkangurunumber].damagelvl >=5 then
-      button8.enabled:=false;
+    inc(eiskanguru[selectedkangurunumber].rangelvl);
+    eiskanguru[selectedkangurunumber].range2 := eiskanguru[selectedkangurunumber].range2 + UpgradeRange;
+    label9.caption:=inttostr(eiskanguru[selectedkangurunumber].rangelvl) + '/5';
+    if eiskanguru[selectedkangurunumber].rangelvl >=5 then
+      button10.enabled:=false;
+    eiskanguru[selectedkangurunumber].attackradius.Width := eiskanguru[selectedkangurunumber].range2*2;
+    eiskanguru[selectedkangurunumber].attackradius.Height := eiskanguru[selectedkangurunumber].range2*2;
+    eiskanguru[selectedkangurunumber].attackradius.left := eiskanguru[selectedkangurunumber].bild.left + 48 - eiskanguru[selectedkangurunumber].range2;
+    eiskanguru[selectedkangurunumber].attackradius.top := eiskanguru[selectedkangurunumber].bild.top + 48 - eiskanguru[selectedkangurunumber].range2;
   end;
   if selectedkangurutype = 'ninja' then
   begin
-    inc(ninjakanguru[selectedkangurunumber].damagelvl);
-    ninjakanguru[selectedkangurunumber].damage := ninjakanguru[selectedkangurunumber].damage + UpgradeDamage;
-    label7.caption:=inttostr(ninjakanguru[selectedkangurunumber].damagelvl) + '/5';
-    if ninjakanguru[selectedkangurunumber].damagelvl >=5 then
-      button8.enabled:=false;
+    inc(ninjakanguru[selectedkangurunumber].rangelvl);
+    ninjakanguru[selectedkangurunumber].range2 := ninjakanguru[selectedkangurunumber].range2 + UpgradeRange;
+    label9.caption:=inttostr(ninjakanguru[selectedkangurunumber].rangelvl) + '/5';
+    if ninjakanguru[selectedkangurunumber].rangelvl >=5 then
+      button10.enabled:=false;
+    ninjakanguru[selectedkangurunumber].attackradius.Width := ninjakanguru[selectedkangurunumber].range2*2;
+    ninjakanguru[selectedkangurunumber].attackradius.Height := ninjakanguru[selectedkangurunumber].range2*2;
+    ninjakanguru[selectedkangurunumber].attackradius.left := ninjakanguru[selectedkangurunumber].bild.left + 48 - ninjakanguru[selectedkangurunumber].range2;
+    ninjakanguru[selectedkangurunumber].attackradius.top := ninjakanguru[selectedkangurunumber].bild.top + 48 - ninjakanguru[selectedkangurunumber].range2;
   end;
   if selectedkangurutype = 'zauber' then
   begin
-    inc(zauberkanguru[selectedkangurunumber].damagelvl);
-    zauberkanguru[selectedkangurunumber].damage := zauberkanguru[selectedkangurunumber].damage + UpgradeDamage;
-    label7.caption:=inttostr(zauberkanguru[selectedkangurunumber].damagelvl) + '/5';
-    if zauberkanguru[selectedkangurunumber].damagelvl >=5 then
-      button8.enabled:=false;
+    inc(zauberkanguru[selectedkangurunumber].Rangelvl);
+    zauberkanguru[selectedkangurunumber].Range2 := zauberkanguru[selectedkangurunumber].range2 + UpgradeRange;
+    label9.caption:=inttostr(zauberkanguru[selectedkangurunumber].Rangelvl) + '/5';
+    if zauberkanguru[selectedkangurunumber].Rangelvl >=5 then
+      button10.enabled:=false;
+    zauberkanguru[selectedkangurunumber].attackradius.Width := zauberkanguru[selectedkangurunumber].range2*2;
+    zauberkanguru[selectedkangurunumber].attackradius.Height := zauberkanguru[selectedkangurunumber].range2*2;
+    zauberkanguru[selectedkangurunumber].attackradius.left := zauberkanguru[selectedkangurunumber].bild.left + 48 - zauberkanguru[selectedkangurunumber].range2;
+    zauberkanguru[selectedkangurunumber].attackradius.top := zauberkanguru[selectedkangurunumber].bild.top + 48 - zauberkanguru[selectedkangurunumber].range2;
   end;
+end;
+//CanCamo
+procedure TForm5.Button11Click(Sender: TObject);
+begin
+
 end;
 end.
 

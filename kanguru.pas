@@ -74,8 +74,8 @@ constructor Tkanguru.create(map, x, y, range : integer);
     self.attackradius.shape := stCircle;
     self.attackradius.brush.color := clGray;
     self.attackradius.brush.style := bsCross;
-    self.attackradius.left := x + 48 - range; //range muss vielleicht geändert werden, dass hier ist falls 1 range = 1 pixel
-    self.attackradius.top := y + 48 - range; //ebd.
+    self.attackradius.left := x + 48 - range;
+    self.attackradius.top := y + 48 - range;
     self.attackradius.visible := true;
     //bild erstellen
     if map = 1 then
@@ -171,6 +171,8 @@ begin
   else if map = 2 then;
   //Self.bild.OnClick := @Form6.KanguruClick
 end;
+
+
 
 procedure Tkanguru.attack(map: integer; Pinguin: TPinguin; Kanguruart: string);
 var i, j: integer;
