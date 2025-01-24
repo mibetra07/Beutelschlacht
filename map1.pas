@@ -142,7 +142,7 @@ type
     var
     selectedKangurutype : string;
     selectedKanguruNumber : integer;
-    procedure ShowMenu(kangurutype : string; damage, range: integer; attackspeed : real);
+    procedure ShowMenu(kangurutype : string; damage, range, attackspeed, damagelvl, speedlvl, rangelvl: integer; cancamo : boolean);
     procedure sellKanguru();
   public
     var
@@ -816,7 +816,7 @@ begin
       selectedkangurutype:='boxer';
       selectedkangurunumber:=i;
       kanguru[i].attackradius.visible:=true;
-      ShowMenu('boxer', kanguru[i].damage, kanguru[i].range2, kanguru[i].attackspeed);
+      ShowMenu('boxer', kanguru[i].damage, kanguru[i].range2, kanguru[i].attackspeed, kanguru[i].damagelvl, kanguru[i].speedlvl, kanguru[i].rangelvl, kanguru[i].cancamo);
     end;
   end;
   for i:=1 to bogenkanguruzahl do
@@ -826,7 +826,7 @@ begin
       selectedkangurutype:='bogen';
       selectedkangurunumber:=i;
       bogenkanguru[i].attackradius.visible:=true;
-      ShowMenu('bogen', bogenkanguru[i].damage, bogenkanguru[i].range2, bogenkanguru[i].attackspeed);
+      ShowMenu('bogen', bogenkanguru[i].damage, bogenkanguru[i].range2, bogenkanguru[i].attackspeed, bogenkanguru[i].damagelvl, bogenkanguru[i].speedlvl, bogenkanguru[i].rangelvl, bogenkanguru[i].cancamo);
     end;
   end;
   for i:=1 to eiskanguruzahl do
@@ -836,7 +836,7 @@ begin
       selectedkangurutype:='eis';
       selectedkangurunumber:=i;
       eiskanguru[i].attackradius.visible:=true;
-      ShowMenu('eis', eiskanguru[i].damage, eiskanguru[i].range2, eiskanguru[i].attackspeed);
+      ShowMenu('eis', eiskanguru[i].damage, eiskanguru[i].range2, eiskanguru[i].attackspeed, eiskanguru[i].damagelvl, eiskanguru[i].speedlvl, eiskanguru[i].rangelvl, eiskanguru[i].cancamo);
     end;
   end;
   for i:=1 to ninjakanguruzahl do
@@ -846,7 +846,7 @@ begin
       selectedkangurutype:='ninja';
       selectedkangurunumber:=i;
       ninjakanguru[i].attackradius.visible:=true;
-      ShowMenu('ninja', ninjakanguru[i].damage, ninjakanguru[i].range2, ninjakanguru[i].attackspeed);
+      ShowMenu('ninja', ninjakanguru[i].damage, ninjakanguru[i].range2, ninjakanguru[i].attackspeed, ninjakanguru[i].damagelvl, ninjakanguru[i].speedlvl, ninjakanguru[i].rangelvl, ninjakanguru[i].cancamo);
     end;
   end;
   //hier Zauberer noch hinzufügen
@@ -870,23 +870,59 @@ begin
   end;
 end;
 //Menü anzeigen
-procedure Tform5.ShowMenu(kangurutype : string; damage, range: integer; attackspeed : real);
+procedure Tform5.ShowMenu(kangurutype : string; damage, range, attackspeed, damagelvl, speedlvl, rangelvl : integer; cancamo : boolean);
 begin
   Groupbox7.visible:=true;
   if kangurutype = 'boxer' then
-    panel11.caption:= 'Boxerkänguru'
+  begin
+    panel11.caption:= 'Boxerkänguru';
+    button11.visible := false;
+    label10.visible := false;
+  end
   else if  kangurutype = 'bogen' then
-    panel11.caption:= 'Bogenkänguru'
+  begin
+    panel11.caption:= 'Bogenkänguru';
+    button11.visible := true;
+    label10.visible := true;
+  end
   else if  kangurutype = 'eis' then
-    panel11.caption:= 'Eiskänguru'
+  begin
+    panel11.caption:= 'Eiskänguru';
+    button11.visible := false;
+    label10.visible := false;
+  end
   else if  kangurutype = 'ninja' then
-    panel11.caption:= 'Ninjakänguru'
+  begin
+    panel11.caption:= 'Ninjakänguru';
+    button11.visible := false;
+    label10.visible := false;
+  end
   else if  kangurutype = 'zauber' then
+  begin
     panel11.caption:= 'Zauberkänguru';
+    button11.visible := true;
+    label10.visible := true;
+  end;
   panel12.caption := inttostr(damage);
-  panel13.caption := floattostr(attackspeed);
+  panel13.caption := inttostr(attackspeed);
   panel14.caption := inttostr(range);
-
+  label7.Caption := inttostr(damagelvl);
+  label8.caption := inttostr(speedlvl);
+  label9.caption := inttostr(rangelvl);
+  if kangurutype = 'zauber' then
+  begin
+    if cancamo = true then
+      panel15.caption := 'Schimmer: Ja'
+    else
+      panel15.caption := 'Schimmer: Nein';
+  end
+  else
+  begin
+    if cancamo = true then
+      panel15.caption := 'Bessere Sicht: Ja'
+    else
+      panel15.caption := 'Bessere Sicht: Nein';
+  end;
 end;
 //Känguru verkaufen
 procedure TForm5.sellKanguru();
