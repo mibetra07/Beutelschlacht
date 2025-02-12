@@ -15,6 +15,7 @@ type
   TForm5 = class(TForm)
     BitBtn1: TBitBtn;
     Button1: TButton;
+    Button12: TButton;
     Button2: TButton;
     Button3: TButton;
     Button4: TButton;
@@ -25,6 +26,7 @@ type
     Button9: TButton;
     Button10: TButton;
     Button11: TButton;
+    CheckBox1: TCheckBox;
     GroupBox2: TGroupBox;
     GroupBox3: TGroupBox;
     GroupBox4: TGroupBox;
@@ -39,7 +41,9 @@ type
     Image6: TImage;
     Image7: TImage;
     Image8: TImage;
+    Image9: TImage;
     Label1: TLabel;
+    Label12: TLabel;
     Label2: TLabel;
     Label3: TLabel;
     Label4: TLabel;
@@ -57,6 +61,7 @@ type
     Memo5: TMemo;
     Panel1: TPanel;
     Panel10: TPanel;
+    Panel16: TPanel;
     Panel2: TPanel;
     Panel3: TPanel;
     Panel4: TPanel;
@@ -80,6 +85,7 @@ type
     procedure BitBtn1Click(Sender: TObject);
     procedure Button10Click(Sender: TObject);
     procedure Button11Click(Sender: TObject);
+    procedure Button12Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -121,6 +127,7 @@ type
       );
     procedure Image3MouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
+    procedure Panel16Click(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
 
   private
@@ -147,21 +154,27 @@ type
   public
     var
     ticksPassed, slowedTick : integer;
-    Path: array[1..7] of Tpath;
+    Path: array[1..30] of Tpath;
     Pinguin: array[1..100] of TPinguin;
     HelmPinguin: array[1..100] of THelmPinguin;
     SchildPinguin: array[1..100] of TSchildPinguin;
     BossPinguin: array[1..100] of TBossPinguin;
     TarnPinguin: array[1..100] of TTarnPinguin;
     AllPinguin: array [1..300] of TPinguin;
+    IndexOfKilled: array[1..5, 1..100] of integer;
+    AmountKilled: array[1..5] of integer;
+    KilledCount: integer;
     Pinguincount: integer;
     wave: array [1..100] of Twave;
+    waveParams: array[1..100, 1..6] of integer;
+    currentWave: integer;
 
     Kanguru : array[1..100] of TBoxerkanguru;
     Bogenkanguru : array[1..100] of TBogenkanguru;
     Zauberkanguru : array[1..100] of TZauberkanguru;
     Ninjakanguru : array[1..100] of TNinjakanguru;
     Eiskanguru : array[1..100] of TEiskanguru;
+    playerHealth: integer;
     procedure KanguruClick(Sender: TObject);
     procedure ConstructForm();
   end;
@@ -181,21 +194,32 @@ procedure TForm5.FormCreate(Sender: TObject);
 begin
    randomize();
    ConstructForm();
-   //Weg der Map erstellen (dir, left, top, breit, hoch, map: integer)
-   Path[1] := TPath.create(1, 100, 500, 500, 100, 1);
-   Path[2] := Tpath.create(2, 600, 500, 100, 400, 1);
-   Path[3] := Tpath.create(3, 300, 900, 400, 500, 1);
-   Path[4] := Tpath.create(4, 300, 200, 100, 800, 1);
-   Path[5] := Tpath.create(1, 300, 200, 1000, 100, 1);
-   Path[6] := Tpath.create(2, 1300, 200, 100, 500, 1);
-   Path[7] := Tpath.create(1, 1300, 700, 1000, 100, 1);
-   wave[1] := Twave.create(5, 4, 3, 1, 2, 1);
+   //Weg der Map erstellen(dir, left, top, breit, hoch, map: integer)
+   Path[1] := TPath.create(1, 0, 320, 620, 75, 1);
+   Path[2] := Tpath.create(2, 620, 320, 75, 320, 1);
+   Path[3] := Tpath.create(3, 300, 650, 400, 75, 1);
+   Path[4] := Tpath.create(4, 250, 90, 75, 620, 1);
+   Path[5] := Tpath.create(1, 250, 30, 740, 75, 1);
+   Path[6] := Tpath.create(2, 990, 30, 75, 350, 1);
+   Path[7] := Tpath.create(1, 990, 380, 400, 75, 1);
+   //Paths, nur für Hindernisse (Platzierbarkeit Kängurus einschränken)
+   Path[20] := TPath.create(1, 0, 0, 180, 100, 1);
+   Path[21] := Tpath.create(1, 180, 0, 90, 20, 1);
+   Path[22] := Tpath.create(1, 1290, 0, 180, 100,1);
+   Path[23] := Tpath.create(1, 0, 650, 80, 430, 1);
+   Path[24] := Tpath.create(1, 80, 800, 120, 330, 1);
+   Path[25] := Tpath.create(1, 200, 900, 1200, 120, 1);
+   Path[26] := Tpath.create(1, 1180, 690, 300, 400, 1);
+   Path[27] := Tpath.create(1, 1120, 860, 100, 80, 1);
+   Path[28] := Tpath.create(1, 1385, 550, 80, 80, 1);
+   wave[1] := Twave.create(2, 2, 0, 0, 0, 1);
+   currentWave := 1;
 end;
 
 procedure Tform5.ConstructForm();
-var i : integer;
+var i, j : integer;
 begin
-   coins := 10000;
+   coins := 9000000;
    Pinguincount := 0;
    Timer1.enabled := false;
    Timer1.interval := 1;
@@ -259,12 +283,148 @@ begin
    Groupbox6.visible:=false;
 
    Groupbox7.visible:=false;
+   //vorkodierte Parameter für die wellen bis 20
+WaveParams[1, 1] := 2;
+WaveParams[1, 2] := 0;
+WaveParams[1, 3] := 0;
+WaveParams[1, 4] := 0;
+WaveParams[1, 5] := 0;
+
+WaveParams[2, 1] := 5;
+WaveParams[2, 2] := 0;
+WaveParams[2, 3] := 0;
+WaveParams[2, 4] := 0;
+WaveParams[2, 5] := 0;
+
+WaveParams[3, 1] := 7;
+WaveParams[3, 2] := 0;
+WaveParams[3, 3] := 0;
+WaveParams[3, 4] := 0;
+WaveParams[3, 5] := 0;
+
+WaveParams[4, 1] := 3;
+WaveParams[4, 2] := 2;
+WaveParams[4, 3] := 0;
+WaveParams[4, 4] := 0;
+WaveParams[4, 5] := 0;
+
+WaveParams[5, 1] := 4;
+WaveParams[5, 2] := 4;
+WaveParams[5, 3] := 0;
+WaveParams[5, 4] := 0;
+WaveParams[5, 5] := 0;
+
+WaveParams[6, 1] := 0;
+WaveParams[6, 2] := 7;
+WaveParams[6, 3] := 0;
+WaveParams[6, 4] := 0;
+WaveParams[6, 5] := 0;
+
+WaveParams[7, 1] := 6;   // Normaler Pinguin
+WaveParams[7, 2] := 3;   // Helm Pinguin
+WaveParams[7, 3] := 0;
+WaveParams[7, 4] := 0;
+WaveParams[7, 5] := 0;
+
+WaveParams[8, 1] := 4;
+WaveParams[8, 2] := 5;   // Fokus auf Helm Pinguin
+WaveParams[8, 3] := 0;
+WaveParams[8, 4] := 0;
+WaveParams[8, 5] := 0;
+
+WaveParams[9, 1] := 8;   // Schnelle Welle
+WaveParams[9, 2] := 2;
+WaveParams[9, 3] := 0;
+WaveParams[9, 4] := 0;
+WaveParams[9, 5] := 0;
+
+WaveParams[10, 1] := 3;
+WaveParams[10, 2] := 3;
+WaveParams[10, 3] := 1;  // Einführung Helm und Schild Pinguin
+WaveParams[10, 4] := 0;
+WaveParams[10, 5] := 0;
+
+WaveParams[11, 1] := 6;   // Mischung aus normal und Helm
+WaveParams[11, 2] := 4;
+WaveParams[11, 3] := 1;
+WaveParams[11, 4] := 0;
+WaveParams[11, 5] := 0;
+
+WaveParams[12, 1] := 5;
+WaveParams[12, 2] := 3;
+WaveParams[12, 3] := 3;
+WaveParams[12, 4] := 0;
+WaveParams[12, 5] := 0;
+
+WaveParams[13, 1] := 0;   // Einführung Tarn Pinguin
+WaveParams[13, 2] := 0;
+WaveParams[13, 3] := 0;
+WaveParams[13, 4] := 0;
+WaveParams[13, 5] := 6;
+
+WaveParams[14, 1] := 5;
+WaveParams[14, 2] := 2;
+WaveParams[14, 3] := 2;
+WaveParams[14, 4] := 0;
+WaveParams[14, 5] := 3;
+
+WaveParams[15, 1] := 0;   // Fokus auf Helm-Pinguine und Tarn
+WaveParams[15, 2] := 6;
+WaveParams[15, 3] := 2;
+WaveParams[15, 4] := 0;
+WaveParams[15, 5] := 4;
+
+WaveParams[16, 1] := 8;   // Rückkehr zu schnellen Wellen
+WaveParams[16, 2] := 0;
+WaveParams[16, 3] := 3;
+WaveParams[16, 4] := 0;
+WaveParams[16, 5] := 3;
+
+WaveParams[17, 1] := 0;   // Helm und Schild mit Tarn
+WaveParams[17, 2] := 0;
+WaveParams[17, 3] := 4;
+WaveParams[17, 4] := 0;
+WaveParams[17, 5] := 4;
+
+WaveParams[18, 1] := 4;
+WaveParams[18, 2] := 4;
+WaveParams[18, 3] := 3;
+WaveParams[18, 4] := 0;
+WaveParams[18, 5] := 4;
+
+WaveParams[19, 1] := 0;   // Herausforderung: viele starke Gegner
+WaveParams[19, 2] := 4;
+WaveParams[19, 3] := 5;
+WaveParams[19, 4] := 0;
+WaveParams[19, 5] := 3;
+
+WaveParams[20, 1] := 0;   // Einführung Boss
+WaveParams[20, 2] := 0;
+WaveParams[20, 3] := 4;
+WaveParams[20, 4] := 1;   // Boss Pinguin
+WaveParams[20, 5] := 3;
+
    //Form leeren (Pinguine und Kängurus)
+   for i := 1 to 5 do
+       for j := 1 to 100 do
+           begin
+                IndexOfKilled[i, j] := 0;
+                AmountKilled[j] := 0;
+           end;
+   killedCount := 0;
+   PlayerHealth := 250;
 end;
 
 procedure TForm5.Timer1Timer(Sender: TObject);
 var i, j, switch: integer;
 begin
+   if playerHealth <= 0 then
+   begin
+        Timer1.enabled := false;
+        label12.caption := '0';
+        Panel16.visible := true;
+        Button12.visible := true;
+   end;
          for i := 1 to 100 do
          begin
          if Pinguin[i] <> nil then
@@ -278,6 +438,8 @@ begin
          if TarnPinguin[i] <> nil then
          tick(1, TarnPinguin[i]);
          end;
+         Panel1.Caption := inttostr(KilledCount) + ';' + inttostr(PinguinCount) + ';' + inttostr(Form5.currentWave);
+         Panel2.Caption := inttostr(AmountKilled[1]) + ';' + inttostr(AmountKilled[2]);
          inc(ticksPassed);
          //Positionssystem muss noch überprft werden
         { for i := 1 to Pinguincount do
@@ -338,8 +500,8 @@ begin
 
               end;
               end;  }
+   end;
 
-end;
 //Angriffsbereich unsichtbar machen
 procedure TForm5.Image1Click(Sender: TObject);
 var i: integer;
@@ -515,12 +677,15 @@ begin
   //Pfade
   for i:=1 to (Length(Path)) do
   begin
+  if Path[i] <> nil then
+  begin
     CheckCollision(firstImage, Path[i].bild, Collision);
     if Collision = true then
     begin
       Collisiondetected := true;
       exit();
     end;
+  end;
   end;
 end;
 
@@ -597,6 +762,11 @@ begin
       kanguru[kanguruzahl].setActive(1);
     end;
   end;
+end;
+
+procedure TForm5.Panel16Click(Sender: TObject);
+begin
+
 end;
 
 //Bogen
@@ -1252,5 +1422,12 @@ begin
       button11.enabled:=false;
   end;
 end;
+
+procedure TForm5.Button12Click(Sender: TObject);
+begin
+  Form1.show;
+  Form5.close;
+end;
+
 end.
 
