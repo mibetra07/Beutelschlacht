@@ -1,14 +1,14 @@
 object Form1: TForm1
-  Left = 1913
-  Height = 1061
-  Top = 0
+  Left = 555
+  Height = 1057
+  Top = 362
   Width = 1920
   Caption = 'Main Menu'
-  ClientHeight = 0
-  ClientWidth = 0
+  ClientHeight = 1057
+  ClientWidth = 1920
   OnActivate = FormActivate
   OnCreate = FormCreate
-  LCLVersion = '3.4.0.0'
+  LCLVersion = '3.6.0.0'
   WindowState = wsFullScreen
   object Button1: TButton
     Left = 860

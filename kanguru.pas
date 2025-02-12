@@ -108,7 +108,7 @@ constructor Tkanguru.create(map, x, y, range : integer);
 
   constructor TBoxerkanguru.create(map, x, y : integer);
   begin
-    damage := 50;
+    damage := 20;
     range2 := 150;
     cancamo := false;
     value := 1000;

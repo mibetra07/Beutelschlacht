@@ -7,7 +7,7 @@ interface
 Uses Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls, Path, ComCtrls;
 type TPinguin  = class
       public
-      x, y, width, height, art, armorlvl, hp, moved, currentPath, position, speed, bildOffset, baseSpeed, slowedTick:integer;
+      x, y, width, height, art, armorlvl, hp, basehp, moved, currentPath, position, speed, bildOffset, baseSpeed, slowedTick, index:integer;
       slowed, camo, canBeSlowed: boolean;
       FileName: string;
       bild: Timage;
@@ -40,7 +40,7 @@ type TPinguin  = class
 procedure posUpdate(Pinguin: TPinguin);
 implementation
 
-   Uses map2, map1;
+   Uses map2, map1, tutorial;
 
 constructor TPinguin.create(map, offset: integer);
 var i: integer;
@@ -68,8 +68,25 @@ begin
      hpBar.parent := Form5;
      position := Form5.PinguinCount;
      inc(Form5.Pinguincount);
+     self.index := Form5.Pinguincount;
      lab := TLabel.create(Form5);
      lab.parent := Form5;
+     lab.visible := true;
+     lab.font.color := Clblack;
+     end
+     else if map = 0 then
+     begin
+          x := Form7.Path[1].x - offset ;
+     y := Form7.Path[1].y;
+     bild := TImage.Create(Form7);
+     bild.Parent := Form7;
+     hpBar := TProgressbar.create(Form7);
+     hpBar.parent := Form7;
+     position := Form7.PinguinCount;
+     inc(Form7.Pinguincount);
+     self.index := Form7.Pinguincount;
+     lab := TLabel.create(Form7);
+     lab.parent := Form7;
      lab.visible := true;
      lab.font.color := Clblack;
      end;
@@ -97,11 +114,13 @@ begin
      bild.top := y;
      bild.Visible := True;
      hp := 100;
+     basehp := hp;
      baseSpeed := 3;
      bildOffset := 0;
      camo := false;
      self.speed := self.baseSpeed;
      canBeSlowed := true;
+     art := 1;
      end;
    end;
 
@@ -114,6 +133,8 @@ constructor THelmPinguin.create(map, offset: integer);
 self.     FileName := 'images\Pinguin helm';
      self.hp := 300;
      self.baseSpeed := 2;
+     self.art := 2;
+     self.basehp := self.hp;
    end;
 constructor TSchildPinguin.create(map, offset: integer);
 begin
@@ -122,6 +143,8 @@ begin
      self.FileName := 'images\Pinguin Helm und Schild';
      self.hp := 500;
      self.baseSpeed := 1;
+     self.art := 3;
+     self.basehp := self.hp;
 end;
 constructor TBossPinguin.create(map, offset: integer);
 begin
@@ -141,6 +164,8 @@ begin
      baseSpeed := 1;
      bildOffset := 48;
      canBeSlowed := false;
+     art := 4;
+     basehp := hp;
      end;
 end;
 constructor TTarnPinguin.create(map, offset: integer);
@@ -149,8 +174,10 @@ begin
      self.camo := true;
      self.bild.picture.loadFromFile('images\Tarnguin.png');
       FileName := 'images\Tarnguin';
-     self.hp := 500;
+     self.hp := 300;
      self.baseSpeed := 5;
+     self.art := 5;
+     self.basehp := self.hp;
 end;
 
 procedure TPinguin.laufen(map: integer);
@@ -160,7 +187,7 @@ begin
   begin
        if ((self.width = 192) AND (Form5.tickspassed mod 8 = 0)) OR ((self.width <> 192) AND (Form5.tickspassed mod 2 = 0)) then
        begin
-         if self.currentPath < 7 then
+         if self.currentPath < 8 then
          begin
          if Form5.Path[self.currentPath].direction = 1 then  //wenn nach links
          begin
@@ -182,7 +209,7 @@ begin
          end
          else if Form5.Path[self.currentPath].direction = 3 then //wenn nach links
          begin
-         if self.x >= Form5.Path[self.currentPath].x then //damit es nur bis Path Ende geht
+         if self.x >= Form5.Path[self.currentPath].x - 48 then //damit es nur bis Path Ende geht
          begin
          self.x := self.x - self.speed;
          end
@@ -191,7 +218,7 @@ begin
          end
          else if Form5.Path[self.currentPath].direction = 4 then //wenn nach oben
          begin
-         if self.y >= Form5.Path[self.currentPath].y then    //damit es nur bis Path Ende geht
+         if self.y >= Form5.Path[self.currentPath].y - 48 then    //damit es nur bis Path Ende geht
            begin
            self.y := self.y - self.speed;
            end
@@ -200,15 +227,64 @@ begin
          end;
          posUpdate(self);
          end
-         else if self.currentPath >= 7 then
+         else if (self.currentPath >= 8) and (self.x > -10000) and (self.hp > 0) then
            begin
-           self.currentPath := 100;
-           self.x := -10000;
-           self.position := 1000;
-           self.bild.left := self.x;
-           self.hpBar.Left := self.x;
+           self.x := -1000;
+           Form5.playerHealth := Form5.playerHealth - self.hp div 5;
+           Form5.label12.caption := inttostr(Form5.playerHealth);
+           self.hp := 0;
            end;
        end;
+  end
+   else if map = 0 then
+  begin
+         if self.currentPath < 8 then
+         begin
+         if Form7.Path[self.currentPath].direction = 1 then  //wenn nach links
+         begin
+         if self.x <= Form7.Path[self.currentPath].x + Form7.Path[self.currentPath].width then  //damit es nur bis Path Ende geht
+           begin
+             self.x := self.x + self.speed;
+           end
+           else
+             inc(self.currentPath); // wenn ende erreicht -> nächster Path
+           end
+         else if Form7.Path[self.currentPath].direction = 2 then  //webb nach unten
+           begin
+           if self.y <= Form7.Path[self.currentPath].y + Form7.Path[self.currentPath].height then //damit es nur bis Path Ende geht
+           begin
+             self.y := self.y + self.speed;
+           end
+           else
+          inc(self.currentPath); // wenn ende erreicht -> nächster Path
+         end
+         else if Form7.Path[self.currentPath].direction = 3 then //wenn nach links
+         begin
+         if self.x >= Form7.Path[self.currentPath].x - 48 then //damit es nur bis Path Ende geht
+         begin
+         self.x := self.x - self.speed;
+         end
+         else
+          inc(self.currentPath); // wenn ende erreicht -> nächster Path
+         end
+         else if Form7.Path[self.currentPath].direction = 4 then //wenn nach oben
+         begin
+         if self.y >= Form7.Path[self.currentPath].y - 48 then    //damit es nur bis Path Ende geht
+           begin
+           self.y := self.y - self.speed;
+           end
+         else
+          inc(self.currentPath); // wenn ende erreicht -> nächster Path
+         end;
+         posUpdate(self);
+         end
+         else if (self.currentPath >= 8) and (self.x > -10000) and (self.hp > 0) then
+           begin
+           self.x := -1000;
+           Form7.playerHealth := Form7.playerHealth - self.hp div 5;
+           Form7.label12.caption := inttostr(Form7.playerHealth);
+           self.hp := 0;
+           end;
   end
     else if map = 2 then
   begin
