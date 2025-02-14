@@ -1073,14 +1073,49 @@ begin
     button11.visible := true;
     label10.visible := true;
   end;
-  panel12.caption := inttostr(damage);
-  panel13.caption := inttostr(attackspeed);
-  panel14.caption := inttostr(range);
-  label7.Caption := inttostr(damagelvl);
-  label8.caption := inttostr(speedlvl);
-  label9.caption := inttostr(rangelvl);
+  panel12.caption := 'Schaden: '+inttostr(damage);
+  panel13.caption := 'Angriffsgeschwindigkeit: '+inttostr(attackspeed);
+  panel14.caption := 'Reichweite: '+inttostr(range);
+  //Schadenupgrade Preis
+  label7.Caption := inttostr(damagelvl)+'/5';
+  if damagelvl = 5 then
+  begin
+    button8.caption := 'Max.';
+    button8.enabled:=false;
+  end
+  else
+  begin
+    button8.enabled:=true;
+    button8.Caption := inttostr(250+damagelvl*300)+'$';
+  end;
+  //Geschwindigkeitupgrade Preis
+  label8.caption := inttostr(speedlvl)+'/5';
+  if speedlvl = 5 then
+  begin
+    button9.caption := 'Max.';
+    button9.enabled:=false;
+  end
+  else
+  begin
+    button9.enabled:=true;
+    button9.caption := inttostr(300+speedlvl*200)+'$';
+  end;
+  //Reichweiteupgrade Preis
+  label9.caption := inttostr(rangelvl)+'/5';
+  if rangelvl = 5 then
+  begin
+    button10.caption := 'Max.';
+    button10.enabled:=false;
+  end
+  else
+  begin
+    button10.enabled:=true;
+    button10.caption := inttostr(400+speedlvl*300)+'$';
+  end;
+  //Camoupgrade
   if kangurutype = 'zauber' then
   begin
+    button11.caption:= '5000$';
     if cancamo = true then
       panel15.caption := 'Schimmer: Ja'
     else
@@ -1088,11 +1123,23 @@ begin
   end
   else
   begin
+    button11.caption:= '2000$';
     if cancamo = true then
       panel15.caption := 'Bessere Sicht: Ja'
     else
       panel15.caption := 'Bessere Sicht: Nein';
   end;
+  //Verkaufspreis
+  if selectedkangurutype = 'boxer' then
+  label11.caption:= inttostr(kanguru[selectedkangurunumber].value div 2)+'$'
+  else if selectedkangurutype = 'bogen' then
+  label11.caption:= inttostr(bogenkanguru[selectedkangurunumber].value div 2)+'$'
+  else if selectedkangurutype = 'eis' then
+  label11.caption:= inttostr(eiskanguru[selectedkangurunumber].value div 2)+'$'
+  else if selectedkangurutype = 'ninja' then
+  label11.caption:= inttostr(ninjakanguru[selectedkangurunumber].value div 2)+'$'
+  else if selectedkangurutype = 'zauber' then
+  label11.caption:= inttostr(zauberkanguru[selectedkangurunumber].value div 2)+'$';
 end;
 //Känguru verkaufen
 procedure TForm5.sellKanguru();

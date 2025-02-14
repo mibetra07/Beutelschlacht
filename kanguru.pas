@@ -114,7 +114,7 @@ constructor Tkanguru.create(map, x, y, range : integer);
     value := 1000;
     inherited create(map, x, y, range2);
     self.bild.Picture.LoadFromFile('images\Boxerkanguru.png');
-    attackspeed := 15;
+    attackspeed := 8;
   end;
 
   constructor TBogenkanguru.create(map, x, y : integer);
@@ -125,7 +125,7 @@ constructor Tkanguru.create(map, x, y, range : integer);
     value:= 2000;
     inherited create(map, x, y, range2);
     self.bild.Picture.LoadFromFile('images\Bogenguru.png');
-    attackspeed := 9;
+    attackspeed := 15;
   end;
 
   constructor TEiskanguru.create(map, x, y : integer);
@@ -137,7 +137,7 @@ constructor Tkanguru.create(map, x, y, range : integer);
     inherited create(map, x, y, range2);
     self.bild.Picture.LoadFromFile('images\Eisguru.png');
     slowness := 2;
-    attackspeed := 2;
+    attackspeed := 7;
   end;
 
   constructor TNinjakanguru.create(map, x, y : integer);
@@ -148,7 +148,7 @@ constructor Tkanguru.create(map, x, y, range : integer);
     value := 5000;
     inherited create(map, x, y, range2);
     self.bild.Picture.LoadFromFile('images\Ninja.png');
-    attackspeed := 30;
+    attackspeed := 7;
   end;
 
   constructor TZauberkanguru.create(map, x, y : integer);
