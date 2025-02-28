@@ -73,22 +73,6 @@ begin
      lab.parent := Form5;
      lab.visible := true;
      lab.font.color := Clblack;
-     end
-     else if map = 0 then
-     begin
-          x := Form7.Path[1].x - offset ;
-     y := Form7.Path[1].y;
-     bild := TImage.Create(Form7);
-     bild.Parent := Form7;
-     hpBar := TProgressbar.create(Form7);
-     hpBar.parent := Form7;
-     position := Form7.PinguinCount;
-     inc(Form7.Pinguincount);
-     self.index := Form7.Pinguincount;
-     lab := TLabel.create(Form7);
-     lab.parent := Form7;
-     lab.visible := true;
-     lab.font.color := Clblack;
      end;
      //größe
 
@@ -236,56 +220,7 @@ begin
            end;
        end;
   end
-   else if map = 0 then
-  begin
-         if self.currentPath < 8 then
-         begin
-         if Form7.Path[self.currentPath].direction = 1 then  //wenn nach links
-         begin
-         if self.x <= Form7.Path[self.currentPath].x + Form7.Path[self.currentPath].width then  //damit es nur bis Path Ende geht
-           begin
-             self.x := self.x + self.speed;
-           end
-           else
-             inc(self.currentPath); // wenn ende erreicht -> nächster Path
-           end
-         else if Form7.Path[self.currentPath].direction = 2 then  //webb nach unten
-           begin
-           if self.y <= Form7.Path[self.currentPath].y + Form7.Path[self.currentPath].height then //damit es nur bis Path Ende geht
-           begin
-             self.y := self.y + self.speed;
-           end
-           else
-          inc(self.currentPath); // wenn ende erreicht -> nächster Path
-         end
-         else if Form7.Path[self.currentPath].direction = 3 then //wenn nach links
-         begin
-         if self.x >= Form7.Path[self.currentPath].x - 48 then //damit es nur bis Path Ende geht
-         begin
-         self.x := self.x - self.speed;
-         end
-         else
-          inc(self.currentPath); // wenn ende erreicht -> nächster Path
-         end
-         else if Form7.Path[self.currentPath].direction = 4 then //wenn nach oben
-         begin
-         if self.y >= Form7.Path[self.currentPath].y - 48 then    //damit es nur bis Path Ende geht
-           begin
-           self.y := self.y - self.speed;
-           end
-         else
-          inc(self.currentPath); // wenn ende erreicht -> nächster Path
-         end;
-         posUpdate(self);
-         end
-         else if (self.currentPath >= 8) and (self.x > -10000) and (self.hp > 0) then
-           begin
-           self.x := -1000;
-           Form7.playerHealth := Form7.playerHealth - self.hp div 5;
-           Form7.label12.caption := inttostr(Form7.playerHealth);
-           self.hp := 0;
-           end;
-  end
+
     else if map = 2 then
   begin
          if self.currentPath < 7 then
