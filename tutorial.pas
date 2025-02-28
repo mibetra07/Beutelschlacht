@@ -98,6 +98,7 @@ type
       Pinguincount: integer;
       Path: array[1..30] of Tpath;
       PlayerHealth: integer;
+      currentsentence: integer;
   end;
 
 var
@@ -123,8 +124,9 @@ var i: integer;
 begin
  for i := 1 to length(sentences) do
      sentences[i] := '';
-  Timer1.interval := 500;
+  Timer1.interval := 20;
   time := 0;
+  currentsentence := 1;
   sentences[1] := ' Welch schöne Landschaft ';
   sentences[2] := ' und so schön ruhig ';
   sentences[6] := ' oh nein ';
@@ -159,14 +161,27 @@ end;
 procedure TForm7.Timer1Timer(Sender: TObject);
 var i: integer;
 begin
+ if (time < 351) or (time > 352) then
  inc(time);
- if (time > 1) and (sentences[time] <> '') then
-    Panel17.caption := sentences[time];
- if time = 5 then
-    Pinguin[1] := TPinguin.create(0, 0);
- if (time > 7) and (time < 10) then
+ if ((time > 50) and (time < 401)) or ((time > 501) and (time < 701)) and (sentences[time div 50] <> '') then
+ begin
+    Panel17.caption := sentences[currentsentence];
+    if(time mod 50 = 0) then
+            inc(currentsentence);
+ end;
+ if time = 300 then
+    begin
+         Pinguin[1] := TPinguin.create(0, 0);
+         Pinguin[1].speed := 1;
+    end;
+ if (time > 301) and (time < 350) then
     for i := 1 to 10 do
-    Pinguin[1].laufen(0);
+    Pinguin[1].laufen(0)
+ else if (time > 351) then
+    begin
+         shape6.visible := true;
+
+    end;
 end;
 
 end.
