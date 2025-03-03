@@ -82,6 +82,8 @@ begin
      hpBar.left := x + 24;
      hpBar.top := y - 10;
      hpBar.width := 50;
+     hpBar.min := 0;
+     hpBar.max := hpBar.width;
      hpBar.height := 10;
      hpBar.Visible := true;
      hpBar.Position := 100;
