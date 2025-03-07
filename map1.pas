@@ -127,6 +127,12 @@ type
       );
     procedure Image3MouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
+    procedure Image7MouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure Image7MouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer
+      );
+    procedure Image7MouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
     procedure Panel16Click(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
 
@@ -441,65 +447,6 @@ begin
          Panel1.Caption := inttostr(KilledCount) + ';' + inttostr(PinguinCount) + ';' + inttostr(Form5.currentWave);
          Panel2.Caption := inttostr(AmountKilled[1]) + ';' + inttostr(AmountKilled[2]);
          inc(ticksPassed);
-         //Positionssystem muss noch überprft werden
-        { for i := 1 to Pinguincount do
-         begin
-         for j := 1 to Pinguincount do
-         begin
-              if (AllPinguin[i] <> nil) AND (i <> j) AND (AllPinguin[i].currentPath < 100) AND (AllPinguin[i].position < 1000) AND (AllPinguin[i] <> nil) AND (AllPinguin[j] <> nil) AND (AllPinguin[j].position < 999) AND (AllPinguin[i].position < 999)then
-              begin
-              if (AllPinguin[j].currentPath > AllPinguin[i].currentpath) OR
-                 ((AllPinguin[j].currentPath = AllPinguin[i].currentPath) AND
-                 (((Path[AllPinguin[j].currentPath].direction = 1) AND (AllPinguin[j].x > AllPinguin[i].x)) OR
-                  ((Path[AllPinguin[j].currentPath].direction = 2) AND (AllPinguin[j].y > AllPinguin[i].y)) OR
-                  ((Path[AllPinguin[j].currentPath].direction = 3) AND (AllPinguin[j].x < AllPinguin[i].x)) OR
-                  ((Path[AllPinguin[j].currentPath].direction = 4) AND (AllPinguin[j].y < AllPinguin[i].y))))
-              then
-                 switch := AllPinguin[i].position;
-                 AllPinguin[i].position := AllPinguin[j].position;
-                 AllPinguin[j].position := switch;
-                 Panel1.caption := 'switched' + '    ' + inttostr(i) + '     ' + inttostr(j);
-              end;
-         end;
-         end; }
-
-         { if (AllPinguin[j] <> nil) AND (i <> j) then
-             begin
-             if (AllPinguin[i].currentPath < 100) AND (AllPinguin[i].position < 1000) AND (AllPinguin[i].currentPath > AllPinguin[j].currentpath) AND (AllPinguin[i].position < AllPinguin[j].position) AND (AllPinguin[i] <> nil) AND (AllPinguin[j] <> nil) then
-              begin
-                switch := AllPinguin[i].Position;
-                AllPinguin[i].position := AllPinguin[j].position;
-                AllPinguin[j].position := switch
-              end
-              else if (AllPinguin[i].currentPath = AllPinguin[j].currentPath)  AND (AllPinguin[i] <> nil) AND (AllPinguin[j] <> nil) then
-              begin
-                   if (AllPinguin[i].currentPath < 100) AND (AllPinguin[i].position < 1000) AND (Path[AllPinguin[i].currentPath].direction = 1) AND (AllPinguin[i].x < AllPinguin[j].x) AND (AllPinguin[i] <> nil) AND (AllPinguin[j] <> nil) then
-                   begin
-                switch := AllPinguin[i].Position;
-                AllPinguin[i].position := AllPinguin[j].position;
-                AllPinguin[j].position := switch
-                   end
-                   else if (AllPinguin[i].currentPath < 100) AND (AllPinguin[i].position < 1000) AND (Path[AllPinguin[i].currentPath].direction = 2) AND (AllPinguin[i].y < AllPinguin[j].y) AND (AllPinguin[i] <> nil) AND (AllPinguin[j] <> nil) then
-                   begin
-                switch := AllPinguin[i].Position;
-                AllPinguin[i].position := AllPinguin[j].position;
-                AllPinguin[j].position := switch
-                   end
-                   else if (AllPinguin[i].currentPath < 100) AND (AllPinguin[i].position < 1000) AND (Path[AllPinguin[i].currentPath].direction = 3) AND (AllPinguin[i].x > AllPinguin[j].x) AND (AllPinguin[i] <> nil) AND (AllPinguin[j] <> nil) then
-                   begin
-                switch := AllPinguin[i].Position;
-                AllPinguin[i].position := AllPinguin[j].position;
-                AllPinguin[j].position := switch
-                   end
-                   else if (AllPinguin[i].currentPath < 100) AND (AllPinguin[i].position < 1000) AND (Path[AllPinguin[i].currentPath].direction = 4) AND (AllPinguin[i].y < AllPinguin[j].y) AND (AllPinguin[i] <> nil) AND (AllPinguin[j] <> nil) then
-                   begin
-                switch := AllPinguin[i].Position;
-                AllPinguin[i].position := AllPinguin[j].position;
-                AllPinguin[j].position := switch
-                   end;
-
-              end;
-              end;  }
    end;
 
 //Angriffsbereich unsichtbar machen
@@ -725,6 +672,11 @@ begin
     end;
     if DragThresholdReached then
     begin
+      Groupbox2.visible:=false;
+      Groupbox3.visible:=false;
+      Groupbox4.visible:=false;
+      Groupbox5.visible:=false;
+      Groupbox6.visible:=false;
       kanguru[kanguruzahl].bild.left := Mouse.CursorPos.X;
       kanguru[kanguruzahl].bild.top := Mouse.CursorPos.Y;
       kanguru[kanguruzahl].attackradius.left := Mouse.CursorPos.X + 48 - kanguru[kanguruzahl].range2;
@@ -764,11 +716,6 @@ begin
   end;
 end;
 
-procedure TForm5.Panel16Click(Sender: TObject);
-begin
-
-end;
-
 //Bogen
 procedure TForm5.Image4MouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
@@ -793,6 +740,11 @@ begin
     end;
     if DragThresholdReached then
     begin
+      Groupbox2.visible:=false;
+      Groupbox3.visible:=false;
+      Groupbox4.visible:=false;
+      Groupbox5.visible:=false;
+      Groupbox6.visible:=false;
       bogenkanguru[bogenkanguruzahl].bild.left := Mouse.CursorPos.X;
       bogenkanguru[bogenkanguruzahl].bild.top := Mouse.CursorPos.Y;
       bogenkanguru[bogenkanguruzahl].attackradius.left := (Mouse.CursorPos.X + 48 - bogenkanguru[bogenkanguruzahl].range2);
@@ -855,6 +807,11 @@ begin
     end;
     if DragThresholdReached then
     begin
+      Groupbox2.visible:=false;
+      Groupbox3.visible:=false;
+      Groupbox4.visible:=false;
+      Groupbox5.visible:=false;
+      Groupbox6.visible:=false;
       Eiskanguru[Eiskanguruzahl].bild.left := Mouse.CursorPos.X;
       Eiskanguru[Eiskanguruzahl].bild.top := Mouse.CursorPos.Y;
       Eiskanguru[Eiskanguruzahl].attackradius.left := (Mouse.CursorPos.X + 48 - Eiskanguru[Eiskanguruzahl].range2);
@@ -917,6 +874,11 @@ begin
     end;
     if DragThresholdReached then
     begin
+      Groupbox2.visible:=false;
+      Groupbox3.visible:=false;
+      Groupbox4.visible:=false;
+      Groupbox5.visible:=false;
+      Groupbox6.visible:=false;
       Ninjakanguru[Ninjakanguruzahl].bild.left := Mouse.CursorPos.X;
       Ninjakanguru[Ninjakanguruzahl].bild.top := Mouse.CursorPos.Y;
       Ninjakanguru[Ninjakanguruzahl].attackradius.left := (Mouse.CursorPos.X + 48 - Ninjakanguru[Ninjakanguruzahl].range2);
@@ -956,6 +918,78 @@ begin
   end;
 end;
 //Zauberer
+procedure TForm5.Image7MouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  initDrag(X,Y,Button);
+end;
+
+procedure TForm5.Image7MouseMove(Sender: TObject; Shift: TShiftState; X,
+  Y: Integer);
+var Collision : boolean;
+begin
+  if isDragging = true then
+  begin
+    if not DragThresholdReached then
+    begin
+      if (Abs(X - StartX) > DragThreshold) or (Abs(Y - StartY) > DragThreshold) then
+      begin
+        DragThresholdReached := true;
+        inc(zauberkanguruzahl);
+        zauberkanguru[zauberKanguruzahl] := TZauberkanguru.create(1, Mouse.CursorPos.X, Mouse.CursorPos.Y);
+      end;
+    end;
+    if DragThresholdReached then
+    begin
+      Groupbox2.visible:=false;
+      Groupbox3.visible:=false;
+      Groupbox4.visible:=false;
+      Groupbox5.visible:=false;
+      Groupbox6.visible:=false;
+      zauberkanguru[zauberkanguruzahl].bild.left := Mouse.CursorPos.X;
+      zauberkanguru[zauberkanguruzahl].bild.top := Mouse.CursorPos.Y;
+      zauberkanguru[zauberkanguruzahl].attackradius.left := Mouse.CursorPos.X + 48 - zauberkanguru[zauberkanguruzahl].range2;
+      zauberkanguru[zauberkanguruzahl].attackradius.Top := Mouse.CursorPos.Y + 48 - zauberkanguru[zauberkanguruzahl].range2;
+      //Radius rot färben wenn versperrte Position
+      CheckAllCollision(zauberkanguru[zauberkanguruzahl].bild, Collision, 'zauber');
+      if (Collision = true) then
+        zauberkanguru[zauberkanguruzahl].attackradius.brush.Color:=clMaroon
+      else
+        zauberkanguru[zauberkanguruzahl].attackradius.brush.Color:=clGray;
+    end;
+  end;
+end;
+
+procedure TForm5.Panel16Click(Sender: TObject);
+begin
+
+end;
+
+procedure TForm5.Image7MouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+var Collision, MapCollision : boolean;
+begin
+  if (Button = mbLeft) and (DragThresholdReached = true) then
+  begin
+    Collision := false;
+    isDragging := False;
+    DragThresholdReached := False;
+
+    CheckAllCollision(zauberkanguru[zauberkanguruzahl].bild, Collision, 'zauber');
+    if (Collision = true) or (coins - zauberkanguru[zauberkanguruzahl].value < 0) then
+    begin
+      zauberkanguru[zauberkanguruzahl].destruct;
+      dec(zauberkanguruzahl);
+    end
+    else
+    begin
+      coins := coins - zauberkanguru[zauberkanguruzahl].value;
+      zauberkanguru[zauberkanguruzahl].attackradius.visible := false;
+      zauberkanguru[zauberkanguruzahl].setActive(1);
+    end;
+  end;
+end;
+
 
 //Kängurumenü
 procedure Tform5.KanguruClick(Sender: TObject);
@@ -1042,6 +1076,13 @@ end;
 //Menü anzeigen
 procedure Tform5.ShowMenu(kangurutype : string; damage, range, attackspeed, damagelvl, speedlvl, rangelvl : integer; cancamo : boolean);
 begin
+  //Beschreibungen schließen
+  Groupbox2.visible:=false;
+  Groupbox3.visible:=false;
+  Groupbox4.visible:=false;
+  Groupbox5.visible:=false;
+  Groupbox6.visible:=false;
+  //Upgrademenü öffnen
   Groupbox7.visible:=true;
   if kangurutype = 'boxer' then
   begin
@@ -1148,6 +1189,7 @@ begin
   //halben Känguruwert erstatten, känguru zerstören, leere Position in Känguruarray mit anderem känguru füllen und känguruzahl um 1 verringern
   if selectedkangurutype = 'boxer' then
   begin
+    kanguru[selectedkangurunumber].active := false;
     coins:= coins + (kanguru[selectedkangurunumber].value div 2);
     label6.caption:= inttostr(coins);
     kanguru[selectedkangurunumber].destruct;
@@ -1161,6 +1203,7 @@ begin
   end
   else if  selectedkangurutype = 'bogen' then
   begin
+    bogenkanguru[selectedkangurunumber].active := false;
     coins:= coins + (bogenkanguru[selectedkangurunumber].value div 2);
     label6.caption:= inttostr(coins);
     bogenkanguru[selectedkangurunumber].destruct;
@@ -1173,6 +1216,7 @@ begin
   end
   else if  selectedkangurutype = 'eis' then
   begin
+    eiskanguru[selectedkangurunumber].active := false;
     coins:= coins + (eiskanguru[selectedkangurunumber].value div 2);
     label6.caption:= inttostr(coins);
     eiskanguru[selectedkangurunumber].destruct;
@@ -1185,6 +1229,7 @@ begin
   end
   else if  selectedkangurutype = 'ninja' then
   begin
+    ninjakanguru[selectedkangurunumber].active := false;
     coins:= coins + (ninjakanguru[selectedkangurunumber].value div 2);
     label6.caption:= inttostr(coins);
     ninjakanguru[selectedkangurunumber].destruct;
@@ -1197,6 +1242,7 @@ begin
   end
   else if  selectedkangurutype = 'zauber' then
   begin
+    zauberkanguru[selectedkangurunumber].active := false;
     coins:= coins + (Zauberkanguru[selectedkangurunumber].value div 2);
     label6.caption:= inttostr(coins);
     zauberkanguru[selectedkangurunumber].destruct;
@@ -1257,7 +1303,6 @@ end;
 
 //Timer
 
-
 procedure TForm5.Button1Click(Sender: TObject);
 begin
   Timer1.enabled := true;
@@ -1267,7 +1312,6 @@ procedure TForm5.BitBtn1Click(Sender: TObject);
 begin
   sellkanguru();
 end;
-
 
 
 //Beschreibungen schließen
@@ -1391,6 +1435,7 @@ begin
     kanguru[selectedkangurunumber].attackSpeed := kanguru[selectedkangurunumber].attackSpeed - UpgradeSpeed;
     label8.caption:=inttostr(kanguru[selectedkangurunumber].Speedlvl) + '/5';
     panel13.Caption:= 'Angriffsgeschwindigkeit: ' + inttostr(kanguru[selectedkangurunumber].attackSpeed);
+    button9.Caption := inttostr(300+kanguru[selectedkangurunumber].speedlvl*200)+'$';
     if kanguru[selectedkangurunumber].Speedlvl >=5 then
     begin
       button9.enabled:=false;
@@ -1405,6 +1450,7 @@ begin
     bogenkanguru[selectedkangurunumber].attackSpeed := bogenkanguru[selectedkangurunumber].attackSpeed - UpgradeSpeed;
     label8.caption:=inttostr(bogenkanguru[selectedkangurunumber].Speedlvl) + '/5';
     panel13.Caption:= 'Angriffsgeschwindigkeit: ' + inttostr(bogenkanguru[selectedkangurunumber].attackSpeed);
+    button9.Caption := inttostr(300+bogenkanguru[selectedkangurunumber].speedlvl*200)+'$';
     if bogenkanguru[selectedkangurunumber].Speedlvl >=5 then
     begin
       button9.enabled:=false;
@@ -1419,6 +1465,7 @@ begin
     eiskanguru[selectedkangurunumber].attackSpeed := eiskanguru[selectedkangurunumber].attackSpeed - UpgradeSpeed;
     label8.caption:=inttostr(eiskanguru[selectedkangurunumber].Speedlvl) + '/5';
     panel13.Caption:= 'Angriffsgeschwindigkeit: ' + inttostr(eiskanguru[selectedkangurunumber].attackSpeed);
+    button9.Caption := inttostr(300+eiskanguru[selectedkangurunumber].speedlvl*200)+'$';
     if eiskanguru[selectedkangurunumber].Speedlvl >=5 then
     begin
       button9.enabled:=false;
@@ -1433,6 +1480,7 @@ begin
     ninjakanguru[selectedkangurunumber].attackSpeed := ninjakanguru[selectedkangurunumber].attackSpeed - UpgradeSpeed;
     label8.caption:=inttostr(ninjakanguru[selectedkangurunumber].Speedlvl) + '/5';
     panel13.Caption:= 'Angriffsgeschwindigkeit: ' + inttostr(ninjakanguru[selectedkangurunumber].attackSpeed);
+    button9.Caption := inttostr(300+ninjakanguru[selectedkangurunumber].speedlvl*200)+'$';
     if ninjakanguru[selectedkangurunumber].Speedlvl >=5 then
     begin
       button9.enabled:=false;
@@ -1447,6 +1495,7 @@ begin
     zauberkanguru[selectedkangurunumber].attackSpeed := zauberkanguru[selectedkangurunumber].attackSpeed - UpgradeSpeed;
     label8.caption:=inttostr(zauberkanguru[selectedkangurunumber].damagelvl) + '/5';
     panel13.Caption:= 'Angriffsgeschwindigkeit: ' + inttostr(zauberkanguru[selectedkangurunumber].attackSpeed);
+    button9.Caption := inttostr(300+zauberkanguru[selectedkangurunumber].speedlvl*200)+'$';
     if zauberkanguru[selectedkangurunumber].Speedlvl >=5 then
     begin
       button9.enabled:=false;
@@ -1465,6 +1514,7 @@ begin
     kanguru[selectedkangurunumber].range2 := kanguru[selectedkangurunumber].range2 + UpgradeRange;
     label9.caption:=inttostr(kanguru[selectedkangurunumber].rangelvl) + '/5';
     panel14.Caption:= 'Reichweite: ' + inttostr(kanguru[selectedkangurunumber].range2);
+    button10.Caption := inttostr(400+kanguru[selectedkangurunumber].rangelvl*300)+'$';
     if kanguru[selectedkangurunumber].rangelvl >=5 then
     begin
       button10.enabled:=false;
@@ -1483,6 +1533,7 @@ begin
     bogenkanguru[selectedkangurunumber].range2 := bogenkanguru[selectedkangurunumber].range2 + UpgradeRange;
     label9.caption:=inttostr(bogenkanguru[selectedkangurunumber].rangelvl) + '/5';
     panel14.Caption:= 'Reichweite: ' + inttostr(bogenkanguru[selectedkangurunumber].range2);
+    button10.Caption := inttostr(400+bogenkanguru[selectedkangurunumber].rangelvl*300)+'$';
     if bogenkanguru[selectedkangurunumber].rangelvl >=5 then
     begin
       button10.enabled:=false;
@@ -1501,6 +1552,7 @@ begin
     eiskanguru[selectedkangurunumber].range2 := eiskanguru[selectedkangurunumber].range2 + UpgradeRange;
     label9.caption:=inttostr(eiskanguru[selectedkangurunumber].rangelvl) + '/5';
     panel14.Caption:= 'Reichweite: ' + inttostr(eiskanguru[selectedkangurunumber].range2);
+    button10.Caption := inttostr(400+eiskanguru[selectedkangurunumber].rangelvl*300)+'$';
     if eiskanguru[selectedkangurunumber].rangelvl >=5 then
     begin
       button10.enabled:=false;
@@ -1519,6 +1571,7 @@ begin
     ninjakanguru[selectedkangurunumber].range2 := ninjakanguru[selectedkangurunumber].range2 + UpgradeRange;
     label9.caption:=inttostr(ninjakanguru[selectedkangurunumber].rangelvl) + '/5';
     panel14.Caption:= 'Reichweite: ' + inttostr(ninjakanguru[selectedkangurunumber].range2);
+    button10.Caption := inttostr(400+ninjakanguru[selectedkangurunumber].rangelvl*300)+'$';
     if ninjakanguru[selectedkangurunumber].rangelvl >=5 then
     begin
       button10.enabled:=false;
