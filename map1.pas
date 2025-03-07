@@ -133,7 +133,6 @@ type
       );
     procedure Image7MouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
-    procedure Panel16Click(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
 
   private
@@ -147,8 +146,6 @@ type
     var Kanguruzahl, Bogenkanguruzahl, Eiskanguruzahl, Ninjakanguruzahl, Zauberkanguruzahl : integer;
   //Positionsvariablen zum platzieren der Kängurus
     dx, dy: integer;
-  //tick variablen und Münzen
-    coins: integer;
     procedure InitDrag(X, Y : integer; Button : TMouseButton);
     procedure CheckAllCollision(firstImage : TImage; var CollisionDetected : boolean; Sender : string);
   //KanguruClick und Menü-Zeugs
@@ -174,7 +171,7 @@ type
     wave: array [1..100] of Twave;
     waveParams: array[1..100, 1..6] of integer;
     currentWave: integer;
-
+    coins: integer;
     Kanguru : array[1..100] of TBoxerkanguru;
     Bogenkanguru : array[1..100] of TBogenkanguru;
     Zauberkanguru : array[1..100] of TZauberkanguru;
@@ -225,7 +222,8 @@ end;
 procedure Tform5.ConstructForm();
 var i, j : integer;
 begin
-   coins := 9000000;
+   coins := 10000;
+   label6.caption:= inttostr(coins);
    Pinguincount := 0;
    Timer1.enabled := false;
    Timer1.interval := 1;
@@ -712,6 +710,7 @@ begin
       coins := coins - kanguru[kanguruzahl].value;
       kanguru[kanguruzahl].attackradius.visible := false;
       kanguru[kanguruzahl].setActive(1);
+      label6.caption := inttostr(coins);
     end;
   end;
 end;
@@ -780,6 +779,7 @@ begin
       coins := coins - bogenkanguru[bogenkanguruzahl].value;
       bogenkanguru[bogenkanguruzahl].attackradius.visible := false;
       bogenkanguru[bogenkanguruzahl].setactive(1);
+      label6.caption := inttostr(coins);
     end;
   end;
 end;
@@ -847,6 +847,7 @@ begin
       coins := coins - Eiskanguru[Eiskanguruzahl].value;
       Eiskanguru[Eiskanguruzahl].attackradius.visible := false;
       Eiskanguru[Eiskanguruzahl].setactive(1);
+      label6.caption := inttostr(coins);
     end;
   end;
 end;
@@ -914,6 +915,7 @@ begin
       coins := coins - Ninjakanguru[Ninjakanguruzahl].value;
       Ninjakanguru[Ninjakanguruzahl].attackradius.visible := false;
       Ninjakanguru[Ninjakanguruzahl].setactive(1);
+      label6.caption := inttostr(coins);
     end;
   end;
 end;
@@ -960,11 +962,6 @@ begin
   end;
 end;
 
-procedure TForm5.Panel16Click(Sender: TObject);
-begin
-
-end;
-
 procedure TForm5.Image7MouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 var Collision, MapCollision : boolean;
@@ -986,6 +983,7 @@ begin
       coins := coins - zauberkanguru[zauberkanguruzahl].value;
       zauberkanguru[zauberkanguruzahl].attackradius.visible := false;
       zauberkanguru[zauberkanguruzahl].setActive(1);
+      label6.caption := inttostr(coins);
     end;
   end;
 end;
@@ -1423,6 +1421,8 @@ begin
       button8.caption:='Max.';
     end;
   end;
+  label6.caption:= inttostr(coins);
+
 end;
 //Speed
 procedure TForm5.Button9Click(Sender: TObject);
@@ -1502,6 +1502,7 @@ begin
       button9.caption:='Max.';
     end;
   end;
+  label6.caption:= inttostr(coins);
 end;
 //range
 procedure TForm5.Button10Click(Sender: TObject);
@@ -1582,6 +1583,7 @@ begin
     ninjakanguru[selectedkangurunumber].attackradius.left := ninjakanguru[selectedkangurunumber].bild.left + 48 - ninjakanguru[selectedkangurunumber].range2;
     ninjakanguru[selectedkangurunumber].attackradius.top := ninjakanguru[selectedkangurunumber].bild.top + 48 - ninjakanguru[selectedkangurunumber].range2;
   end;
+  label6.caption:= inttostr(coins);
 end;
 //CanCamo
 procedure TForm5.Button11Click(Sender: TObject);
@@ -1604,6 +1606,7 @@ begin
     if zauberkanguru[selectedkangurunumber].cancamo = true then
       button11.enabled:=false;
   end;
+  label6.caption:= inttostr(coins);
 end;
 
 procedure TForm5.Button12Click(Sender: TObject);
