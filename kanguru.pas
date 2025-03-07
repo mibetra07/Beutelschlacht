@@ -19,6 +19,8 @@ type TKanguru = class
     active : boolean;
     damagelvl, rangelvl, speedlvl : integer;
     slowness: integer;
+    cooldownTick: integer;
+    tickSinceAttack: integer;
     constructor create(map, x, y, range : integer);
     procedure destruct;
     procedure attack(map: integer; Pinguin: TPinguin; Kanguruart: string);
@@ -130,7 +132,7 @@ constructor Tkanguru.create(map, x, y, range : integer);
 
   constructor TEiskanguru.create(map, x, y : integer);
   begin
-    damage := 25;
+    damage := 500;
     range2 := 150;
     cancamo := false;
     value := 3000;
@@ -187,8 +189,10 @@ begin
       Sqr(Pinguin.Y - (self.attackradius.Top + self.attackradius.Height div 2))
       <= Sqr(self.attackradius.Width div 2))) then
   begin
-       Pinguin.hp := Pinguin.hp - self.damage div 10;
-       Pinguin.hpBar.position := Pinguin.hp div 10;
+       if Form5.ticksPassed - cooldownTick > self.attackSpeed then begin
+            cooldownTick := Form5.ticksPassed;
+            Pinguin.hp := Pinguin.hp - self.damage div 10;
+            Pinguin.hpBar.position := (Pinguin.hp * Pinguin.hpBar.width) div (Pinguin.basehp);
        if (Kanguruart = 'Eis') AND (Pinguin.slowed = false) AND (Pinguin.canBeSlowed = true) then
        begin
        Pinguin.slowed := true;
@@ -197,11 +201,12 @@ begin
        Pinguin.bild.picture.loadFromFile(Pinguin.FileName + '_freeze' + '.png');
        self.bild.picture.LoadFromFile('Images\Eisguru_Attack.png')
 
-       end;
-       if Kanguruart = 'Boxer' then
+       end
+       else if Kanguruart = 'Boxer' then
           self.bild.picture.LoadFromFile('Images\Pinguinboxer_Attack.png')
-       else if Kanguruart = 'Bogen' then
+       else if (Kanguruart = 'Bogen') and (assigned(self)) then
             self.bild.picture.LoadFromFile('Images\Bogenguru_Attack.png');
+       end;
   end;
   end;
   end;
