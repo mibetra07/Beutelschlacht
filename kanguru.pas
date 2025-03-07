@@ -155,7 +155,13 @@ constructor Tkanguru.create(map, x, y, range : integer);
 
   constructor TZauberkanguru.create(map, x, y : integer);
   begin
-
+  damage := 0;
+  range2 := 200;
+  cancamo := false;
+  value := 8000;
+  inherited create(map, x, y, range2);
+  self.bild.Picture.LoadFromFile('images\Magier.png');
+  attackspeed := 0;
   end;
 
 procedure TKanguru.destruct();
@@ -182,12 +188,12 @@ begin
   // Prüfen, ob irgendein Teil von `Pinguin` innerhalb des Kreises liegt (von chatgpt)
   if self <> nil then
     begin
-  if  (self.active = true)and ((Sqr(Pinguin.X + 48 - (self.attackradius.Left + self.attackradius.Width div 2)) +
+  if  (self.active)and ((Sqr(Pinguin.X + 48 - (self.attackradius.Left + self.attackradius.Width div 2)) +
       Sqr(Pinguin.Y + 48 - (self.attackradius.Top + self.attackradius.Height div 2))
       <= Sqr(self.attackradius.Width div 2)) or
      (Sqr(Pinguin.X - (self.attackradius.Left + self.attackradius.Width div 2)) +
       Sqr(Pinguin.Y - (self.attackradius.Top + self.attackradius.Height div 2))
-      <= Sqr(self.attackradius.Width div 2))) then
+      <= Sqr(self.attackradius.Width div 2))) and ((Pinguin.camo = false) or (self.cancamo)) then
   begin
        if Form5.ticksPassed - cooldownTick > self.attackSpeed then begin
             cooldownTick := Form5.ticksPassed;
@@ -206,10 +212,13 @@ begin
           self.bild.picture.LoadFromFile('Images\Pinguinboxer_Attack.png')
        else if (Kanguruart = 'Bogen') and (assigned(self)) then
             self.bild.picture.LoadFromFile('Images\Bogenguru_Attack.png');
+       end
+       else if (Kanguruart = 'Ninja') and (assigned(self)) then
+            self.bild.picture.LoadFromFile('Images\Ninja_Attack.png');
        end;
   end;
   end;
-  end;
+
 
 end.
 
