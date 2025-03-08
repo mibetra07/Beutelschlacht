@@ -289,6 +289,7 @@ begin
          Pinguin.hpBar.top := Pinguin.y - 10 - Pinguin.bildOffset;
          Pinguin.lab.top := Pinguin.y + 100;
          Pinguin.lab.left := Pinguin.x + 48;
+         Pinguin.bild.BringToFront;
 end;
 
 {procedure Tpinguin.attackcheck(map: integer; Kanguru: TKanguru; Kanguruart: string);

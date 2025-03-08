@@ -129,6 +129,10 @@ begin
                 if (Form5. ticksPassed - Form5.NinjaKanguru[j].cooldownTick > Form5.NinjaKanguru[j].attackspeed div 2) and (Form5.NinjaKanguru[j] <> nil) and (Form5.NinjaKanguru[j].active = true)then
                 Form5.Ninjakanguru[1].bild.picture.LoadFromFile('images\Ninja.png');
               end;
+               if (Form5.Zauberkanguru[j] <> nil) and (Form5.Zauberkanguru[j].zauber <> nil) then
+              begin
+                Form5.Zauberkanguru[j].zauber.attack(1, Pinguin, 'Zauber');
+              end;
                if Form5.EisKanguru[j] <> nil then
               begin
                    begin

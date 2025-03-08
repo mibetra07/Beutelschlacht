@@ -61,7 +61,6 @@ type
     Memo5: TMemo;
     Panel1: TPanel;
     Panel10: TPanel;
-    Panel16: TPanel;
     Panel2: TPanel;
     Panel3: TPanel;
     Panel4: TPanel;
@@ -199,7 +198,7 @@ begin
    ConstructForm();
    //Weg der Map erstellen(dir, left, top, breit, hoch, map: integer)
    Path[1] := TPath.create(1, 0, 320, 620, 75, 1);
-   Path[2] := Tpath.create(2, 620, 320, 75, 320, 1);
+   Path[2] := Tpath.create(2, 620, 320, 75, 330, 1);
    Path[3] := Tpath.create(3, 300, 650, 400, 75, 1);
    Path[4] := Tpath.create(4, 250, 90, 75, 620, 1);
    Path[5] := Tpath.create(1, 250, 30, 740, 75, 1);
@@ -222,7 +221,7 @@ end;
 procedure Tform5.ConstructForm();
 var i, j : integer;
 begin
-   coins := 10000;
+   coins := 990000;
    label6.caption:= inttostr(coins);
    Pinguincount := 0;
    Timer1.enabled := false;
@@ -426,7 +425,7 @@ begin
    begin
         Timer1.enabled := false;
         label12.caption := '0';
-        Panel16.visible := true;
+        //Panel16.visible := true;
         Button12.visible := true;
    end;
          for i := 1 to 100 do
@@ -965,6 +964,7 @@ end;
 procedure TForm5.Image7MouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 var Collision, MapCollision : boolean;
+    i, j: integer;
 begin
   if (Button = mbLeft) and (DragThresholdReached = true) then
   begin
@@ -983,10 +983,35 @@ begin
       coins := coins - zauberkanguru[zauberkanguruzahl].value;
       zauberkanguru[zauberkanguruzahl].attackradius.visible := false;
       zauberkanguru[zauberkanguruzahl].setActive(1);
+      for i := 1 to 7 do
+      if j <> 100 then
+      begin
+        if (Abs(path[i].x + path[i].width div 2 - (zauberkanguru[zauberkanguruzahl].bild.left + 48)) <= (path[i].width div 2 + zauberkanguru[zauberkanguruzahl].range2)) and
+        (Abs(path[i].y + path[i].height div 2  - (zauberkanguru[zauberkanguruzahl].bild.top + 48)) <= (path[i].height div 2 + zauberkanguru[zauberkanguruzahl].range2)) then
+        begin
+          zauberkanguru[zauberkanguruzahl].Zauber := TZauberAngriff.create(1,zauberkanguru[zauberkanguruzahl].bild.left - zauberkanguru[zauberkanguruzahl].range2, zauberkanguru[zauberkanguruzahl].bild.top - zauberkanguru[zauberkanguruzahl].range2);
+          zauberkanguru[zauberkanguruzahl].Zauber.active := true;
+          j := 100;
+          repeat
+            begin
+               zauberkanguru[zauberkanguruzahl].Zauber.x2 := zauberkanguru[zauberkanguruzahl].Zauber.x2 + 1;
+               zauberkanguru[zauberkanguruzahl].Zauber.bild.left := zauberkanguru[zauberkanguruzahl].Zauber.x2 - 16;
+               zauberkanguru[zauberkanguruzahl].Zauber.attackradius.left :=  zauberkanguru[zauberkanguruzahl].Zauber.x2 + 48 -  zauberkanguru[zauberkanguruzahl].Zauber.range2;
+            end;
+            until Abs(path[i].x + path[i].width div 2 - (zauberkanguru[zauberkanguruzahl].Zauber.x2)) <= (path[i].width div 2);
+          repeat
+            begin
+               zauberkanguru[zauberkanguruzahl].Zauber.y2 := zauberkanguru[zauberkanguruzahl].Zauber.y2 + 1 ;
+               zauberkanguru[zauberkanguruzahl].Zauber.bild.top := zauberkanguru[zauberkanguruzahl].Zauber.y2 - 16;
+               zauberkanguru[zauberkanguruzahl].Zauber.attackradius.top :=  zauberkanguru[zauberkanguruzahl].Zauber.y2 + 48 -  zauberkanguru[zauberkanguruzahl].Zauber.range2;
+            end;
+            until Abs(path[i].y + path[i].height div 2 - (zauberkanguru[zauberkanguruzahl].Zauber.y2)) <= (path[i].height div 2);
+        end;
+      end;
+      end;
       label6.caption := inttostr(coins);
     end;
   end;
-end;
 
 
 //Kängurumenü

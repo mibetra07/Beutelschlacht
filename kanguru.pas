@@ -46,11 +46,16 @@ type TKanguru = class
   TNinjakanguru = class(Tkanguru)
     constructor create(map, x, y : integer);
   end;
-
-
-  TZauberkanguru = class(Tkanguru)
+   TZauberAngriff = class(Tkanguru)
+     x2, y2: integer;
     constructor create(map, x, y : integer);
   end;
+
+  TZauberkanguru = class(Tkanguru)
+   Zauber: TZauberangriff;
+    constructor create(map, x, y : integer);
+  end;
+
 implementation
 
   Uses map2, map1;
@@ -132,14 +137,14 @@ constructor Tkanguru.create(map, x, y, range : integer);
 
   constructor TEiskanguru.create(map, x, y : integer);
   begin
-    damage := 500;
+    damage := 40;
     range2 := 150;
     cancamo := false;
     value := 3000;
     inherited create(map, x, y, range2);
     self.bild.Picture.LoadFromFile('images\Eisguru.png');
     slowness := 2;
-    attackspeed := 7;
+    attackspeed := 26;
   end;
 
   constructor TNinjakanguru.create(map, x, y : integer);
@@ -152,16 +157,33 @@ constructor Tkanguru.create(map, x, y, range : integer);
     self.bild.Picture.LoadFromFile('images\Ninja.png');
     attackspeed := 7;
   end;
+  constructor TZauberAngriff.create(map, x, y : integer);
+  begin
+    damage := 30;
+    range2 := 75;
+    cancamo := true;
+    value := 0;
+    self.x2 := x;
+    self.y2 := y;
+   inherited create(map, x, y, range2);
+   self.bild.stretch := true;
+   self.bild.Picture.LoadFromFile('images\Feuer.png');
+   self.bild.Width := 124;
+    self.bild.Height := 114;
+    self.attackradius.visible := false;
+   attackspeed := 2;
+  end;
 
   constructor TZauberkanguru.create(map, x, y : integer);
   begin
-  damage := 0;
-  range2 := 200;
+  damage := 100;
+  range2 := 150;
   cancamo := false;
   value := 8000;
   inherited create(map, x, y, range2);
   self.bild.Picture.LoadFromFile('images\Magier.png');
-  attackspeed := 0;
+  attackspeed := 999;
+
   end;
 
 procedure TKanguru.destruct();
@@ -188,18 +210,19 @@ begin
   // Prüfen, ob irgendein Teil von `Pinguin` innerhalb des Kreises liegt (von chatgpt)
   if self <> nil then
     begin
-  if  (self.active)and ((Sqr(Pinguin.X + 48 - (self.attackradius.Left + self.attackradius.Width div 2)) +
+  if  (self.active = true)and ((Sqr(Pinguin.X + 48 - (self.attackradius.Left + self.attackradius.Width div 2)) +
       Sqr(Pinguin.Y + 48 - (self.attackradius.Top + self.attackradius.Height div 2))
       <= Sqr(self.attackradius.Width div 2)) or
      (Sqr(Pinguin.X - (self.attackradius.Left + self.attackradius.Width div 2)) +
       Sqr(Pinguin.Y - (self.attackradius.Top + self.attackradius.Height div 2))
-      <= Sqr(self.attackradius.Width div 2))) and ((Pinguin.camo = false) or (self.cancamo)) then
+      <= Sqr(self.attackradius.Width div 2))) and ((Pinguin.camo = false) or (self.cancamo)) and ((Pinguin.slowed = false) or (Kanguruart <> 'Zauber')) then
   begin
-       if Form5.ticksPassed - cooldownTick > self.attackSpeed then begin
-            cooldownTick := Form5.ticksPassed;
+    Form5.panel4.caption := Kanguruart;
+       if Form5.ticksPassed - self.cooldownTick > self.attackSpeed then begin
+            self.cooldownTick := Form5.ticksPassed;
             Pinguin.hp := Pinguin.hp - self.damage div 10;
             Pinguin.hpBar.position := (Pinguin.hp * Pinguin.hpBar.width) div (Pinguin.basehp);
-       if (Kanguruart = 'Eis') AND (Pinguin.slowed = false) AND (Pinguin.canBeSlowed = true) then
+       if (Kanguruart = 'Eis') AND (Pinguin.slowed = false) AND (Pinguin.canBeSlowed = true) AND (Form5.ticksPassed - Pinguin.slowedTick > 70) then
        begin
        Pinguin.slowed := true;
        Pinguin.speed := 0;
@@ -211,14 +234,14 @@ begin
        else if Kanguruart = 'Boxer' then
           self.bild.picture.LoadFromFile('Images\Pinguinboxer_Attack.png')
        else if (Kanguruart = 'Bogen') and (assigned(self)) then
-            self.bild.picture.LoadFromFile('Images\Bogenguru_Attack.png');
-       end
+            self.bild.picture.LoadFromFile('Images\Bogenguru_Attack.png')
        else if (Kanguruart = 'Ninja') and (assigned(self)) then
-            self.bild.picture.LoadFromFile('Images\Ninja_Attack.png');
+            self.bild.picture.LoadFromFile('Images\Ninja_Attack.png')
        end;
-  end;
-  end;
+       end;
+    end;
 
+end;
 
 end.
 
