@@ -19,8 +19,6 @@ type TKanguru = class
     active : boolean;
     damagelvl, rangelvl, speedlvl : integer;
     slowness: integer;
-    cooldownTick: integer;
-    tickSinceAttack: integer;
     constructor create(map, x, y, range : integer);
     procedure destruct;
     procedure attack(map: integer; Pinguin: TPinguin; Kanguruart: string);
@@ -116,7 +114,7 @@ constructor Tkanguru.create(map, x, y, range : integer);
     value := 1000;
     inherited create(map, x, y, range2);
     self.bild.Picture.LoadFromFile('images\Boxerkanguru.png');
-    attackspeed := 8;
+    attackspeed := 15;
   end;
 
   constructor TBogenkanguru.create(map, x, y : integer);
@@ -127,19 +125,19 @@ constructor Tkanguru.create(map, x, y, range : integer);
     value:= 2000;
     inherited create(map, x, y, range2);
     self.bild.Picture.LoadFromFile('images\Bogenguru.png');
-    attackspeed := 15;
+    attackspeed := 9;
   end;
 
   constructor TEiskanguru.create(map, x, y : integer);
   begin
-    damage := 500;
+    damage := 25;
     range2 := 150;
     cancamo := false;
     value := 3000;
     inherited create(map, x, y, range2);
     self.bild.Picture.LoadFromFile('images\Eisguru.png');
     slowness := 2;
-    attackspeed := 7;
+    attackspeed := 2;
   end;
 
   constructor TNinjakanguru.create(map, x, y : integer);
@@ -150,18 +148,12 @@ constructor Tkanguru.create(map, x, y, range : integer);
     value := 5000;
     inherited create(map, x, y, range2);
     self.bild.Picture.LoadFromFile('images\Ninja.png');
-    attackspeed := 7;
+    attackspeed := 30;
   end;
 
   constructor TZauberkanguru.create(map, x, y : integer);
   begin
-  damage := 0;
-  range2 := 200;
-  cancamo := false;
-  value := 8000;
-  inherited create(map, x, y, range2);
-  self.bild.Picture.LoadFromFile('images\Magier.png');
-  attackspeed := 0;
+
   end;
 
 procedure TKanguru.destruct();
@@ -188,17 +180,15 @@ begin
   // Prüfen, ob irgendein Teil von `Pinguin` innerhalb des Kreises liegt (von chatgpt)
   if self <> nil then
     begin
-  if  (self.active)and ((Sqr(Pinguin.X + 48 - (self.attackradius.Left + self.attackradius.Width div 2)) +
+  if  (self.active = true)and ((Sqr(Pinguin.X + 48 - (self.attackradius.Left + self.attackradius.Width div 2)) +
       Sqr(Pinguin.Y + 48 - (self.attackradius.Top + self.attackradius.Height div 2))
       <= Sqr(self.attackradius.Width div 2)) or
      (Sqr(Pinguin.X - (self.attackradius.Left + self.attackradius.Width div 2)) +
       Sqr(Pinguin.Y - (self.attackradius.Top + self.attackradius.Height div 2))
-      <= Sqr(self.attackradius.Width div 2))) and ((Pinguin.camo = false) or (self.cancamo)) then
+      <= Sqr(self.attackradius.Width div 2))) then
   begin
-       if Form5.ticksPassed - cooldownTick > self.attackSpeed then begin
-            cooldownTick := Form5.ticksPassed;
-            Pinguin.hp := Pinguin.hp - self.damage div 10;
-            Pinguin.hpBar.position := (Pinguin.hp * Pinguin.hpBar.width) div (Pinguin.basehp);
+       Pinguin.hp := Pinguin.hp - self.damage div 10;
+       Pinguin.hpBar.position := Pinguin.hp div 10;
        if (Kanguruart = 'Eis') AND (Pinguin.slowed = false) AND (Pinguin.canBeSlowed = true) then
        begin
        Pinguin.slowed := true;
@@ -207,18 +197,14 @@ begin
        Pinguin.bild.picture.loadFromFile(Pinguin.FileName + '_freeze' + '.png');
        self.bild.picture.LoadFromFile('Images\Eisguru_Attack.png')
 
-       end
-       else if Kanguruart = 'Boxer' then
-          self.bild.picture.LoadFromFile('Images\Pinguinboxer_Attack.png')
-       else if (Kanguruart = 'Bogen') and (assigned(self)) then
-            self.bild.picture.LoadFromFile('Images\Bogenguru_Attack.png');
-       end
-       else if (Kanguruart = 'Ninja') and (assigned(self)) then
-            self.bild.picture.LoadFromFile('Images\Ninja_Attack.png');
        end;
+       if Kanguruart = 'Boxer' then
+          self.bild.picture.LoadFromFile('Images\Pinguinboxer_Attack.png')
+       else if Kanguruart = 'Bogen' then
+            self.bild.picture.LoadFromFile('Images\Bogenguru_Attack.png');
   end;
   end;
-
+  end;
 
 end.
 

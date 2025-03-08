@@ -12,7 +12,7 @@ type TPath = class
      constructor create(dir, left, top, breit, hoch, map: integer);
      end;
 implementation
-uses map2, map1, tutorial;
+uses map2, map1;
 constructor TPath.create(dir, left, top, breit, hoch, map: integer);
 begin
 inherited create;
@@ -35,11 +35,6 @@ inherited create;
  begin
  self.bild := TImage.create(Form5);
  self.Bild.parent := Form5;
- end
-  else if map = 0 then
- begin
- self.bild := TImage.create(Form7);
- self.Bild.parent := Form7;
  end;
 
 //Bild bekommt gleiche Koordinaten und Größen wie Path
@@ -47,8 +42,7 @@ inherited create;
  self.bild.top := top;
  self.bild.height := hoch;
  self.bild.width := breit;
- self.bild.stretch := true;
- self.bild.visible := false;
+ self.bild.visible := true;
 
  //je nach map Bild laden
 

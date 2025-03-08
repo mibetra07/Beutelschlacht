@@ -40,7 +40,7 @@ type TPinguin  = class
 procedure posUpdate(Pinguin: TPinguin);
 implementation
 
-   Uses map2, map1, tutorial;
+   Uses map2, map1;
 
 constructor TPinguin.create(map, offset: integer);
 var i: integer;
@@ -82,8 +82,6 @@ begin
      hpBar.left := x + 24;
      hpBar.top := y - 10;
      hpBar.width := 50;
-     hpBar.min := 0;
-     hpBar.max := hpBar.width;
      hpBar.height := 10;
      hpBar.Visible := true;
      hpBar.Position := 100;
@@ -173,9 +171,9 @@ begin
   begin
        if ((self.width = 192) AND (Form5.tickspassed mod 8 = 0)) OR ((self.width <> 192) AND (Form5.tickspassed mod 2 = 0)) then
        begin
-         if self.currentPath < 8 then
+         if self.currentPath < 35 then
          begin
-         if Form5.Path[self.currentPath].direction = 1 then  //wenn nach links
+         {if Form5.Path[self.currentPath].direction = 1 then  //wenn nach links
          begin
          if self.x <= Form5.Path[self.currentPath].x + Form5.Path[self.currentPath].width then  //damit es nur bis Path Ende geht
            begin
@@ -195,8 +193,8 @@ begin
          end
          else if Form5.Path[self.currentPath].direction = 3 then //wenn nach links
          begin
-         if self.x >= Form5.Path[self.currentPath].x - 48 then //damit es nur bis Path Ende geht
-         begin
+         if self.x >= Form5.Path[self.currentPath].x then //damit es nur bis Path Ende geht
+         begin                                                              sqrt( sqr(self.x - Form5.path[self.currentPath].x) + sqr(self.y - Form5.path[self.currentPath].y))
          self.x := self.x - self.speed;
          end
          else
@@ -204,25 +202,34 @@ begin
          end
          else if Form5.Path[self.currentPath].direction = 4 then //wenn nach oben
          begin
-         if self.y >= Form5.Path[self.currentPath].y - 48 then    //damit es nur bis Path Ende geht
+         if self.y >= Form5.Path[self.currentPath].y then    //damit es nur bis Path Ende geht
            begin
-           self.y := self.y - self.speed;
-           end
+           self.y := self.y - self.speed; }
+         if sqrt( sqr(self.x - Form5.path[self.currentPath].x) + sqr(self.y - Form5.path[self.currentPath].y)) > 30 then
+         begin
+         Form5.panel3.caption := inttostr(self.currentpath);
+              if self.currentpath = 1 then
+              begin
+                   self.x := self.x + speed;
+              end
+              else
+              begin
+                   self.x := self.x + speed * (Form5.path[self.currentpath].x - Form5.path[self.currentpath - 1].x) div round(sqrt(sqr((Form5.path[self.currentpath].x - Form5.path[self.currentpath - 1].x)) + sqr(Form5.path[self.currentpath].y - Form5.path[self.currentpath - 1].y)));
+                   self.y := self.y + speed * (Form5.path[self.currentpath].y - Form5.path[self.currentpath - 1].y) div round(sqrt(sqr((Form5.path[self.currentpath].x - Form5.path[self.currentpath - 1].x)) + sqr(Form5.path[self.currentpath].y - Form5.path[self.currentpath - 1].y)));
+              end;
+         end
          else
           inc(self.currentPath); // wenn ende erreicht -> nächster Path
-         end;
          posUpdate(self);
          end
-         else if (self.currentPath >= 8) and (self.x > -10000) and (self.hp > 0) then
+         else if (self.currentPath >= 35) and (self.x > -10000) and (self.hp > 0) then
            begin
            self.x := -1000;
            Form5.playerHealth := Form5.playerHealth - self.hp div 5;
            Form5.label12.caption := inttostr(Form5.playerHealth);
            self.hp := 0;
            end;
-       end;
   end
-
     else if map = 2 then
   begin
          if self.currentPath < 7 then
@@ -281,6 +288,8 @@ begin
            end;
   end;
 end;
+end;
+
 procedure posUpdate(Pinguin: TPinguin);
 begin
          Pinguin.bild.left := Pinguin.x;
