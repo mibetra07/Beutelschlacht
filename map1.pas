@@ -16,6 +16,7 @@ type
     BitBtn1: TBitBtn;
     Button1: TButton;
     Button12: TButton;
+    Button13: TButton;
     Button2: TButton;
     Button3: TButton;
     Button4: TButton;
@@ -61,7 +62,6 @@ type
     Memo5: TMemo;
     Panel1: TPanel;
     Panel10: TPanel;
-    Panel16: TPanel;
     Panel2: TPanel;
     Panel3: TPanel;
     Panel4: TPanel;
@@ -86,6 +86,7 @@ type
     procedure Button10Click(Sender: TObject);
     procedure Button11Click(Sender: TObject);
     procedure Button12Click(Sender: TObject);
+    procedure Button13Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -199,7 +200,7 @@ begin
    ConstructForm();
    //Weg der Map erstellen(dir, left, top, breit, hoch, map: integer)
    Path[1] := TPath.create(1, 0, 320, 620, 75, 1);
-   Path[2] := Tpath.create(2, 620, 320, 75, 320, 1);
+   Path[2] := Tpath.create(2, 620, 320, 75, 330, 1);
    Path[3] := Tpath.create(3, 300, 650, 400, 75, 1);
    Path[4] := Tpath.create(4, 250, 90, 75, 620, 1);
    Path[5] := Tpath.create(1, 250, 30, 740, 75, 1);
@@ -222,7 +223,7 @@ end;
 procedure Tform5.ConstructForm();
 var i, j : integer;
 begin
-   coins := 10000;
+   coins := 990000;
    label6.caption:= inttostr(coins);
    Pinguincount := 0;
    Timer1.enabled := false;
@@ -288,11 +289,11 @@ begin
 
    Groupbox7.visible:=false;
    //vorkodierte Parameter für die wellen bis 20
-WaveParams[1, 1] := 2;
-WaveParams[1, 2] := 0;
-WaveParams[1, 3] := 0;
-WaveParams[1, 4] := 0;
-WaveParams[1, 5] := 0;
+WaveParams[1, 1] := 2; //anzahl normale
+WaveParams[1, 2] := 0; //anzahl helm
+WaveParams[1, 3] := 0; //anzahl schild
+WaveParams[1, 4] := 0; //anzahl boss
+WaveParams[1, 5] := 0; //anzahl tarn
 
 WaveParams[2, 1] := 5;
 WaveParams[2, 2] := 0;
@@ -416,31 +417,32 @@ WaveParams[20, 5] := 3;
                 AmountKilled[j] := 0;
            end;
    killedCount := 0;
-   PlayerHealth := 250;
+   PlayerHealth := 5;
 end;
 
 procedure TForm5.Timer1Timer(Sender: TObject);
 var i, j, switch: integer;
 begin
-   if playerHealth <= 0 then
+   if playerHealth <= 0 then  //Abbruch wenn man keine hp mehr hat
    begin
         Timer1.enabled := false;
         label12.caption := '0';
-        Panel16.visible := true;
         Button12.visible := true;
+        Button13.visible := true;
    end;
+       //ticks für jeden Pinguin ausführen
          for i := 1 to 100 do
          begin
          if Pinguin[i] <> nil then
-         tick(1, Pinguin[i]);
+            tick(1, Pinguin[i]);
          if HelmPinguin[i] <> nil then
-         tick(1, HelmPinguin[i]);
+            tick(1, HelmPinguin[i]);
          if SchildPinguin[i] <> nil then
-         tick(1, SchildPinguin[i]);
+            tick(1, SchildPinguin[i]);
          if BossPinguin[i] <> nil then
-         tick(1, BossPinguin[i]);
+            tick(1, BossPinguin[i]);
          if TarnPinguin[i] <> nil then
-         tick(1, TarnPinguin[i]);
+            tick(1, TarnPinguin[i]);
          end;
          Panel1.Caption := inttostr(KilledCount) + ';' + inttostr(PinguinCount) + ';' + inttostr(Form5.currentWave);
          Panel2.Caption := inttostr(AmountKilled[1]) + ';' + inttostr(AmountKilled[2]);
@@ -965,6 +967,7 @@ end;
 procedure TForm5.Image7MouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 var Collision, MapCollision : boolean;
+    i, j: integer;
 begin
   if (Button = mbLeft) and (DragThresholdReached = true) then
   begin
@@ -983,10 +986,35 @@ begin
       coins := coins - zauberkanguru[zauberkanguruzahl].value;
       zauberkanguru[zauberkanguruzahl].attackradius.visible := false;
       zauberkanguru[zauberkanguruzahl].setActive(1);
+      for i := 1 to 7 do
+      if j <> 100 then
+      begin
+        if (Abs(path[i].x + path[i].width div 2 - (zauberkanguru[zauberkanguruzahl].bild.left + 48)) <= (path[i].width div 2 + zauberkanguru[zauberkanguruzahl].range2)) and
+        (Abs(path[i].y + path[i].height div 2  - (zauberkanguru[zauberkanguruzahl].bild.top + 48)) <= (path[i].height div 2 + zauberkanguru[zauberkanguruzahl].range2)) then
+        begin
+          zauberkanguru[zauberkanguruzahl].Zauber := TZauberAngriff.create(1,zauberkanguru[zauberkanguruzahl].bild.left - zauberkanguru[zauberkanguruzahl].range2, zauberkanguru[zauberkanguruzahl].bild.top - zauberkanguru[zauberkanguruzahl].range2);
+          zauberkanguru[zauberkanguruzahl].Zauber.active := true;
+          j := 100;
+          repeat
+            begin
+               zauberkanguru[zauberkanguruzahl].Zauber.x2 := zauberkanguru[zauberkanguruzahl].Zauber.x2 + 1;
+               zauberkanguru[zauberkanguruzahl].Zauber.bild.left := zauberkanguru[zauberkanguruzahl].Zauber.x2 - 16;
+               zauberkanguru[zauberkanguruzahl].Zauber.attackradius.left :=  zauberkanguru[zauberkanguruzahl].Zauber.x2 + 48 -  zauberkanguru[zauberkanguruzahl].Zauber.range2;
+            end;
+            until Abs(path[i].x + path[i].width div 2 - (zauberkanguru[zauberkanguruzahl].Zauber.x2)) <= (path[i].width div 2);
+          repeat
+            begin
+               zauberkanguru[zauberkanguruzahl].Zauber.y2 := zauberkanguru[zauberkanguruzahl].Zauber.y2 + 1 ;
+               zauberkanguru[zauberkanguruzahl].Zauber.bild.top := zauberkanguru[zauberkanguruzahl].Zauber.y2 - 16;
+               zauberkanguru[zauberkanguruzahl].Zauber.attackradius.top :=  zauberkanguru[zauberkanguruzahl].Zauber.y2 + 48 -  zauberkanguru[zauberkanguruzahl].Zauber.range2;
+            end;
+            until Abs(path[i].y + path[i].height div 2 - (zauberkanguru[zauberkanguruzahl].Zauber.y2)) <= (path[i].height div 2);
+        end;
+      end;
+      end;
       label6.caption := inttostr(coins);
     end;
   end;
-end;
 
 
 //Kängurumenü
@@ -1614,6 +1642,86 @@ begin
   Form1.show;
   Form5.close;
 end;
+//beim erneut versuchen
+procedure TForm5.Button13Click(Sender: TObject);
+var i, j: integer;
+    Pinguintemp: TPinguin;
+begin
+  //alle Kangurus entfernen
+for i := 1 to 100 do
+    begin
+      if Kanguru[i] <> nil then
+      begin
+         selectedkangurutype := 'boxer';
+         selectedKanguruNumber := i;
+         sellkanguru();
+      end;
+      if BogenKanguru[i] <> nil then
+      begin
+         selectedkangurutype := 'bogen';
+         selectedKanguruNumber := i;
+         sellkanguru();
+      end;
+      if EisKanguru[i] <> nil then
+      begin
+         selectedkangurutype := 'eis';
+         selectedKanguruNumber := i;
+         sellkanguru();
+      end;
+      if NinjaKanguru[i] <> nil then
+      begin
+         selectedkangurutype := 'ninja';
+         selectedKanguruNumber := i;
+      end;
+    end;
+      {if ZauberKanguru[i] <> nil then
+      begin
+         selectedkangurutype := 'zauber';
+         selectedKanguruNumber := i;
+      end;}
+      //Pinguine wegteleportieren
+      for j := 1 to 5 do
+          for i := 1 to 100 do
+          begin
+            if (j = 1) and (Pinguin[i] <> nil) then
+               Pinguintemp := Pinguin[i]
+            else if (j = 2) and (HelmPinguin[i] <> nil)  then
+               Pinguintemp := HelmPinguin[i]
+            else if (j = 3) and (SchildPinguin[i] <> nil)  then
+               Pinguintemp := SchildPinguin[i]
+            else if (j = 4) and (BossPinguin[i] <> nil)  then
+               Pinguintemp := BossPinguin[i]
+            else if (j = 5) and (TarnPinguin[i] <> nil)  then
+               Pinguintemp := TarnPinguin[i];
+            begin
+              if Pinguintemp.x > -10000 then
+                begin
+                   inc(Form5.AmountKilled[Pinguintemp.art]);
+                   inc(Form5.killedCount);
+                end;
+                   Pinguintemp.currentPath := 100;
+                   Pinguintemp.x := -10000;
+                   Pinguintemp.bild.left := Pinguintemp.x;
+                   Pinguintemp.hpBar.Left := Pinguintemp.x;
+                   Pinguintemp.lab.left := Pinguintemp.x;
+                   Form5.IndexOfKilled[Pinguintemp.art, Form5.AmountKilled[Pinguintemp.art]] := Pinguintemp.index;
+            end;
+          end;
+     for i := 1 to 5 do
+         for j := 1 to 100 do
+             begin
+                  Form5.IndexOfKilled[i, j] := 0;
+                  Form5.AmountKilled[j] := 0;
+             end;
+     //restlichen nötigen Variablen zutücksetzen
+       currentWave := 1;
+       wave[1] := Twave.create(2, 2, 0, 0, 0, 1);
+       Timer1.enabled := true;
+       playerHealth := 250;
+       coins := 3000;
+       Button13.visible := false;
+       Button12.visible := false;
+    end;
 
 end.
 
