@@ -54,6 +54,7 @@ type TKanguru = class
   TZauberkanguru = class(Tkanguru)
    Zauber: TZauberangriff;
     constructor create(map, x, y : integer);
+    procedure destruct;
   end;
 
 implementation
@@ -191,6 +192,16 @@ begin
   self.Attackradius.free;
   self.bild.free;
   self.Free;
+end;
+
+procedure TZauberkanguru.destruct();
+begin
+  self.attackradius.free;
+  self.Zauber.attackradius.free;
+  self.Zauber.Bild.free;
+  self.Zauber.Free;
+  self.bild.free;
+  self.free;
 end;
 
 procedure Tkanguru.setActive(map : integer);
