@@ -49,33 +49,32 @@ var i: integer;
      //je nach map pinguin auf Path[1] erstellen
      with self do
 begin
-     if map = 2 then
+     if map = 2 then //grundlegende Form-bezogene Eigenschaften
      begin
-     x := Form6.Path[1].x - offset;
-     y := Form6.Path[1].y;
-     bild := TImage.Create(Form6);
-     bild.Parent := Form6;
-     hpBar := TProgressbar.create(Form6);
-     hpBar.parent := Form6;
+       x := Form6.Path[1].x - offset;
+       y := Form6.Path[1].y;
+       bild := TImage.Create(Form6);
+       bild.Parent := Form6;
+       hpBar := TProgressbar.create(Form6);
+       hpBar.parent := Form6;
      end
-     else if map = 1 then
+     else if map = 1 then //grundlegende Form-bezogene Eigenschaften
      begin
-     x := Form5.Path[1].x - offset ;
-     y := Form5.Path[1].y;
-     bild := TImage.Create(Form5);
-     bild.Parent := Form5;
-     hpBar := TProgressbar.create(Form5);
-     hpBar.parent := Form5;
-     position := Form5.PinguinCount;
-     inc(Form5.Pinguincount);
-     self.index := Form5.Pinguincount;
-     lab := TLabel.create(Form5);
-     lab.parent := Form5;
-     lab.visible := true;
-     lab.font.color := Clblack;
+       x := Form5.Path[1].x - offset ;
+       y := Form5.Path[1].y;
+       bild := TImage.Create(Form5);
+       bild.Parent := Form5;
+       hpBar := TProgressbar.create(Form5);
+       hpBar.parent := Form5;
+       position := Form5.PinguinCount;
+       inc(Form5.Pinguincount);
+       self.index := Form5.Pinguincount;
+       lab := TLabel.create(Form5);
+       lab.parent := Form5;
+       lab.visible := true;
+       lab.font.color := Clblack;
      end;
-     //größe
-
+     //größe und hp bar
      width := 96;
      height := 96;
      currentPath := 1;
@@ -99,6 +98,7 @@ begin
      bild.left := x;
      bild.top := y;
      bild.Visible := True;
+     //Pinguin spezifische Eigenschaften
      hp := 100;
      basehp := hp;
      baseSpeed := 3;
@@ -114,21 +114,24 @@ constructor THelmPinguin.create(map, offset: integer);
    begin
 
      inherited create(map, offset);
-
+     //Pinguin spezifische Eigenschaften
      self.bild.Picture.LoadFromFile('images\Pinguin helm.png');
-self.     FileName := 'images\Pinguin helm';
+     self.FileName := 'images\Pinguin helm';
      self.hp := 300;
      self.baseSpeed := 2;
+     self.speed := self.baseSpeed;
      self.art := 2;
      self.basehp := self.hp;
    end;
 constructor TSchildPinguin.create(map, offset: integer);
 begin
      inherited create(map, offset);
+     //Pinguin spezifische Eigenschaften
      self.bild.picture.loadFromFile('images\Pinguin Helm und Schild.png');
      self.FileName := 'images\Pinguin Helm und Schild';
      self.hp := 500;
      self.baseSpeed := 1;
+     self.speed := self.baseSpeed;
      self.art := 3;
      self.basehp := self.hp;
 end;
@@ -137,6 +140,7 @@ begin
      inherited create(map, offset);
      with self do
      begin
+     //Pinguin spezifische Eigenschaften
      bild.picture.loadFromFile('images\BossPinguin.png');
      FileName := 'images\BossPinguin';
      bild.Width := 192;
@@ -148,6 +152,7 @@ begin
      bild.Visible := True;
      hp := 1500;
      baseSpeed := 1;
+     self.speed := self.baseSpeed;
      bildOffset := 48;
      canBeSlowed := false;
      art := 4;
@@ -157,11 +162,13 @@ end;
 constructor TTarnPinguin.create(map, offset: integer);
 begin
      inherited create(map, offset);
+     //Pinguin spezifische Eigenschaften
      self.camo := true;
      self.bild.picture.loadFromFile('images\Tarnguin.png');
       FileName := 'images\Tarnguin';
      self.hp := 300;
      self.baseSpeed := 5;
+     self.speed := self.baseSpeed;
      self.art := 5;
      self.basehp := self.hp;
 end;
@@ -171,9 +178,9 @@ var i, normal: integer;
 begin
   if map = 1 then
   begin
-       if ((self.width = 192) AND (Form5.tickspassed mod 8 = 0)) OR ((self.width <> 192) AND (Form5.tickspassed mod 2 = 0)) then
+       if ((self.width = 192) AND (Form5.tickspassed mod 4 = 0)) OR (self.width <> 192) then // wenn es der bosspinguin ist alle 8 ticks sonst alle 2 ticks
        begin
-         if self.currentPath < 8 then
+         if self.currentPath < 8 then //solange noch auf den Weg-Paths
          begin
          if Form5.Path[self.currentPath].direction = 1 then  //wenn nach links
          begin
@@ -213,8 +220,9 @@ begin
          end;
          posUpdate(self);
          end
-         else if (self.currentPath >= 8) and (self.x > -10000) and (self.hp > 0) then
+         else if (self.currentPath >= 8) and (self.x > -10000) and (self.hp > 0) then //kriterien für einen durchgekommenen Pinguin
            begin
+           //Pinguin wegteleportieren, hp vom spieler abziehen, anzeigen
            self.x := -1000;
            Form5.playerHealth := Form5.playerHealth - self.hp div 5;
            Form5.label12.caption := inttostr(Form5.playerHealth);
@@ -289,34 +297,9 @@ begin
          Pinguin.hpBar.top := Pinguin.y - 10 - Pinguin.bildOffset;
          Pinguin.lab.top := Pinguin.y + 100;
          Pinguin.lab.left := Pinguin.x + 48;
+         Pinguin.bild.BringToFront;
 end;
 
-{procedure Tpinguin.attackcheck(map: integer; Kanguru: TKanguru; Kanguruart: string);
-var i, j: integer;
-begin
-  begin
-  // Prüfen, ob irgendein Teil von `self` innerhalb des Kreises liegt (von chatgpt)
-  if Kanguru <> nil then
-    begin
-  if (Sqr(self.X + 48 - (Kanguru.attackradius.Left + Kanguru.attackradius.Width div 2)) +
-      Sqr(self.Y + 48 - (Kanguru.attackradius.Top + Kanguru.attackradius.Height div 2))
-      <= Sqr(Kanguru.attackradius.Width div 2)) or
-     (Sqr(self.X - (Kanguru.attackradius.Left + Kanguru.attackradius.Width div 2)) +
-      Sqr(self.Y - (Kanguru.attackradius.Top + Kanguru.attackradius.Height div 2))
-      <= Sqr(Kanguru.attackradius.Width div 2)) then
-  begin
-        self.hp := self.hp - Kanguru.damage div 5;
-       self.hpBar.position := self.hp div 10;
-       if Kanguruart = 'boxer' then
-          Kanguru.bild.picture.LoadFromFile('Images\Pinguinboxer_Attack.png')
-       else if Kanguruart = 'Bogen' then
-            Kanguru.bild.picture.LoadFromFile('Images\Bogenguru_Attack.png')
-  end;
-end;
-
-
-end;
-  end; }
 
 end.
 

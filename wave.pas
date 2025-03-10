@@ -19,7 +19,7 @@ begin
   offsetmultiplier := 100;
   if map = 1 then
     begin
-  for i := 1 to 5 do
+  for i := 1 to 5 do //Die wegteleportierten Pinguine nach Bedarf zurückrufen und resetten
       for j := 1 to Form5.AmountKilled[i] do
           for k := 1 to Form5.Pinguincount do
               begin
@@ -36,12 +36,12 @@ begin
                   end;
                 end;
               end;
-
-       for i := 1 to normal - Form5.AmountKilled[1] do
-       begin
-           Form5.Pinguin[i] := TPinguin.Create(1, random(offsetmultiplier) * 50);
-           Form5.AllPinguin[i] := Form5.Pinguin[i];
-       end;
+       //neue Pinguine erzeugen
+         for i := 1 to normal - Form5.AmountKilled[1] do
+         begin
+             Form5.Pinguin[i] := TPinguin.Create(1, random(offsetmultiplier) * 50);
+             Form5.AllPinguin[i] := Form5.Pinguin[i];
+         end;
         for i := 1 to helm - Form5.AmountKilled[2] do
         begin
           Form5.helmPinguin[i] := THelmPinguin.Create(1, random(offsetmultiplier) * 50 + 100);
@@ -75,82 +75,87 @@ procedure tick(map: integer; Pinguin: TPinguin);
 var i, j, k, speed: integer;
 begin
   k := 0;
-  if Form5.tickspassed > 2000000 then
+  if Form5.tickspassed > 1000000 then //sicherheit falls irgendwer extrem lange spielt
      Form5.tickspassed := 0;
   if map = 1 then
   begin
     repeat
-    Pinguin.laufen(1);
-    if Pinguin.hp <= 0 then //wenn Pinguin tot dann weg
-    begin
-      if Pinguin.x > -10000 then
+      if Pinguin <> nil then
+             Pinguin.laufen(1);
+      if Pinguin.hp <= 0 then //wenn Pinguin tot dann weg
       begin
-         inc(Form5.AmountKilled[Pinguin.art]);
-         inc(Form5.killedCount);
-      end;
-         Pinguin.currentPath := 100;
-         Pinguin.x := -10000;
-         Pinguin.bild.left := Pinguin.x;
-         Pinguin.hpBar.Left := Pinguin.x;
-         Pinguin.lab.left := Pinguin.x;
-         Form5.IndexOfKilled[Pinguin.art, Form5.AmountKilled[Pinguin.art]] := Pinguin.index;
-      end;
-    if Form5.KilledCount = Form5.PinguinCount then
-    begin
-     for i := 1 to 5 do
-         for j := 1 to 100 do
-             begin
-                  Form5.IndexOfKilled[i, j] := 0;
-                  Form5.AmountKilled[j] := 0;
-             end;
-       inc(Form5.currentWave);
-       Form5.wave[Form5.currentWave] := TWave.create(Form5.waveParams[Form5.currentWave, 1], Form5.waveParams[Form5.currentWave, 2], Form5.waveParams[Form5.currentWave, 3], Form5.waveParams[Form5.currentWave, 4], Form5.waveParams[Form5.currentWave, 5], 1);
-       Form5.killedCount := 0;
-    end;
-        if Pinguin <> nil then
-           Pinguin.laufen(1);
-        for j := 1 to 50 do   //für jedes Känguru: angriff auf Pinguine; Attackframe rein
-            begin
-              if Form5.BogenKanguru[j] <> nil then
-              begin
-                Form5.BogenKanguru[j].attack(1, Pinguin, 'Bogen');
-                if (Form5. ticksPassed - Form5.BogenKanguru[j].cooldownTick > Form5.BogenKanguru[j].attackspeed div 2) and (Form5.BogenKanguru[j] <> nil) and (Form5.BogenKanguru[j].active = true)then
-                Form5.BogenKanguru[1].bild.picture.LoadFromFile('images\Bogenguru.png'); //alle anderen so und so viel sekunden
-              end;
-               if Form5.Kanguru[j] <> nil then
-              begin
-                Form5.Kanguru[j].attack(1, Pinguin, 'Boxer');
-                if (Form5. ticksPassed - Form5.Kanguru[j].cooldownTick > Form5.Kanguru[j].attackspeed div 2) and (Form5.Kanguru[j] <> nil) and (Form5.Kanguru[j].active = true)then
-                Form5.Kanguru[1].bild.picture.LoadFromFile('images\Boxerkanguru.png');
-              end;
-               if Form5.Ninjakanguru[j] <> nil then
-              begin
-                Form5.Ninjakanguru[j].attack(1, Pinguin, 'Ninja');
-                if (Form5. ticksPassed - Form5.NinjaKanguru[j].cooldownTick > Form5.NinjaKanguru[j].attackspeed div 2) and (Form5.NinjaKanguru[j] <> nil) and (Form5.NinjaKanguru[j].active = true)then
-                Form5.Ninjakanguru[1].bild.picture.LoadFromFile('images\Ninja.png');
-              end;
-               if Form5.EisKanguru[j] <> nil then
-              begin
-                   begin
-                        Form5.EisKanguru[j].attack(1, Pinguin, 'Eis');
-                        if (Form5. ticksPassed - Form5.EisKanguru[j].cooldownTick > Form5.EisKanguru[j].attackspeed div 2) and (Form5.EisKanguru[j] <> nil) and (Form5.EisKanguru[j].active = true)then
-                        Form5.EisKanguru[1].bild.picture.LoadFromFile('images\Eisguru.png');
-                   end;
-                   if Form5.ticksPassed - Pinguin.slowedTick > 35 then
-                    begin
-                        Pinguin.slowed := false;
-                        Pinguin.bild.picture.loadFromFile(Pinguin.FileName + '.png');
-                        Pinguin.speed :=  Pinguin.baseSpeed;
-                   end;
-              end;
+        if Pinguin.x > -10000 then //wenn der Pinguin noch nicht wegteleportiert wurde: Arrays mit "toten" Pinguinen updaten
+        begin
+           inc(Form5.AmountKilled[Pinguin.art]);
+           inc(Form5.killedCount);
         end;
-        pinguin.lab.caption := inttostr(pinguin.index);
-        if Form5.CheckBox1.checked = true then
-           begin
-           inc(k);
-           end
-        else
-            k :=2;
+            //Pinguin wegteleportieren (destroy hat aus Lazarus Gründen nicht funktioniert)
+           Pinguin.currentPath := 100;
+           Pinguin.x := -10000;
+           Pinguin.bild.left := Pinguin.x;
+           Pinguin.hpBar.Left := Pinguin.x;
+           Pinguin.lab.left := Pinguin.x;
+           Form5.IndexOfKilled[Pinguin.art, Form5.AmountKilled[Pinguin.art]] := Pinguin.index;
+      end;
+      if Form5.KilledCount = Form5.PinguinCount then //Wenn alle Pinguine einer Wave tot sind: Speicher der getöteten Pinguin resetten und die nächste wave starten
+      begin
+       for i := 1 to 5 do
+           for j := 1 to 100 do
+               begin
+                    Form5.IndexOfKilled[i, j] := 0;
+                    Form5.AmountKilled[j] := 0;
+               end;
+         inc(Form5.currentWave);
+         Form5.wave[Form5.currentWave] := TWave.create(Form5.waveParams[Form5.currentWave, 1], Form5.waveParams[Form5.currentWave, 2], Form5.waveParams[Form5.currentWave, 3], Form5.waveParams[Form5.currentWave, 4], Form5.waveParams[Form5.currentWave, 5], 1);
+         Form5.killedCount := 0;
+      end;
+
+          for j := 1 to 50 do   //für jedes Känguru: angriff auf Pinguine
+              begin
+                if Form5.BogenKanguru[j] <> nil then
+                begin
+                  Form5.BogenKanguru[j].attack(1, Pinguin, 'Bogen');
+                  if (Form5. ticksPassed - Form5.BogenKanguru[j].cooldownTick > Form5.BogenKanguru[j].attackspeed div 2) and (Form5.BogenKanguru[j] <> nil) and (Form5.BogenKanguru[j].active = true)then
+                     Form5.BogenKanguru[1].bild.picture.LoadFromFile('images\Bogenguru.png'); //alle anderen so und so viel sekunden idle Bild
+                end;
+                 if Form5.Kanguru[j] <> nil then
+                begin
+                  Form5.Kanguru[j].attack(1, Pinguin, 'Boxer');
+                  if (Form5. ticksPassed - Form5.Kanguru[j].cooldownTick > Form5.Kanguru[j].attackspeed div 2) and (Form5.Kanguru[j] <> nil) and (Form5.Kanguru[j].active = true)then
+                     Form5.Kanguru[1].bild.picture.LoadFromFile('images\Boxerkanguru.png'); //alle anderen so und so viel sekunden idle Bild
+                end;
+                 if Form5.Ninjakanguru[j] <> nil then
+                begin
+                  Form5.Ninjakanguru[j].attack(1, Pinguin, 'Ninja');
+                  if (Form5. ticksPassed - Form5.NinjaKanguru[j].cooldownTick > Form5.NinjaKanguru[j].attackspeed div 2) and (Form5.NinjaKanguru[j] <> nil) and (Form5.NinjaKanguru[j].active = true)then
+                     Form5.Ninjakanguru[1].bild.picture.LoadFromFile('images\Ninja.png'); //alle anderen so und so viel sekunden idle Bild
+                end;
+                 if (Form5.Zauberkanguru[j] <> nil) and (Form5.Zauberkanguru[j].zauber <> nil) then
+                begin
+                  Form5.Zauberkanguru[j].zauber.attack(1, Pinguin, 'Zauber'); //alle anderen so und so viel sekunden idle Bild
+                end;
+                 if Form5.EisKanguru[j] <> nil then
+                begin
+                     begin
+                          Form5.EisKanguru[j].attack(1, Pinguin, 'Eis');
+                          if (Form5. ticksPassed - Form5.EisKanguru[j].cooldownTick > Form5.EisKanguru[j].attackspeed div 2) and (Form5.EisKanguru[j] <> nil) and (Form5.EisKanguru[j].active = true)then
+                          Form5.EisKanguru[1].bild.picture.LoadFromFile('images\Eisguru.png'); //alle anderen so und so viel sekunden idle Bild
+                     end;
+                     if Form5.ticksPassed - Pinguin.slowedTick > 35 then //wenn der Pinguin eine Zeit gefreezed war: entfreezen
+                      begin
+                          Pinguin.slowed := false;
+                          Pinguin.bild.picture.loadFromFile(Pinguin.FileName + '.png');
+                          Pinguin.speed :=  Pinguin.baseSpeed;
+                      end;
+                end;
+              end;
+          pinguin.lab.caption := inttostr(pinguin.index);
+          if Form5.CheckBox1.checked = true then  //wenn die checkbox gechecked ist loop parameter erhöhen (2x speed: alles 2x ausgeführt)
+             begin
+                  inc(k);
+             end
+          else
+              k :=2;
         until k = 2;
   end
   else if map = 2 then
