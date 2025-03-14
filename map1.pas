@@ -469,6 +469,10 @@ begin
   begin
     ninjakanguru[i].attackradius.visible:=false;
   end;
+  for i:=1 to zauberkanguruzahl do
+  begin
+    zauberkanguru[i].attackradius.visible:=false;
+  end;
   Groupbox7.visible:=false;
 end;
 //Form wechseln
@@ -1038,6 +1042,10 @@ begin
   begin
     ninjakanguru[i].attackradius.visible:=false;
   end;
+  for i:=1 to zauberkanguruzahl do
+  begin
+    zauberkanguru[i].attackradius.visible:=false;
+  end;
   //ShowMenu aufrufen und Angriffsbereich sichtbar machen mit Sender-Abfrage
   for i:=1 to kanguruzahl do
   begin
@@ -1079,8 +1087,16 @@ begin
       ShowMenu('ninja', ninjakanguru[i].damage, ninjakanguru[i].range2, ninjakanguru[i].attackspeed, ninjakanguru[i].damagelvl, ninjakanguru[i].speedlvl, ninjakanguru[i].rangelvl, ninjakanguru[i].cancamo);
     end;
   end;
-  //hier Zauberer noch hinzufügen
-
+  for i:=1 to zauberkanguruzahl do
+  begin
+    if zauberKanguru[i].bild = Sender then
+    begin
+      selectedkangurutype:='zauber';
+      selectedkangurunumber:=i;
+      zauberkanguru[i].attackradius.visible:=true;
+      ShowMenu('zauber', zauberkanguru[i].damage, zauberkanguru[i].range2, zauberkanguru[i].attackspeed, zauberkanguru[i].damagelvl, zauberkanguru[i].speedlvl, zauberkanguru[i].rangelvl, zauberkanguru[i].cancamo);
+    end;
+  end;
   //Kängurus über Angriffsbereich bringen, sodass immer noch ansprechbar
   for i:=1 to kanguruzahl do
   begin
@@ -1097,6 +1113,10 @@ begin
   for i:=1 to ninjakanguruzahl do
   begin
     ninjakanguru[i].bild.bringtofront;
+  end;
+  for i:=1 to zauberkanguruzahl do
+  begin
+    zauberkanguru[i].bild.bringtofront;
   end;
 end;
 //Menü anzeigen
@@ -1137,7 +1157,11 @@ begin
   else if  kangurutype = 'zauber' then
   begin
     panel11.caption:= 'Zauberkänguru';
-    button11.visible := true;
+    button9.visible:= false;
+    label8.visible:= false;
+    button10.visible:= false;
+    label9.visible := false;
+    button11.visible := true;   //Schimmer
     label10.visible := true;
   end;
   panel12.caption := 'Schaden: '+inttostr(damage);
@@ -1182,19 +1206,25 @@ begin
   //Camoupgrade
   if kangurutype = 'zauber' then
   begin
-    button11.caption:= '5000$';
     if cancamo = true then
-      panel15.caption := 'Schimmer: Ja'
+    begin
+      panel15.caption := 'Schimmer: Ja';
+      button11.caption := 'Max.';
+    end
     else
       panel15.caption := 'Schimmer: Nein';
+      button11.caption:= '5000$';
   end
   else
   begin
-    button11.caption:= '2000$';
     if cancamo = true then
-      panel15.caption := 'Bessere Sicht: Ja'
+    begin
+      panel15.caption := 'Bessere Sicht: Ja';
+      button11.caption:= 'Max.';
+    end
     else
       panel15.caption := 'Bessere Sicht: Nein';
+      button11.caption:= '2000$';
   end;
   //Verkaufspreis
   if selectedkangurutype = 'boxer' then
@@ -1371,101 +1401,105 @@ begin
   Groupbox7.visible := false;
 end;
 //Upgrades
+//Damage
 procedure TForm5.Button8Click(Sender: TObject);
 begin
   if selectedkangurutype = 'boxer' then
   begin
     if coins - (250+kanguru[selectedkangurunumber].damagelvl*300) >= 0 then
     begin
-    coins:= coins - (250+kanguru[selectedkangurunumber].damagelvl*300);
-    kanguru[selectedkangurunumber].value := kanguru[selectedkangurunumber].value + (250+kanguru[selectedkangurunumber].damagelvl*300);
-    inc(kanguru[selectedkangurunumber].damagelvl);
-    kanguru[selectedkangurunumber].damage := kanguru[selectedkangurunumber].damage + UpgradeDamage;
-    label7.caption:=inttostr(kanguru[selectedkangurunumber].damagelvl) + '/5';
-    panel12.Caption:= 'Schaden: ' + inttostr(kanguru[selectedkangurunumber].damage);
-    button8.Caption := inttostr(250+kanguru[selectedkangurunumber].damagelvl*300)+'$';
+      coins:= coins - (250+kanguru[selectedkangurunumber].damagelvl*300);
+      kanguru[selectedkangurunumber].value := kanguru[selectedkangurunumber].value + (250+kanguru[selectedkangurunumber].damagelvl*300);
+      inc(kanguru[selectedkangurunumber].damagelvl);
+      kanguru[selectedkangurunumber].damage := kanguru[selectedkangurunumber].damage + UpgradeDamage;
+      label7.caption:=inttostr(kanguru[selectedkangurunumber].damagelvl) + '/5';
+      panel12.Caption:= 'Schaden: ' + inttostr(kanguru[selectedkangurunumber].damage);
+      button8.Caption := inttostr(250+kanguru[selectedkangurunumber].damagelvl*300)+'$';
     end;
     if kanguru[selectedkangurunumber].damagelvl >=5 then
     begin
       button8.enabled:=false;
       button8.caption:='Max.';
     end;
-
+    label11.caption:= inttostr(kanguru[selectedkangurunumber].value div 2)+'$'
   end
   else if selectedkangurutype = 'bogen' then
   begin
     if coins - (250+bogenkanguru[selectedkangurunumber].damagelvl*300) >= 0 then
     begin
-    coins:= coins - (250+bogenkanguru[selectedkangurunumber].damagelvl*300);
-    bogenkanguru[selectedkangurunumber].value := bogenkanguru[selectedkangurunumber].value + (250+bogenkanguru[selectedkangurunumber].damagelvl*300);
-    inc(bogenkanguru[selectedkangurunumber].damagelvl);
-    bogenkanguru[selectedkangurunumber].damage := bogenkanguru[selectedkangurunumber].damage + UpgradeDamage;
-    label7.caption:=inttostr(bogenkanguru[selectedkangurunumber].damagelvl) + '/5';
-    panel12.Caption:= 'Schaden: ' + inttostr(bogenkanguru[selectedkangurunumber].damage);
-    button8.Caption := inttostr(250+bogenkanguru[selectedkangurunumber].damagelvl*300)+'$';
+      coins:= coins - (250+bogenkanguru[selectedkangurunumber].damagelvl*300);
+      bogenkanguru[selectedkangurunumber].value := bogenkanguru[selectedkangurunumber].value + (250+bogenkanguru[selectedkangurunumber].damagelvl*300);
+      inc(bogenkanguru[selectedkangurunumber].damagelvl);
+      bogenkanguru[selectedkangurunumber].damage := bogenkanguru[selectedkangurunumber].damage + UpgradeDamage;
+      label7.caption:=inttostr(bogenkanguru[selectedkangurunumber].damagelvl) + '/5';
+      panel12.Caption:= 'Schaden: ' + inttostr(bogenkanguru[selectedkangurunumber].damage);
+      button8.Caption := inttostr(250+bogenkanguru[selectedkangurunumber].damagelvl*300)+'$';
     end;
     if bogenkanguru[selectedkangurunumber].damagelvl >=5 then
     begin
       button8.enabled:=false;
       button8.caption:='Max.';
     end;
+    label11.caption:= inttostr(bogenkanguru[selectedkangurunumber].value div 2)+'$'
   end
   else if selectedkangurutype = 'eis' then
   begin
     if coins - (250+eiskanguru[selectedkangurunumber].damagelvl*300) >= 0 then
     begin
-    coins:= coins - (250+eiskanguru[selectedkangurunumber].damagelvl*300);
-    eiskanguru[selectedkangurunumber].value := eiskanguru[selectedkangurunumber].value + (250+eiskanguru[selectedkangurunumber].damagelvl*300);
-    inc(eiskanguru[selectedkangurunumber].damagelvl);
-    eiskanguru[selectedkangurunumber].damage := eiskanguru[selectedkangurunumber].damage + UpgradeDamage;
-    label7.caption:=inttostr(eiskanguru[selectedkangurunumber].damagelvl) + '/5';
-    panel12.Caption:= 'Schaden: ' + inttostr(eiskanguru[selectedkangurunumber].damage);
-    button8.Caption := inttostr(250+eiskanguru[selectedkangurunumber].damagelvl*300)+'$';
+      coins:= coins - (250+eiskanguru[selectedkangurunumber].damagelvl*300);
+      eiskanguru[selectedkangurunumber].value := eiskanguru[selectedkangurunumber].value + (250+eiskanguru[selectedkangurunumber].damagelvl*300);
+      inc(eiskanguru[selectedkangurunumber].damagelvl);
+      eiskanguru[selectedkangurunumber].damage := eiskanguru[selectedkangurunumber].damage + UpgradeDamage;
+      label7.caption:=inttostr(eiskanguru[selectedkangurunumber].damagelvl) + '/5';
+      panel12.Caption:= 'Schaden: ' + inttostr(eiskanguru[selectedkangurunumber].damage);
+      button8.Caption := inttostr(250+eiskanguru[selectedkangurunumber].damagelvl*300)+'$';
     end;
     if eiskanguru[selectedkangurunumber].damagelvl >=5 then
     begin
       button8.enabled:=false;
       button8.caption:='Max.';
     end;
+    label11.caption:= inttostr(eiskanguru[selectedkangurunumber].value div 2)+'$';
   end
   else if selectedkangurutype = 'ninja' then
   begin
     if coins - (250+ninjakanguru[selectedkangurunumber].damagelvl*300) >= 0 then
     begin
-    coins:= coins - (250+ninjakanguru[selectedkangurunumber].damagelvl*300);
-    ninjakanguru[selectedkangurunumber].value := ninjakanguru[selectedkangurunumber].value + (250+ninjakanguru[selectedkangurunumber].damagelvl*300);
-    inc(ninjakanguru[selectedkangurunumber].damagelvl);
-    ninjakanguru[selectedkangurunumber].damage := ninjakanguru[selectedkangurunumber].damage + UpgradeDamage;
-    label7.caption:=inttostr(ninjakanguru[selectedkangurunumber].damagelvl) + '/5';
-    panel12.Caption:= 'Schaden: ' + inttostr(ninjakanguru[selectedkangurunumber].damage);
-    button8.Caption := inttostr(250+ninjakanguru[selectedkangurunumber].damagelvl*300)+'$';
+      coins:= coins - (250+ninjakanguru[selectedkangurunumber].damagelvl*300);
+      ninjakanguru[selectedkangurunumber].value := ninjakanguru[selectedkangurunumber].value + (250+ninjakanguru[selectedkangurunumber].damagelvl*300);
+      inc(ninjakanguru[selectedkangurunumber].damagelvl);
+      ninjakanguru[selectedkangurunumber].damage := ninjakanguru[selectedkangurunumber].damage + UpgradeDamage;
+      label7.caption:=inttostr(ninjakanguru[selectedkangurunumber].damagelvl) + '/5';
+      panel12.Caption:= 'Schaden: ' + inttostr(ninjakanguru[selectedkangurunumber].damage);
+      button8.Caption := inttostr(250+ninjakanguru[selectedkangurunumber].damagelvl*300)+'$';
     end;
     if ninjakanguru[selectedkangurunumber].damagelvl >=5 then
     begin
       button8.enabled:=false;
       button8.caption:='Max.';
     end;
+    label11.caption:= inttostr(ninjakanguru[selectedkangurunumber].value div 2)+'$';
   end
   else if selectedkangurutype = 'zauber' then
   begin
-    if coins - (250+kanguru[selectedkangurunumber].damagelvl*300) >= 0 then
+    if coins - (250+zauberkanguru[selectedkangurunumber].damagelvl*300) >= 0 then
     begin
-    coins:= coins - (250+zauberkanguru[selectedkangurunumber].damagelvl*300);
-    zauberkanguru[selectedkangurunumber].value := zauberkanguru[selectedkangurunumber].value + (250+zauberkanguru[selectedkangurunumber].damagelvl*300);
-    inc(zauberkanguru[selectedkangurunumber].damagelvl);
-    zauberkanguru[selectedkangurunumber].damage := zauberkanguru[selectedkangurunumber].damage + UpgradeDamage;
-    label7.caption:=inttostr(zauberkanguru[selectedkangurunumber].damagelvl) + '/5';
-    panel12.Caption:= 'Schaden: ' + inttostr(zauberkanguru[selectedkangurunumber].damage);
-    button8.Caption := inttostr(250+zauberkanguru[selectedkangurunumber].damagelvl*300)+'$';
+      coins:= coins - (250+zauberkanguru[selectedkangurunumber].damagelvl*300);
+      zauberkanguru[selectedkangurunumber].value := zauberkanguru[selectedkangurunumber].value + (250+zauberkanguru[selectedkangurunumber].damagelvl*300);
+      inc(zauberkanguru[selectedkangurunumber].damagelvl);
+      zauberkanguru[selectedkangurunumber].damage := zauberkanguru[selectedkangurunumber].damage + UpgradeDamage;
+      label7.caption:=inttostr(zauberkanguru[selectedkangurunumber].damagelvl) + '/5';
+      panel12.Caption:= 'Schaden: ' + inttostr(zauberkanguru[selectedkangurunumber].damage);
+      button8.Caption := inttostr(250+zauberkanguru[selectedkangurunumber].damagelvl*300)+'$';
     end;
     if zauberkanguru[selectedkangurunumber].damagelvl >=5 then
     begin
       button8.enabled:=false;
       button8.caption:='Max.';
     end;
+    label11.caption:= inttostr(zauberkanguru[selectedkangurunumber].value div 2)+'$';
   end;
   label6.caption:= inttostr(coins);
-
 end;
 //Speed
 procedure TForm5.Button9Click(Sender: TObject);
@@ -1474,79 +1508,77 @@ begin
   begin
   if coins - (250+kanguru[selectedkangurunumber].speedlvl*200) >= 0 then
     begin
-    coins:= coins - (300+kanguru[selectedkangurunumber].speedlvl*200);
-    kanguru[selectedkangurunumber].value := kanguru[selectedkangurunumber].value + (300+kanguru[selectedkangurunumber].speedlvl*200);
-    inc(kanguru[selectedkangurunumber].Speedlvl);
-    kanguru[selectedkangurunumber].attackSpeed := kanguru[selectedkangurunumber].attackSpeed - UpgradeSpeed;
-    label8.caption:=inttostr(kanguru[selectedkangurunumber].Speedlvl) + '/5';
-    panel13.Caption:= 'Angriffsgeschwindigkeit: ' + inttostr(kanguru[selectedkangurunumber].attackSpeed);
-    button9.Caption := inttostr(300+kanguru[selectedkangurunumber].speedlvl*200)+'$';
+      coins:= coins - (300+kanguru[selectedkangurunumber].speedlvl*200);
+      kanguru[selectedkangurunumber].value := kanguru[selectedkangurunumber].value + (300+kanguru[selectedkangurunumber].speedlvl*200);
+      inc(kanguru[selectedkangurunumber].Speedlvl);
+      kanguru[selectedkangurunumber].attackSpeed := kanguru[selectedkangurunumber].attackSpeed - UpgradeSpeed;
+      label8.caption:=inttostr(kanguru[selectedkangurunumber].Speedlvl) + '/5';
+      panel13.Caption:= 'Angriffsgeschwindigkeit: ' + inttostr(kanguru[selectedkangurunumber].attackSpeed);
+      button9.Caption := inttostr(300+kanguru[selectedkangurunumber].speedlvl*200)+'$';
     end;
     if kanguru[selectedkangurunumber].Speedlvl >=5 then
     begin
       button9.enabled:=false;
       button9.caption:='Max.';
     end;
+    label11.caption:= inttostr(kanguru[selectedkangurunumber].value div 2)+'$';
   end
   else if selectedkangurutype = 'bogen' then
   begin
-    coins:= coins - (300+bogenkanguru[selectedkangurunumber].speedlvl*200);
-    bogenkanguru[selectedkangurunumber].value := bogenkanguru[selectedkangurunumber].value + (300+bogenkanguru[selectedkangurunumber].speedlvl*200);
-    inc(bogenkanguru[selectedkangurunumber].Speedlvl);
-    bogenkanguru[selectedkangurunumber].attackSpeed := bogenkanguru[selectedkangurunumber].attackSpeed - UpgradeSpeed;
-    label8.caption:=inttostr(bogenkanguru[selectedkangurunumber].Speedlvl) + '/5';
-    panel13.Caption:= 'Angriffsgeschwindigkeit: ' + inttostr(bogenkanguru[selectedkangurunumber].attackSpeed);
-    button9.Caption := inttostr(300+bogenkanguru[selectedkangurunumber].speedlvl*200)+'$';
+    if coins - (250+bogenkanguru[selectedkangurunumber].speedlvl*200) >= 0 then
+    begin
+      coins:= coins - (300+bogenkanguru[selectedkangurunumber].speedlvl*200);
+      bogenkanguru[selectedkangurunumber].value := bogenkanguru[selectedkangurunumber].value + (300+bogenkanguru[selectedkangurunumber].speedlvl*200);
+      inc(bogenkanguru[selectedkangurunumber].Speedlvl);
+      bogenkanguru[selectedkangurunumber].attackSpeed := bogenkanguru[selectedkangurunumber].attackSpeed - UpgradeSpeed;
+      label8.caption:=inttostr(bogenkanguru[selectedkangurunumber].Speedlvl) + '/5';
+      panel13.Caption:= 'Angriffsgeschwindigkeit: ' + inttostr(bogenkanguru[selectedkangurunumber].attackSpeed);
+      button9.Caption := inttostr(300+bogenkanguru[selectedkangurunumber].speedlvl*200)+'$';
+    end;
     if bogenkanguru[selectedkangurunumber].Speedlvl >=5 then
     begin
       button9.enabled:=false;
       button9.caption:='Max.';
     end;
+    label11.caption:= inttostr(bogenkanguru[selectedkangurunumber].value div 2)+'$';
   end
   else if selectedkangurutype = 'eis' then
   begin
-    coins:= coins - (300+eiskanguru[selectedkangurunumber].speedlvl*200);
-    eiskanguru[selectedkangurunumber].value := eiskanguru[selectedkangurunumber].value + (300+eiskanguru[selectedkangurunumber].speedlvl*200);
-    inc(eiskanguru[selectedkangurunumber].Speedlvl);
-    eiskanguru[selectedkangurunumber].attackSpeed := eiskanguru[selectedkangurunumber].attackSpeed - UpgradeSpeed;
-    label8.caption:=inttostr(eiskanguru[selectedkangurunumber].Speedlvl) + '/5';
-    panel13.Caption:= 'Angriffsgeschwindigkeit: ' + inttostr(eiskanguru[selectedkangurunumber].attackSpeed);
-    button9.Caption := inttostr(300+eiskanguru[selectedkangurunumber].speedlvl*200)+'$';
+    if coins - (250+eiskanguru[selectedkangurunumber].speedlvl*200) >= 0 then
+    begin
+      coins:= coins - (300+eiskanguru[selectedkangurunumber].speedlvl*200);
+      eiskanguru[selectedkangurunumber].value := eiskanguru[selectedkangurunumber].value + (300+eiskanguru[selectedkangurunumber].speedlvl*200);
+      inc(eiskanguru[selectedkangurunumber].Speedlvl);
+      eiskanguru[selectedkangurunumber].attackSpeed := eiskanguru[selectedkangurunumber].attackSpeed - UpgradeSpeed;
+      label8.caption:=inttostr(eiskanguru[selectedkangurunumber].Speedlvl) + '/5';
+      panel13.Caption:= 'Angriffsgeschwindigkeit: ' + inttostr(eiskanguru[selectedkangurunumber].attackSpeed);
+      button9.Caption := inttostr(300+eiskanguru[selectedkangurunumber].speedlvl*200)+'$';
+    end;
     if eiskanguru[selectedkangurunumber].Speedlvl >=5 then
     begin
       button9.enabled:=false;
       button9.caption:='Max.';
     end;
+    label11.caption:= inttostr(eiskanguru[selectedkangurunumber].value div 2)+'$';
   end
   else if selectedkangurutype = 'ninja' then
   begin
-    coins:= coins - (300+ninjakanguru[selectedkangurunumber].speedlvl*200);
-    ninjakanguru[selectedkangurunumber].value := ninjakanguru[selectedkangurunumber].value + (300+ninjakanguru[selectedkangurunumber].speedlvl*200);
-    inc(ninjakanguru[selectedkangurunumber].Speedlvl);
-    ninjakanguru[selectedkangurunumber].attackSpeed := ninjakanguru[selectedkangurunumber].attackSpeed - UpgradeSpeed;
-    label8.caption:=inttostr(ninjakanguru[selectedkangurunumber].Speedlvl) + '/5';
-    panel13.Caption:= 'Angriffsgeschwindigkeit: ' + inttostr(ninjakanguru[selectedkangurunumber].attackSpeed);
-    button9.Caption := inttostr(300+ninjakanguru[selectedkangurunumber].speedlvl*200)+'$';
+    if coins - (250+ninjakanguru[selectedkangurunumber].speedlvl*200) >= 0 then
+    begin
+      coins:= coins - (300+ninjakanguru[selectedkangurunumber].speedlvl*200);
+      ninjakanguru[selectedkangurunumber].value := ninjakanguru[selectedkangurunumber].value + (300+ninjakanguru[selectedkangurunumber].speedlvl*200);
+      inc(ninjakanguru[selectedkangurunumber].Speedlvl);
+      ninjakanguru[selectedkangurunumber].attackSpeed := ninjakanguru[selectedkangurunumber].attackSpeed - UpgradeSpeed;
+      label8.caption:=inttostr(ninjakanguru[selectedkangurunumber].Speedlvl) + '/5';
+      panel13.Caption:= 'Angriffsgeschwindigkeit: ' + inttostr(ninjakanguru[selectedkangurunumber].attackSpeed);
+      button9.Caption := inttostr(300+ninjakanguru[selectedkangurunumber].speedlvl*200)+'$';
+    end;
     if ninjakanguru[selectedkangurunumber].Speedlvl >=5 then
     begin
       button9.enabled:=false;
       button9.caption:='Max.';
     end;
-  end
-  else if selectedkangurutype = 'zauber' then
-  begin
-    coins:= coins - (300+zauberkanguru[selectedkangurunumber].speedlvl*200);
-    zauberkanguru[selectedkangurunumber].value := zauberkanguru[selectedkangurunumber].value + (300+zauberkanguru[selectedkangurunumber].speedlvl*200);
-    inc(zauberkanguru[selectedkangurunumber].Speedlvl);
-    zauberkanguru[selectedkangurunumber].attackSpeed := zauberkanguru[selectedkangurunumber].attackSpeed - UpgradeSpeed;
-    label8.caption:=inttostr(zauberkanguru[selectedkangurunumber].damagelvl) + '/5';
-    panel13.Caption:= 'Angriffsgeschwindigkeit: ' + inttostr(zauberkanguru[selectedkangurunumber].attackSpeed);
-    button9.Caption := inttostr(300+zauberkanguru[selectedkangurunumber].speedlvl*200)+'$';
-    if zauberkanguru[selectedkangurunumber].Speedlvl >=5 then
-    begin
-      button9.enabled:=false;
-      button9.caption:='Max.';
-    end;
+    label11.caption:= inttostr(kanguru[selectedkangurunumber].value div 2)+'$';
   end;
   label6.caption:= inttostr(coins);
 end;
@@ -1555,13 +1587,16 @@ procedure TForm5.Button10Click(Sender: TObject);
 begin
   if selectedkangurutype = 'boxer' then
   begin
-    coins:= coins - (400+kanguru[selectedkangurunumber].rangelvl*300);
-    kanguru[selectedkangurunumber].value := kanguru[selectedkangurunumber].value + (400+kanguru[selectedkangurunumber].rangelvl*300);
-    inc(kanguru[selectedkangurunumber].rangelvl);
-    kanguru[selectedkangurunumber].range2 := kanguru[selectedkangurunumber].range2 + UpgradeRange;
-    label9.caption:=inttostr(kanguru[selectedkangurunumber].rangelvl) + '/5';
-    panel14.Caption:= 'Reichweite: ' + inttostr(kanguru[selectedkangurunumber].range2);
-    button10.Caption := inttostr(400+kanguru[selectedkangurunumber].rangelvl*300)+'$';
+    if coins - (250+kanguru[selectedkangurunumber].speedlvl*200) >= 0 then
+    begin
+      coins:= coins - (400+kanguru[selectedkangurunumber].rangelvl*300);
+      kanguru[selectedkangurunumber].value := kanguru[selectedkangurunumber].value + (400+kanguru[selectedkangurunumber].rangelvl*300);
+      inc(kanguru[selectedkangurunumber].rangelvl);
+      kanguru[selectedkangurunumber].range2 := kanguru[selectedkangurunumber].range2 + UpgradeRange;
+      label9.caption:=inttostr(kanguru[selectedkangurunumber].rangelvl) + '/5';
+      panel14.Caption:= 'Reichweite: ' + inttostr(kanguru[selectedkangurunumber].range2);
+      button10.Caption := inttostr(400+kanguru[selectedkangurunumber].rangelvl*300)+'$';
+    end;
     if kanguru[selectedkangurunumber].rangelvl >=5 then
     begin
       button10.enabled:=false;
@@ -1574,13 +1609,16 @@ begin
   end
   else if selectedkangurutype = 'bogen' then
   begin
-    coins:= coins - (400+bogenkanguru[selectedkangurunumber].rangelvl*300);
-    bogenkanguru[selectedkangurunumber].value := bogenkanguru[selectedkangurunumber].value + (400+bogenkanguru[selectedkangurunumber].rangelvl*300);
-    inc(bogenkanguru[selectedkangurunumber].rangelvl);
-    bogenkanguru[selectedkangurunumber].range2 := bogenkanguru[selectedkangurunumber].range2 + UpgradeRange;
-    label9.caption:=inttostr(bogenkanguru[selectedkangurunumber].rangelvl) + '/5';
-    panel14.Caption:= 'Reichweite: ' + inttostr(bogenkanguru[selectedkangurunumber].range2);
-    button10.Caption := inttostr(400+bogenkanguru[selectedkangurunumber].rangelvl*300)+'$';
+    if coins - (250+bogenkanguru[selectedkangurunumber].speedlvl*200) >= 0 then
+    begin
+      coins:= coins - (400+bogenkanguru[selectedkangurunumber].rangelvl*300);
+      bogenkanguru[selectedkangurunumber].value := bogenkanguru[selectedkangurunumber].value + (400+bogenkanguru[selectedkangurunumber].rangelvl*300);
+      inc(bogenkanguru[selectedkangurunumber].rangelvl);
+      bogenkanguru[selectedkangurunumber].range2 := bogenkanguru[selectedkangurunumber].range2 + UpgradeRange;
+      label9.caption:=inttostr(bogenkanguru[selectedkangurunumber].rangelvl) + '/5';
+      panel14.Caption:= 'Reichweite: ' + inttostr(bogenkanguru[selectedkangurunumber].range2);
+      button10.Caption := inttostr(400+bogenkanguru[selectedkangurunumber].rangelvl*300)+'$';
+    end;
     if bogenkanguru[selectedkangurunumber].rangelvl >=5 then
     begin
       button10.enabled:=false;
@@ -1593,13 +1631,16 @@ begin
   end
   else if selectedkangurutype = 'eis' then
   begin
-    coins:= coins - (400+eiskanguru[selectedkangurunumber].rangelvl*300);
-    eiskanguru[selectedkangurunumber].value := eiskanguru[selectedkangurunumber].value + (400+eiskanguru[selectedkangurunumber].rangelvl*300);
-    inc(eiskanguru[selectedkangurunumber].rangelvl);
-    eiskanguru[selectedkangurunumber].range2 := eiskanguru[selectedkangurunumber].range2 + UpgradeRange;
-    label9.caption:=inttostr(eiskanguru[selectedkangurunumber].rangelvl) + '/5';
-    panel14.Caption:= 'Reichweite: ' + inttostr(eiskanguru[selectedkangurunumber].range2);
-    button10.Caption := inttostr(400+eiskanguru[selectedkangurunumber].rangelvl*300)+'$';
+    if coins - (250+eiskanguru[selectedkangurunumber].speedlvl*200) >= 0 then
+    begin
+      coins:= coins - (400+eiskanguru[selectedkangurunumber].rangelvl*300);
+      eiskanguru[selectedkangurunumber].value := eiskanguru[selectedkangurunumber].value + (400+eiskanguru[selectedkangurunumber].rangelvl*300);
+      inc(eiskanguru[selectedkangurunumber].rangelvl);
+      eiskanguru[selectedkangurunumber].range2 := eiskanguru[selectedkangurunumber].range2 + UpgradeRange;
+      label9.caption:=inttostr(eiskanguru[selectedkangurunumber].rangelvl) + '/5';
+      panel14.Caption:= 'Reichweite: ' + inttostr(eiskanguru[selectedkangurunumber].range2);
+      button10.Caption := inttostr(400+eiskanguru[selectedkangurunumber].rangelvl*300)+'$';
+    end;
     if eiskanguru[selectedkangurunumber].rangelvl >=5 then
     begin
       button10.enabled:=false;
@@ -1612,13 +1653,16 @@ begin
   end
   else if selectedkangurutype = 'ninja' then
   begin
-    coins:= coins - (400+ninjakanguru[selectedkangurunumber].rangelvl*300);
-    ninjakanguru[selectedkangurunumber].value := ninjakanguru[selectedkangurunumber].value + (400+ninjakanguru[selectedkangurunumber].rangelvl*300);
-    inc(ninjakanguru[selectedkangurunumber].rangelvl);
-    ninjakanguru[selectedkangurunumber].range2 := ninjakanguru[selectedkangurunumber].range2 + UpgradeRange;
-    label9.caption:=inttostr(ninjakanguru[selectedkangurunumber].rangelvl) + '/5';
-    panel14.Caption:= 'Reichweite: ' + inttostr(ninjakanguru[selectedkangurunumber].range2);
-    button10.Caption := inttostr(400+ninjakanguru[selectedkangurunumber].rangelvl*300)+'$';
+    if coins - (250+ninjakanguru[selectedkangurunumber].speedlvl*200) >= 0 then
+    begin
+      coins:= coins - (400+ninjakanguru[selectedkangurunumber].rangelvl*300);
+      ninjakanguru[selectedkangurunumber].value := ninjakanguru[selectedkangurunumber].value + (400+ninjakanguru[selectedkangurunumber].rangelvl*300);
+      inc(ninjakanguru[selectedkangurunumber].rangelvl);
+      ninjakanguru[selectedkangurunumber].range2 := ninjakanguru[selectedkangurunumber].range2 + UpgradeRange;
+      label9.caption:=inttostr(ninjakanguru[selectedkangurunumber].rangelvl) + '/5';
+      panel14.Caption:= 'Reichweite: ' + inttostr(ninjakanguru[selectedkangurunumber].range2);
+      button10.Caption := inttostr(400+ninjakanguru[selectedkangurunumber].rangelvl*300)+'$';
+    end;
     if ninjakanguru[selectedkangurunumber].rangelvl >=5 then
     begin
       button10.enabled:=false;
@@ -1636,21 +1680,31 @@ procedure TForm5.Button11Click(Sender: TObject);
 begin
   if selectedkangurutype = 'bogen' then
   begin
-    coins := coins-2000;
-    bogenkanguru[selectedkangurunumber].cancamo:=true;
-    label10.caption:='1/1';
-    panel15.Caption:= 'Bessere Sicht: Ja';
-    if bogenkanguru[selectedkangurunumber].cancamo = true then
-      button11.enabled:=false;
+    if coins - 2000 >= 0 then
+    begin
+      coins := coins-2000;
+      bogenkanguru[selectedkangurunumber].cancamo:=true;
+      label10.caption:='1/1';
+      panel15.Caption:= 'Bessere Sicht: Ja';
+      if bogenkanguru[selectedkangurunumber].cancamo = true then begin
+        button11.enabled:=false;
+        button11.caption:= 'Max.';
+      end;
+    end;
   end
   else if selectedkangurutype = 'zauber' then
   begin
-    coins := coins-5000;
-    zauberkanguru[selectedkangurunumber].cancamo := true;
-    label10.caption:='1/1';
-    panel15.Caption:= 'Schimmer: Ja' ;
-    if zauberkanguru[selectedkangurunumber].cancamo = true then
-      button11.enabled:=false;
+    if coins - 5000 >= 0 then
+    begin
+      coins := coins-5000;
+      zauberkanguru[selectedkangurunumber].cancamo := true;
+      label10.caption:='1/1';
+      panel15.Caption:= 'Schimmer: Ja' ;
+      if zauberkanguru[selectedkangurunumber].cancamo = true then begin
+        button11.enabled:=false;
+        button11.caption:= 'Max.';
+      end;
+    end;
   end;
   label6.caption:= inttostr(coins);
 end;
