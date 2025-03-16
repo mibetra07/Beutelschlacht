@@ -17,6 +17,7 @@ type
     Button1: TButton;
     Button12: TButton;
     Button13: TButton;
+    Button14: TButton;
     Button2: TButton;
     Button3: TButton;
     Button4: TButton;
@@ -45,6 +46,7 @@ type
     Image9: TImage;
     Label1: TLabel;
     Label12: TLabel;
+    Label13: TLabel;
     Label2: TLabel;
     Label3: TLabel;
     Label4: TLabel;
@@ -87,6 +89,7 @@ type
     procedure Button11Click(Sender: TObject);
     procedure Button12Click(Sender: TObject);
     procedure Button13Click(Sender: TObject);
+    procedure Button14Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -135,7 +138,6 @@ type
     procedure Image7MouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure Timer1Timer(Sender: TObject);
-
   private
     //fürs Platzieren
     var isDragging, DragThresholdReached : boolean;
@@ -155,6 +157,8 @@ type
     selectedKanguruNumber : integer;
     procedure ShowMenu(kangurutype : string; damage, range, attackspeed, damagelvl, speedlvl, rangelvl: integer; cancamo : boolean);
     procedure sellKanguru();
+  //Zauberangriff bewegen
+    var ZauberBewegenClicked : boolean;
   public
     var
     ticksPassed, slowedTick : integer;
@@ -180,6 +184,12 @@ type
     Eiskanguru : array[1..100] of TEiskanguru;
     playerHealth: integer;
     procedure KanguruClick(Sender: TObject);
+    procedure ZauberMouseDown(Sender: TObject; Button: TMouseButton;
+    Shift: TShiftState; X, Y: Integer);
+    procedure ZauberMouseMove(Sender: TObject; Shift: TShiftState; X,
+    Y: Integer);
+    procedure ZauberMouseUp(Sender: TObject; Button: TMouseButton;
+    Shift: TShiftState; X, Y: Integer);
     procedure ConstructForm();
   end;
 
@@ -223,201 +233,201 @@ end;
 procedure Tform5.ConstructForm();
 var i, j : integer;
 begin
-   coins := 990000;
-   label6.caption:= inttostr(coins);
-   Pinguincount := 0;
-   Timer1.enabled := false;
-   Timer1.interval := 1;
-   //Känguruzählervariablen
-   Kanguruzahl := 0;
-   Bogenkanguruzahl := 0;
-   Eiskanguruzahl := 0;
-   Ninjakanguruzahl := 0;
-   Zauberkanguruzahl := 0;
+  coins := 990000;
+  label6.caption:= inttostr(coins);
+  Pinguincount := 0;
+  Timer1.enabled := false;
+  Timer1.interval := 1;
+  //Känguruzählervariablen
+  Kanguruzahl := 0;
+  Bogenkanguruzahl := 0;
+  Eiskanguruzahl := 0;
+  Ninjakanguruzahl := 0;
+  Zauberkanguruzahl := 0;
 
-   //Platzieren
-   isDragging := false;
+  //Platzieren
+  isDragging := false;
+  ZauberBewegenClicked := false;
+  //Memos mit Känguruinfos
+  //Boxerkänguru
+  Memo1.Lines.Clear;
+  Memo1.Lines.add('Das klassische Känguru - quadratisch, praktisch, gut');
+  Memo1.Lines.add('');
+  Memo1.Lines.add('Reichweite: Gering');
+  Memo1.Lines.add('Schaden: Mittel');
+  Memo1.Lines.add('Angriffsgeschwindigkeit: Hoch');
+  Groupbox2.visible:=false;
 
-   //Memos mit Känguruinfos
-   //Boxerkänguru
-   Memo1.Lines.Clear;
-   Memo1.Lines.add('Das klassische Känguru - quadratisch, praktisch, gut');
-   Memo1.Lines.add('');
-   Memo1.Lines.add('Reichweite: Gering');
-   Memo1.Lines.add('Schaden: Mittel');
-   Memo1.Lines.add('Angriffsgeschwindigkeit: Hoch');
-   Groupbox2.visible:=false;
+  //Bogenkänguru
+  Memo2.Lines.Clear;
+  Memo2.Lines.add('Großer Fan von Robin Hood - stiehlt den Reichen, verteilt an alle');
+  Memo2.Lines.add('');
+  Memo2.Lines.add('Reichweite: Hoch');
+  Memo2.Lines.add('Schaden: Hoch');
+  Memo2.Lines.add('Angriffsgeschwindigkeit: Gering');
+  Groupbox3.visible:=false;
+  //Eiskänguru
+  Memo3.Lines.Clear;
+  Memo3.Lines.add('Etwas zu lang am Nordpol gewesen - hat ein Praktikum beim Weihnachtsmann');
+  Memo3.Lines.add('');
+  Memo3.Lines.add('Reichweite: Gering');
+  Memo3.Lines.add('Schaden: Gering');
+  Memo3.Lines.add('Angriffsgeschwindigkeit: Mittel');
+  Memo5.Lines.add('');
+  Memo3.Lines.add('Verlangsamt Gegner');
+  Groupbox4.visible:=false;
+  //Ninjakänguru
+  Memo4.Lines.Clear;
+  Memo4.Lines.add('Ausgebildet im feudalen Japan – schlägt zu, bevor du es siehst, und hüpft weg, bevor du „Aua!“ sagen kannst');
+  Memo4.Lines.add('');
+  Memo4.Lines.add('Reichweite: Mittel');
+  Memo4.Lines.add('Schaden: Mittel');
+  Memo4.Lines.add('Angriffsgeschwindigkeit: Hoch');
+  Memo5.Lines.add('');
+  Memo4.Lines.add('Durchschaut jede Verkleidung');
+  Groupbox5.visible:=false;
+  //Magie
+  Memo5.Lines.Clear;
+  Memo5.Lines.add('ᒲᒲᒲ↸⎓ᒲ↸ʖ⍊ ⊣╎ ⊣ʖ∷ᓭ↸ꖌᓭ⎓⍑↸ᓭ⎓');
+  Memo5.Lines.add('');
+  Memo5.Lines.add('Reichweite: ???');
+  Memo5.Lines.add('Schaden: Magisch');
+  Memo5.Lines.add('Angriffsgeschwindigkeit: ???');
+  Memo5.Lines.add('');
+  Memo5.Lines.add('Beschwört Kreis auf der Strecke, der konstant Schaden zufügt');
+  Groupbox6.visible:=false;
 
-   //Bogenkänguru
-   Memo2.Lines.Clear;
-   Memo2.Lines.add('Großer Fan von Robin Hood - stiehlt den Reichen, verteilt an alle');
-   Memo2.Lines.add('');
-   Memo2.Lines.add('Reichweite: Hoch');
-   Memo2.Lines.add('Schaden: Hoch');
-   Memo2.Lines.add('Angriffsgeschwindigkeit: Gering');
-   Groupbox3.visible:=false;
-   //Eiskänguru
-   Memo3.Lines.Clear;
-   Memo3.Lines.add('Etwas zu lang am Nordpol gewesen - hat ein Praktikum beim Weihnachtsmann');
-   Memo3.Lines.add('');
-   Memo3.Lines.add('Reichweite: Gering');
-   Memo3.Lines.add('Schaden: Gering');
-   Memo3.Lines.add('Angriffsgeschwindigkeit: Mittel');
-   Memo5.Lines.add('');
-   Memo3.Lines.add('Verlangsamt Gegner');
-   Groupbox4.visible:=false;
-   //Ninjakänguru
-   Memo4.Lines.Clear;
-   Memo4.Lines.add('Ausgebildet im feudalen Japan – schlägt zu, bevor du es siehst, und hüpft weg, bevor du „Aua!“ sagen kannst');
-   Memo4.Lines.add('');
-   Memo4.Lines.add('Reichweite: Mittel');
-   Memo4.Lines.add('Schaden: Mittel');
-   Memo4.Lines.add('Angriffsgeschwindigkeit: Hoch');
-   Memo5.Lines.add('');
-   Memo4.Lines.add('Durchschaut jede Verkleidung');
-   Groupbox5.visible:=false;
-   //Magie
-   Memo5.Lines.Clear;
-   Memo5.Lines.add('ᒲᒲᒲ↸⎓ᒲ↸ʖ⍊ ⊣╎ ⊣ʖ∷ᓭ↸ꖌᓭ⎓⍑↸ᓭ⎓');
-   Memo5.Lines.add('');
-   Memo5.Lines.add('Reichweite: ???');
-   Memo5.Lines.add('Schaden: Magisch');
-   Memo5.Lines.add('Angriffsgeschwindigkeit: ???');
-   Memo5.Lines.add('');
-   Memo5.Lines.add('Beschwört Kreis auf der Strecke, der konstant Schaden zufügt');
-   Groupbox6.visible:=false;
+  Groupbox7.visible:=false;
+  //vorkodierte Parameter für die wellen bis 20
+  WaveParams[1, 1] := 2; //anzahl normale
+  WaveParams[1, 2] := 0; //anzahl helm
+  WaveParams[1, 3] := 0; //anzahl schild
+  WaveParams[1, 4] := 0; //anzahl boss
+  WaveParams[1, 5] := 0; //anzahl tarn
 
-   Groupbox7.visible:=false;
-   //vorkodierte Parameter für die wellen bis 20
-WaveParams[1, 1] := 2; //anzahl normale
-WaveParams[1, 2] := 0; //anzahl helm
-WaveParams[1, 3] := 0; //anzahl schild
-WaveParams[1, 4] := 0; //anzahl boss
-WaveParams[1, 5] := 0; //anzahl tarn
+  WaveParams[2, 1] := 5;
+  WaveParams[2, 2] := 0;
+  WaveParams[2, 3] := 0;
+  WaveParams[2, 4] := 0;
+  WaveParams[2, 5] := 0;
 
-WaveParams[2, 1] := 5;
-WaveParams[2, 2] := 0;
-WaveParams[2, 3] := 0;
-WaveParams[2, 4] := 0;
-WaveParams[2, 5] := 0;
+  WaveParams[3, 1] := 7;
+  WaveParams[3, 2] := 0;
+  WaveParams[3, 3] := 0;
+  WaveParams[3, 4] := 0;
+  WaveParams[3, 5] := 0;
 
-WaveParams[3, 1] := 7;
-WaveParams[3, 2] := 0;
-WaveParams[3, 3] := 0;
-WaveParams[3, 4] := 0;
-WaveParams[3, 5] := 0;
+  WaveParams[4, 1] := 3;
+  WaveParams[4, 2] := 2;
+  WaveParams[4, 3] := 0;
+  WaveParams[4, 4] := 0;
+  WaveParams[4, 5] := 0;
 
-WaveParams[4, 1] := 3;
-WaveParams[4, 2] := 2;
-WaveParams[4, 3] := 0;
-WaveParams[4, 4] := 0;
-WaveParams[4, 5] := 0;
+  WaveParams[5, 1] := 4;
+  WaveParams[5, 2] := 4;
+  WaveParams[5, 3] := 0;
+  WaveParams[5, 4] := 0;
+  WaveParams[5, 5] := 0;
 
-WaveParams[5, 1] := 4;
-WaveParams[5, 2] := 4;
-WaveParams[5, 3] := 0;
-WaveParams[5, 4] := 0;
-WaveParams[5, 5] := 0;
+  WaveParams[6, 1] := 0;
+  WaveParams[6, 2] := 7;
+  WaveParams[6, 3] := 0;
+  WaveParams[6, 4] := 0;
+  WaveParams[6, 5] := 0;
 
-WaveParams[6, 1] := 0;
-WaveParams[6, 2] := 7;
-WaveParams[6, 3] := 0;
-WaveParams[6, 4] := 0;
-WaveParams[6, 5] := 0;
+  WaveParams[7, 1] := 6;   // Normaler Pinguin
+  WaveParams[7, 2] := 3;   // Helm Pinguin
+  WaveParams[7, 3] := 0;
+  WaveParams[7, 4] := 0;
+  WaveParams[7, 5] := 0;
 
-WaveParams[7, 1] := 6;   // Normaler Pinguin
-WaveParams[7, 2] := 3;   // Helm Pinguin
-WaveParams[7, 3] := 0;
-WaveParams[7, 4] := 0;
-WaveParams[7, 5] := 0;
+  WaveParams[8, 1] := 4;
+  WaveParams[8, 2] := 5;   // Fokus auf Helm Pinguin
+  WaveParams[8, 3] := 0;
+  WaveParams[8, 4] := 0;
+  WaveParams[8, 5] := 0;
 
-WaveParams[8, 1] := 4;
-WaveParams[8, 2] := 5;   // Fokus auf Helm Pinguin
-WaveParams[8, 3] := 0;
-WaveParams[8, 4] := 0;
-WaveParams[8, 5] := 0;
+  WaveParams[9, 1] := 8;   // Schnelle Welle
+  WaveParams[9, 2] := 2;
+  WaveParams[9, 3] := 0;
+  WaveParams[9, 4] := 0;
+  WaveParams[9, 5] := 0;
 
-WaveParams[9, 1] := 8;   // Schnelle Welle
-WaveParams[9, 2] := 2;
-WaveParams[9, 3] := 0;
-WaveParams[9, 4] := 0;
-WaveParams[9, 5] := 0;
+  WaveParams[10, 1] := 3;
+  WaveParams[10, 2] := 3;
+  WaveParams[10, 3] := 1;  // Einführung Helm und Schild Pinguin
+  WaveParams[10, 4] := 0;
+  WaveParams[10, 5] := 0;
 
-WaveParams[10, 1] := 3;
-WaveParams[10, 2] := 3;
-WaveParams[10, 3] := 1;  // Einführung Helm und Schild Pinguin
-WaveParams[10, 4] := 0;
-WaveParams[10, 5] := 0;
+  WaveParams[11, 1] := 6;   // Mischung aus normal und Helm
+  WaveParams[11, 2] := 4;
+  WaveParams[11, 3] := 1;
+  WaveParams[11, 4] := 0;
+  WaveParams[11, 5] := 0;
 
-WaveParams[11, 1] := 6;   // Mischung aus normal und Helm
-WaveParams[11, 2] := 4;
-WaveParams[11, 3] := 1;
-WaveParams[11, 4] := 0;
-WaveParams[11, 5] := 0;
+  WaveParams[12, 1] := 5;
+  WaveParams[12, 2] := 3;
+  WaveParams[12, 3] := 3;
+  WaveParams[12, 4] := 0;
+  WaveParams[12, 5] := 0;
 
-WaveParams[12, 1] := 5;
-WaveParams[12, 2] := 3;
-WaveParams[12, 3] := 3;
-WaveParams[12, 4] := 0;
-WaveParams[12, 5] := 0;
+  WaveParams[13, 1] := 0;   // Einführung Tarn Pinguin
+  WaveParams[13, 2] := 0;
+  WaveParams[13, 3] := 0;
+  WaveParams[13, 4] := 0;
+  WaveParams[13, 5] := 6;
 
-WaveParams[13, 1] := 0;   // Einführung Tarn Pinguin
-WaveParams[13, 2] := 0;
-WaveParams[13, 3] := 0;
-WaveParams[13, 4] := 0;
-WaveParams[13, 5] := 6;
+  WaveParams[14, 1] := 5;
+  WaveParams[14, 2] := 2;
+  WaveParams[14, 3] := 2;
+  WaveParams[14, 4] := 0;
+  WaveParams[14, 5] := 3;
 
-WaveParams[14, 1] := 5;
-WaveParams[14, 2] := 2;
-WaveParams[14, 3] := 2;
-WaveParams[14, 4] := 0;
-WaveParams[14, 5] := 3;
+  WaveParams[15, 1] := 0;   // Fokus auf Helm-Pinguine und Tarn
+  WaveParams[15, 2] := 6;
+  WaveParams[15, 3] := 2;
+  WaveParams[15, 4] := 0;
+  WaveParams[15, 5] := 4;
 
-WaveParams[15, 1] := 0;   // Fokus auf Helm-Pinguine und Tarn
-WaveParams[15, 2] := 6;
-WaveParams[15, 3] := 2;
-WaveParams[15, 4] := 0;
-WaveParams[15, 5] := 4;
+  WaveParams[16, 1] := 8;   // Rückkehr zu schnellen Wellen
+  WaveParams[16, 2] := 0;
+  WaveParams[16, 3] := 3;
+  WaveParams[16, 4] := 0;
+  WaveParams[16, 5] := 3;
 
-WaveParams[16, 1] := 8;   // Rückkehr zu schnellen Wellen
-WaveParams[16, 2] := 0;
-WaveParams[16, 3] := 3;
-WaveParams[16, 4] := 0;
-WaveParams[16, 5] := 3;
+  WaveParams[17, 1] := 0;   // Helm und Schild mit Tarn
+  WaveParams[17, 2] := 0;
+  WaveParams[17, 3] := 4;
+  WaveParams[17, 4] := 0;
+  WaveParams[17, 5] := 4;
 
-WaveParams[17, 1] := 0;   // Helm und Schild mit Tarn
-WaveParams[17, 2] := 0;
-WaveParams[17, 3] := 4;
-WaveParams[17, 4] := 0;
-WaveParams[17, 5] := 4;
+  WaveParams[18, 1] := 4;
+  WaveParams[18, 2] := 4;
+  WaveParams[18, 3] := 3;
+  WaveParams[18, 4] := 0;
+  WaveParams[18, 5] := 4;
 
-WaveParams[18, 1] := 4;
-WaveParams[18, 2] := 4;
-WaveParams[18, 3] := 3;
-WaveParams[18, 4] := 0;
-WaveParams[18, 5] := 4;
+  WaveParams[19, 1] := 0;   // Herausforderung: viele starke Gegner
+  WaveParams[19, 2] := 4;
+  WaveParams[19, 3] := 5;
+  WaveParams[19, 4] := 0;
+  WaveParams[19, 5] := 3;
 
-WaveParams[19, 1] := 0;   // Herausforderung: viele starke Gegner
-WaveParams[19, 2] := 4;
-WaveParams[19, 3] := 5;
-WaveParams[19, 4] := 0;
-WaveParams[19, 5] := 3;
+  WaveParams[20, 1] := 0;   // Einführung Boss
+  WaveParams[20, 2] := 0;
+  WaveParams[20, 3] := 4;
+  WaveParams[20, 4] := 1;   // Boss Pinguin
+  WaveParams[20, 5] := 3;
 
-WaveParams[20, 1] := 0;   // Einführung Boss
-WaveParams[20, 2] := 0;
-WaveParams[20, 3] := 4;
-WaveParams[20, 4] := 1;   // Boss Pinguin
-WaveParams[20, 5] := 3;
-
-   //Form leeren (Pinguine und Kängurus)
-   for i := 1 to 5 do
-       for j := 1 to 100 do
-           begin
-                IndexOfKilled[i, j] := 0;
-                AmountKilled[j] := 0;
-           end;
-   killedCount := 0;
-   PlayerHealth := 5;
+  //Form leeren (Pinguine und Kängurus)
+  for i := 1 to 5 do
+     for j := 1 to 100 do
+         begin
+              IndexOfKilled[i, j] := 0;
+              AmountKilled[j] := 0;
+         end;
+  killedCount := 0;
+  PlayerHealth := 5;
 end;
 
 procedure TForm5.Timer1Timer(Sender: TObject);
@@ -640,7 +650,6 @@ begin
   end;
 end;
 
-//Boxer
 procedure Tform5.InitDrag(X, Y : integer; Button : TMouseButton);
 begin
   if Button = mbLeft then
@@ -653,6 +662,7 @@ begin
   end;
 end;
 
+//Boxer
 procedure TForm5.Image3MouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
@@ -681,6 +691,7 @@ begin
       Groupbox4.visible:=false;
       Groupbox5.visible:=false;
       Groupbox6.visible:=false;
+      Groupbox7.visible:=false;
       kanguru[kanguruzahl].bild.left := Mouse.CursorPos.X;
       kanguru[kanguruzahl].bild.top := Mouse.CursorPos.Y;
       kanguru[kanguruzahl].attackradius.left := Mouse.CursorPos.X + 48 - kanguru[kanguruzahl].range2;
@@ -750,6 +761,7 @@ begin
       Groupbox4.visible:=false;
       Groupbox5.visible:=false;
       Groupbox6.visible:=false;
+      Groupbox7.visible:=false;
       bogenkanguru[bogenkanguruzahl].bild.left := Mouse.CursorPos.X;
       bogenkanguru[bogenkanguruzahl].bild.top := Mouse.CursorPos.Y;
       bogenkanguru[bogenkanguruzahl].attackradius.left := (Mouse.CursorPos.X + 48 - bogenkanguru[bogenkanguruzahl].range2);
@@ -818,6 +830,7 @@ begin
       Groupbox4.visible:=false;
       Groupbox5.visible:=false;
       Groupbox6.visible:=false;
+      Groupbox7.visible:=false;
       Eiskanguru[Eiskanguruzahl].bild.left := Mouse.CursorPos.X;
       Eiskanguru[Eiskanguruzahl].bild.top := Mouse.CursorPos.Y;
       Eiskanguru[Eiskanguruzahl].attackradius.left := (Mouse.CursorPos.X + 48 - Eiskanguru[Eiskanguruzahl].range2);
@@ -886,6 +899,7 @@ begin
       Groupbox4.visible:=false;
       Groupbox5.visible:=false;
       Groupbox6.visible:=false;
+      Groupbox7.visible:=false;
       Ninjakanguru[Ninjakanguruzahl].bild.left := Mouse.CursorPos.X;
       Ninjakanguru[Ninjakanguruzahl].bild.top := Mouse.CursorPos.Y;
       Ninjakanguru[Ninjakanguruzahl].attackradius.left := (Mouse.CursorPos.X + 48 - Ninjakanguru[Ninjakanguruzahl].range2);
@@ -954,6 +968,7 @@ begin
       Groupbox4.visible:=false;
       Groupbox5.visible:=false;
       Groupbox6.visible:=false;
+      Groupbox7.visible:=false;
       zauberkanguru[zauberkanguruzahl].bild.left := Mouse.CursorPos.X;
       zauberkanguru[zauberkanguruzahl].bild.top := Mouse.CursorPos.Y;
       zauberkanguru[zauberkanguruzahl].attackradius.left := Mouse.CursorPos.X + 48 - zauberkanguru[zauberkanguruzahl].range2;
@@ -1018,8 +1033,128 @@ begin
       end;
       label6.caption := inttostr(coins);
     end;
+end;
+//Zauberangriff bewegen
+procedure TForm5.Button14Click(Sender: TObject);
+begin
+  if ZauberBewegenClicked = false then
+  begin
+    zauberkanguru[selectedkangurunumber].Zauber.active:=false;
+    button14.caption:= 'Abbrechen';
+    bitbtn1.enabled:= false;
+    button7.enabled:= false;
+    button8.enabled:= false;
+    zauberkanguru[selectedkangurunumber].zauber.DraggingEnabled:= true;
+    ZauberBewegenClicked := true;
+  end
+  else
+  begin
+    zauberkanguru[selectedkangurunumber].zauber.active:=true;
+    button14.caption:= 'Feuer bewegen';
+    bitbtn1.enabled:= true;
+    button7.enabled:= true;
+    button8.enabled:= true;
+    zauberkanguru[selectedkangurunumber].zauber.DraggingEnabled:= false;
+    ZauberBewegenClicked := false;
   end;
+end;
 
+procedure Tform5.ZauberMouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  if zauberkanguru[selectedkangurunumber].zauber.DraggingEnabled = true then
+  begin
+    if Button = mbLeft then
+    begin
+      isDragging := true;
+      DragThresholdReached := false;
+      StartX :=  zauberkanguru[selectedkangurunumber].zauber.bild.left;
+      StartY :=  zauberkanguru[selectedkangurunumber].zauber.bild.top;
+    end;
+  end;
+end;
+
+procedure TForm5.ZauberMouseMove(Sender: TObject; Shift: TShiftState; X,
+  Y: Integer);
+var collision : boolean; i : integer;
+begin
+  if isDragging = true then
+  begin
+    if not DragThresholdReached then
+    begin
+      if (Abs(X - StartX) > DragThreshold) or (Abs(Y - StartY) > DragThreshold) then
+      begin
+        DragThresholdReached := true;
+      end;
+    end;
+    if DragThresholdReached then
+    begin
+      Groupbox2.visible:=false;
+      Groupbox3.visible:=false;
+      Groupbox4.visible:=false;
+      Groupbox5.visible:=false;
+      Groupbox6.visible:=false;
+      zauberkanguru[selectedkangurunumber].zauber.bild.left := Mouse.CursorPos.X;
+      zauberkanguru[selectedkangurunumber].zauber.bild.top := Mouse.CursorPos.Y;
+      zauberkanguru[selectedkangurunumber].zauber.attackradius.left := Mouse.CursorPos.X + 48 - zauberkanguru[selectedkangurunumber].zauber.range2;
+      zauberkanguru[selectedkangurunumber].zauber.attackradius.Top := Mouse.CursorPos.Y + 48 - zauberkanguru[selectedkangurunumber].zauber.range2;
+      //Radius rot färben wenn versperrte Position
+      for i:=1 to 7 do
+      begin
+        CheckCollision(zauberkanguru[selectedkangurunumber].zauber.bild, Path[i].Bild, Collision);
+        if Collision = true {and (Abs(Mouse.CursorPos.X + 48 - (zauberkanguru[selectedkangurunumber].bild.left + 48)) <= (48 + zauberkanguru[selectedkangurunumber].range2)) and
+        (Abs(Mouse.CursorPos.Y + 48 - (zauberkanguru[selectedkangurunumber].bild.top + 48)) <= (48 + zauberkanguru[selectedkangurunumber].range2))} then
+        begin
+          zauberkanguru[selectedkangurunumber].zauber.bild.Picture.LoadFromFile('images\Feuer.png');
+          exit();
+        end;
+      end;
+      if (Collision = true) {and (Abs(zauberkanguru[selectedkangurunumber].zauber.bild.left + 48 - (zauberkanguru[selectedkangurunumber].bild.left + 48)) <= (48 + zauberkanguru[selectedkangurunumber].range2)) and
+        (Abs(zauberkanguru[selectedkangurunumber].zauber.bild.top + 48 - (zauberkanguru[selectedkangurunumber].bild.top + 48)) <= (48 + zauberkanguru[selectedkangurunumber].range2))} then
+        zauberkanguru[selectedkangurunumber].zauber.bild.Picture.LoadFromFile('images\Feuer.png')
+      else
+        zauberkanguru[selectedkangurunumber].zauber.bild.Picture.LoadFromFile('images\Feuer_invalid.png');
+    end;
+  end;
+end;
+
+procedure Tform5.ZauberMouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+var Collision : boolean;
+    i : integer;
+begin
+  if (Button = mbLeft) and (DragThresholdReached = true) then
+  zauberkanguru[selectedkangurunumber].zauber.bild.Picture.LoadFromFile('images\Feuer.png');
+  zauberkanguru[selectedkangurunumber].zauber.active:=true;
+  button14.caption:= 'Feuer bewegen';
+  bitbtn1.enabled:= true;
+  button7.enabled:= true;
+  button8.enabled:= true;
+  zauberkanguru[selectedkangurunumber].zauber.DraggingEnabled:= false;
+  ZauberBewegenClicked := false;
+  begin
+    Collision := false;
+    isDragging := False;
+    DragThresholdReached := False;
+    for i:=1 to 7 do
+    begin
+      CheckCollision(zauberkanguru[selectedkangurunumber].zauber.bild, Path[i].Bild, Collision);
+      if Collision = true then
+        exit();
+    end;
+    if Collision = false then
+    begin
+      zauberkanguru[selectedkangurunumber].zauber.bild.left := StartX;
+      zauberkanguru[selectedkangurunumber].zauber.bild.top := StartY;
+    end
+    else
+    begin
+      zauberkanguru[selectedkangurunumber].zauber.active:=true;
+      zauberkanguru[selectedkangurunumber].zauber.attackradius.left := zauberkanguru[selectedkangurunumber].zauber.bild.left + zauberkanguru[selectedkangurunumber].zauber.attackradius.width div 2;
+      zauberkanguru[selectedkangurunumber].zauber.attackradius.top := zauberkanguru[selectedkangurunumber].zauber.bild.top + zauberkanguru[selectedkangurunumber].zauber.attackradius.height div 2;
+    end;
+  end;
+end;
 
 //Kängurumenü
 procedure Tform5.KanguruClick(Sender: TObject);
@@ -1129,30 +1264,21 @@ begin
   Groupbox5.visible:=false;
   Groupbox6.visible:=false;
   //Upgrademenü öffnen
+  //Standardmenü
   Groupbox7.visible:=true;
-  if kangurutype = 'boxer' then
-  begin
-    panel11.caption:= 'Boxerkänguru';
-    button11.visible := false;
-    label10.visible := false;
-  end
-  else if  kangurutype = 'bogen' then
+  button9.visible:= true;
+  label8.visible:= true;
+  button10.visible:= true;
+  label9.visible := true;
+  button11.visible := false;
+  label10.visible := false;
+  button14.visible:= false;
+  //Besonderheiten
+  if  kangurutype = 'bogen' then
   begin
     panel11.caption:= 'Bogenkänguru';
     button11.visible := true;
     label10.visible := true;
-  end
-  else if  kangurutype = 'eis' then
-  begin
-    panel11.caption:= 'Eiskänguru';
-    button11.visible := false;
-    label10.visible := false;
-  end
-  else if  kangurutype = 'ninja' then
-  begin
-    panel11.caption:= 'Ninjakänguru';
-    button11.visible := false;
-    label10.visible := false;
   end
   else if  kangurutype = 'zauber' then
   begin
@@ -1163,6 +1289,7 @@ begin
     label9.visible := false;
     button11.visible := true;   //Schimmer
     label10.visible := true;
+    button14.visible:= true;
   end;
   panel12.caption := 'Schaden: '+inttostr(damage);
   panel13.caption := 'Angriffsgeschwindigkeit: '+inttostr(attackspeed);
@@ -1308,7 +1435,8 @@ begin
         zauberkanguru[i]:=zauberkanguru[i+1];
     end;
     dec(zauberkanguruzahl);
-  end
+  end;
+  Groupbox7.visible:=false;
 end;
 
 //Zwischen Beschreibungen wechseln
@@ -1319,6 +1447,7 @@ begin
   Groupbox4.visible:=false;
   Groupbox5.visible:=false;
   Groupbox6.visible:=false;
+  Groupbox7.visible:=false;
 end;
 
 procedure TForm5.Image4Click(Sender: TObject);
@@ -1328,6 +1457,7 @@ begin
   Groupbox4.visible:=false;
   Groupbox5.visible:=false;
   Groupbox6.visible:=false;
+  Groupbox7.visible:=false;
 end;
 
 procedure TForm5.Image5Click(Sender: TObject);
@@ -1337,6 +1467,7 @@ begin
   Groupbox2.visible:=false;
   Groupbox5.visible:=false;
   Groupbox6.visible:=false;
+  Groupbox7.visible:=false;
 end;
 
 procedure TForm5.Image6Click(Sender: TObject);
@@ -1346,6 +1477,7 @@ begin
   Groupbox4.visible:=false;
   Groupbox2.visible:=false;
   Groupbox6.visible:=false;
+  Groupbox7.visible:=false;
 end;
 
 procedure TForm5.Image7Click(Sender: TObject);
@@ -1355,6 +1487,7 @@ begin
   Groupbox4.visible:=false;
   Groupbox5.visible:=false;
   Groupbox2.visible:=false;
+  Groupbox7.visible:=false;
 end;
 
 //Timer
@@ -1596,6 +1729,7 @@ begin
       label9.caption:=inttostr(kanguru[selectedkangurunumber].rangelvl) + '/5';
       panel14.Caption:= 'Reichweite: ' + inttostr(kanguru[selectedkangurunumber].range2);
       button10.Caption := inttostr(400+kanguru[selectedkangurunumber].rangelvl*300)+'$';
+      label11.caption:= inttostr(kanguru[selectedkangurunumber].value div 2)+'$';
     end;
     if kanguru[selectedkangurunumber].rangelvl >=5 then
     begin
@@ -1618,6 +1752,7 @@ begin
       label9.caption:=inttostr(bogenkanguru[selectedkangurunumber].rangelvl) + '/5';
       panel14.Caption:= 'Reichweite: ' + inttostr(bogenkanguru[selectedkangurunumber].range2);
       button10.Caption := inttostr(400+bogenkanguru[selectedkangurunumber].rangelvl*300)+'$';
+      label11.caption:= inttostr(bogenkanguru[selectedkangurunumber].value div 2)+'$';
     end;
     if bogenkanguru[selectedkangurunumber].rangelvl >=5 then
     begin
@@ -1640,6 +1775,7 @@ begin
       label9.caption:=inttostr(eiskanguru[selectedkangurunumber].rangelvl) + '/5';
       panel14.Caption:= 'Reichweite: ' + inttostr(eiskanguru[selectedkangurunumber].range2);
       button10.Caption := inttostr(400+eiskanguru[selectedkangurunumber].rangelvl*300)+'$';
+      label11.caption:= inttostr(eiskanguru[selectedkangurunumber].value div 2)+'$';
     end;
     if eiskanguru[selectedkangurunumber].rangelvl >=5 then
     begin
@@ -1662,6 +1798,7 @@ begin
       label9.caption:=inttostr(ninjakanguru[selectedkangurunumber].rangelvl) + '/5';
       panel14.Caption:= 'Reichweite: ' + inttostr(ninjakanguru[selectedkangurunumber].range2);
       button10.Caption := inttostr(400+ninjakanguru[selectedkangurunumber].rangelvl*300)+'$';
+      label11.caption:= inttostr(ninjakanguru[selectedkangurunumber].value div 2)+'$';
     end;
     if ninjakanguru[selectedkangurunumber].rangelvl >=5 then
     begin
@@ -1686,10 +1823,10 @@ begin
       bogenkanguru[selectedkangurunumber].cancamo:=true;
       label10.caption:='1/1';
       panel15.Caption:= 'Bessere Sicht: Ja';
-      if bogenkanguru[selectedkangurunumber].cancamo = true then begin
-        button11.enabled:=false;
-        button11.caption:= 'Max.';
-      end;
+      button11.enabled:=false;
+      button11.caption:= 'Max.';
+      bogenkanguru[selectedkangurunumber].value := bogenkanguru[selectedkangurunumber].value + 2000;
+      label11.caption:= inttostr(bogenkanguru[selectedkangurunumber].value div 2)+'$';
     end;
   end
   else if selectedkangurutype = 'zauber' then
@@ -1700,10 +1837,10 @@ begin
       zauberkanguru[selectedkangurunumber].cancamo := true;
       label10.caption:='1/1';
       panel15.Caption:= 'Schimmer: Ja' ;
-      if zauberkanguru[selectedkangurunumber].cancamo = true then begin
-        button11.enabled:=false;
-        button11.caption:= 'Max.';
-      end;
+      button11.enabled:=false;
+      button11.caption:= 'Max.';
+      zauberkanguru[selectedkangurunumber].value := zauberkanguru[selectedkangurunumber].value + 5000;
+      label11.caption:= inttostr(zauberkanguru[selectedkangurunumber].value div 2)+'$';
     end;
   end;
   label6.caption:= inttostr(coins);

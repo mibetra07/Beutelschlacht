@@ -48,7 +48,8 @@ type TKanguru = class
   end;
    TZauberAngriff = class(Tkanguru)
      x2, y2: integer;
-    constructor create(map, x, y : integer);
+     DraggingEnabled : boolean;
+     constructor create(map, x, y : integer);
   end;
 
   TZauberkanguru = class(Tkanguru)
@@ -90,13 +91,11 @@ constructor Tkanguru.create(map, x, y, range : integer);
     begin
       self.bild := TImage.Create(Form5);
       self.bild.Parent := Form5;
-
     end
     else if map = 2 then
     begin
       self.bild := TImage.Create(Form6);
       self.bild.Parent := Form6;
-      //Self.bild.OnClick := @Form6.KanguruClick;
     end;
     //bild formatieren
     self.bild.Width := 96;
@@ -158,6 +157,7 @@ constructor Tkanguru.create(map, x, y, range : integer);
     self.bild.Picture.LoadFromFile('images\Ninja.png');
     attackspeed := 7;
   end;
+
   constructor TZauberAngriff.create(map, x, y : integer);
   begin
     damage := 30;
@@ -166,13 +166,26 @@ constructor Tkanguru.create(map, x, y, range : integer);
     value := 0;
     self.x2 := x;
     self.y2 := y;
-   inherited create(map, x, y, range2);
-   self.bild.stretch := true;
-   self.bild.Picture.LoadFromFile('images\Feuer.png');
-   self.bild.Width := 124;
+    self.DraggingEnabled:= false;
+    inherited create(map, x, y, range2);
+    self.bild.stretch := true;
+    self.bild.Picture.LoadFromFile('images\Feuer.png');
+    self.bild.Width := 124;
     self.bild.Height := 114;
     self.attackradius.visible := false;
-   attackspeed := 2;
+    attackspeed := 2;
+    if map = 1 then
+    begin
+      self.bild.OnMouseDown := @Form5.ZauberMouseDown;
+      self.bild.OnMouseMove := @Form5.ZauberMouseMove;
+      self.bild.OnMouseUp := @Form5.ZauberMouseUp;
+    end
+    else if map = 2 then
+    begin
+      //self.bild.OnMouseDown := @Form6.ZauberMouseDown;
+      //self.bild.OnMouseMove := @Form6.ZauberMouseMove;
+      //self.bild.OnMouseUp := @Form6.ZauberMouseUp;
+    end;
   end;
 
   constructor TZauberkanguru.create(map, x, y : integer);
