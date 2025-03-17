@@ -233,6 +233,7 @@ var i, j: integer;
 begin
   if self <> nil then
     begin
+      try
       if  (self.active = true)and ((Sqr(Pinguin.X + 48 - (self.attackradius.Left + self.attackradius.Width div 2)) +
           Sqr(Pinguin.Y + 48 - (self.attackradius.Top + self.attackradius.Height div 2))
           <= Sqr(self.attackradius.Width div 2)) or
@@ -264,6 +265,9 @@ begin
                     self.bild.picture.LoadFromFile('Images\Ninja_Attack.png')
            end;
       end;
+      except
+        halt;
+        end;
     end;
 end;
 
