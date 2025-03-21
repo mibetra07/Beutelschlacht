@@ -1005,6 +1005,7 @@ begin
       coins := coins - zauberkanguru[zauberkanguruzahl].value;
       zauberkanguru[zauberkanguruzahl].attackradius.visible := false;
       zauberkanguru[zauberkanguruzahl].setActive(1);
+      selectedkangurunumber := zauberkanguruzahl;
       for i := 1 to 7 do
       if j <> 100 then
       begin
@@ -1062,7 +1063,7 @@ end;
 procedure Tform5.ZauberMouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
-  if zauberkanguru[selectedkangurunumber].zauber.DraggingEnabled = true then
+  if zauberkanguru[selectedkangurunumber].zauber.DraggingEnabled then
   begin
     if Button = mbLeft then
     begin
@@ -1102,18 +1103,19 @@ begin
       for i:=1 to 7 do
       begin
         CheckCollision(zauberkanguru[selectedkangurunumber].zauber.bild, Path[i].Bild, Collision);
-        if Collision = true {and (Abs(Mouse.CursorPos.X + 48 - (zauberkanguru[selectedkangurunumber].bild.left + 48)) <= (48 + zauberkanguru[selectedkangurunumber].range2)) and
-        (Abs(Mouse.CursorPos.Y + 48 - (zauberkanguru[selectedkangurunumber].bild.top + 48)) <= (48 + zauberkanguru[selectedkangurunumber].range2))} then
+        if (Collision = true) and  ((Sqr(zauberkanguru[selectedkangurunumber].zauber.bild.left + 48 - (zauberkanguru[selectedkangurunumber].attackradius.Left + zauberkanguru[selectedkangurunumber].attackradius.Width div 2)) +
+          Sqr(zauberkanguru[selectedkangurunumber].zauber.bild.top + 48 - (zauberkanguru[selectedkangurunumber].attackradius.Top + zauberkanguru[selectedkangurunumber].attackradius.Height div 2))
+          <= Sqr(zauberkanguru[selectedkangurunumber].attackradius.Width div 2)) or
+         (Sqr(zauberkanguru[selectedkangurunumber].zauber.bild.left - (zauberkanguru[selectedkangurunumber].attackradius.Left + zauberkanguru[selectedkangurunumber].attackradius.Width div 2)) +
+          Sqr(zauberkanguru[selectedkangurunumber].zauber.bild.top - (zauberkanguru[selectedkangurunumber].attackradius.Top + zauberkanguru[selectedkangurunumber].attackradius.Height div 2))
+          <= Sqr(zauberkanguru[selectedkangurunumber].attackradius.Width div 2))) then
         begin
           zauberkanguru[selectedkangurunumber].zauber.bild.Picture.LoadFromFile('images\Feuer.png');
           exit();
-        end;
+        end
+        else
+          zauberkanguru[selectedkangurunumber].zauber.bild.Picture.LoadFromFile('images\backwards.png');
       end;
-      if (Collision = true) {and (Abs(zauberkanguru[selectedkangurunumber].zauber.bild.left + 48 - (zauberkanguru[selectedkangurunumber].bild.left + 48)) <= (48 + zauberkanguru[selectedkangurunumber].range2)) and
-        (Abs(zauberkanguru[selectedkangurunumber].zauber.bild.top + 48 - (zauberkanguru[selectedkangurunumber].bild.top + 48)) <= (48 + zauberkanguru[selectedkangurunumber].range2))} then
-        zauberkanguru[selectedkangurunumber].zauber.bild.Picture.LoadFromFile('images\Feuer.png')
-      else
-        zauberkanguru[selectedkangurunumber].zauber.bild.Picture.LoadFromFile('images\Feuer_invalid.png');
     end;
   end;
 end;
@@ -1370,6 +1372,8 @@ procedure TForm5.sellKanguru();
 var i : integer;
 begin
   //halben Känguruwert erstatten, känguru zerstören, leere Position in Känguruarray mit anderem känguru füllen und känguruzahl um 1 verringern
+  timer1.enabled := false;
+  sleep(10);
   if selectedkangurutype = 'boxer' then
   begin
     kanguru[selectedkangurunumber].active := false;
@@ -1437,6 +1441,7 @@ begin
     dec(zauberkanguruzahl);
   end;
   Groupbox7.visible:=false;
+  timer1.enabled := true;
 end;
 
 //Zwischen Beschreibungen wechseln
