@@ -137,14 +137,14 @@ constructor Tkanguru.create(map, x, y, range : integer);
 
   constructor TEiskanguru.create(map, x, y : integer);
   begin
-    damage := 40;
+    damage := 60;
     range2 := 150;
     cancamo := false;
     value := 3000;
     inherited create(map, x, y, range2);
     self.bild.Picture.LoadFromFile('images\Eisguru.png');
     slowness := 2;
-    attackspeed := 26;
+    attackspeed := 0;
   end;
 
   constructor TNinjakanguru.create(map, x, y : integer);
@@ -241,13 +241,14 @@ begin
           Sqr(Pinguin.Y - (self.attackradius.Top + self.attackradius.Height div 2))
           <= Sqr(self.attackradius.Width div 2))) and ((Pinguin.camo = false) or (self.cancamo)) and ((Pinguin.slowed = false) or (Kanguruart <> 'Zauber')) then   // Prüfen, ob irgendein Teil von `Pinguin` innerhalb des Kreises liegt (von chatgpt) und auf camo überprüufen und Zauberer können gefrorene Pinguine nicht attackieren
       begin
-           if Form5.ticksPassed - self.cooldownTick > self.attackSpeed then //wenn der Angriifs-Cooldown abgelaufen ist
+           if Form5.ticksPassed - self.cooldownTick >= self.attackSpeed then //wenn der Angriifs-Cooldown abgelaufen ist
             begin
               //neuen Cooldown tick setzen, hp abziehen, hp bar updaten
               self.cooldownTick := Form5.ticksPassed;
+              if (Kanguruart <> 'Eis') or (Form5.tickspassed - Pinguin.slowedTick > 120) then
               Pinguin.hp := Pinguin.hp - self.damage div 10;
               Pinguin.hpBar.position := (Pinguin.hp * Pinguin.hpBar.width) div (Pinguin.basehp);
-               if (Kanguruart = 'Eis') AND (Pinguin.slowed = false) AND (Pinguin.canBeSlowed = true) AND (Form5.ticksPassed - Pinguin.slowedTick > 70) then  //wenn ein eiskanguru angreift; der Pinguin nicht gefroren ist und der Gefrier Cooldown abgelaufen ist
+               if (Kanguruart = 'Eis') AND (Pinguin.slowed = false) AND (Pinguin.canBeSlowed = true) AND (Form5.ticksPassed - Pinguin.slowedTick > 120) then  //wenn ein eiskanguru angreift; der Pinguin nicht gefroren ist und der Gefrier Cooldown abgelaufen ist
                begin
                  //Pinguin einfrieren; Slowed Tick setzen (Zeitpunkt zu dem der Pinguin gefroren wurde)
                  Pinguin.slowed := true;
