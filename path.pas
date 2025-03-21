@@ -49,7 +49,7 @@ inherited create;
  self.bild.width := breit;
  self.bild.stretch := true;
  self.bild.visible := false;
-
+ self.direction := dir;
  //je nach map Bild laden
 
  if map = 2 then
