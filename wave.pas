@@ -16,7 +16,7 @@ uses map1, map2, Path;
 constructor TWave.create(normal, helm, schild, boss, tarn, map: integer);
 var i, j , k, offsetmultiplier: integer;
 begin
-  offsetmultiplier := 100;
+  offsetmultiplier := 20;
   if map = 1 then
     begin
   for i := 1 to 5 do //Die wegteleportierten Pinguine nach Bedarf zurückrufen und resetten
@@ -110,30 +110,35 @@ begin
          Form5.killedCount := 0;
       end;
 
-          for j := 1 to 50 do   //für jedes Känguru: angriff auf Pinguine
-              begin
+         // for j := 1 to 50 do   //für jedes Känguru: angriff auf Pinguine
+             // begin
+             for j := 1 to Form5.Bogenkanguruzahl do
                 if Form5.BogenKanguru[j] <> nil then
                 begin
                   Form5.BogenKanguru[j].attack(1, Pinguin, 'Bogen');
                   if (Form5. ticksPassed - Form5.BogenKanguru[j].cooldownTick > Form5.BogenKanguru[j].attackspeed div 2) and (Form5.BogenKanguru[j] <> nil) and (Form5.BogenKanguru[j].active = true)then
                      Form5.BogenKanguru[1].bild.picture.LoadFromFile('images\Bogenguru.png'); //alle anderen so und so viel sekunden idle Bild
                 end;
+             for j := 1 to Form5.Kanguruzahl do
                  if Form5.Kanguru[j] <> nil then
                 begin
                   Form5.Kanguru[j].attack(1, Pinguin, 'Boxer');
                   if (Form5. ticksPassed - Form5.Kanguru[j].cooldownTick > Form5.Kanguru[j].attackspeed div 2) and (Form5.Kanguru[j] <> nil) and (Form5.Kanguru[j].active = true)then
                      Form5.Kanguru[1].bild.picture.LoadFromFile('images\Boxerkanguru.png'); //alle anderen so und so viel sekunden idle Bild
                 end;
+             for j := 1 to Form5.Ninjakanguruzahl do
                  if Form5.Ninjakanguru[j] <> nil then
                 begin
                   Form5.Ninjakanguru[j].attack(1, Pinguin, 'Ninja');
                   if (Form5. ticksPassed - Form5.NinjaKanguru[j].cooldownTick > Form5.NinjaKanguru[j].attackspeed div 2) and (Form5.NinjaKanguru[j] <> nil) and (Form5.NinjaKanguru[j].active = true)then
                      Form5.Ninjakanguru[1].bild.picture.LoadFromFile('images\Ninja.png'); //alle anderen so und so viel sekunden idle Bild
                 end;
+             for j := 1 to Form5.Zauberkanguruzahl do
                  if (Form5.Zauberkanguru[j] <> nil) and (Form5.Zauberkanguru[j].zauber <> nil) then
                 begin
                   Form5.Zauberkanguru[j].zauber.attack(1, Pinguin, 'Zauber'); //alle anderen so und so viel sekunden idle Bild
                 end;
+             for j := 1 to Form5.Eiskanguruzahl do
                  if Form5.EisKanguru[j] <> nil then
                 begin
                      begin
@@ -141,14 +146,14 @@ begin
                           if (Form5. ticksPassed - Form5.EisKanguru[j].cooldownTick > Form5.EisKanguru[j].attackspeed div 2) and (Form5.EisKanguru[j] <> nil) and (Form5.EisKanguru[j].active = true)then
                           Form5.EisKanguru[1].bild.picture.LoadFromFile('images\Eisguru.png'); //alle anderen so und so viel sekunden idle Bild
                      end;
-                     if Form5.ticksPassed - Pinguin.slowedTick > 35 then //wenn der Pinguin eine Zeit gefreezed war: entfreezen
+                end;
+              if Form5.ticksPassed - Pinguin.slowedTick > 55 then //wenn der Pinguin eine Zeit gefreezed war: entfreezen
                       begin
                           Pinguin.slowed := false;
                           Pinguin.bild.picture.loadFromFile(Pinguin.FileName + '.png');
                           Pinguin.speed :=  Pinguin.baseSpeed;
                       end;
-                end;
-              end;
+              //end;
           pinguin.lab.caption := inttostr(pinguin.index);
           if Form5.CheckBox1.checked = true then  //wenn die checkbox gechecked ist loop parameter erhöhen (2x speed: alles 2x ausgeführt)
              begin
