@@ -463,27 +463,30 @@ begin
 procedure TForm5.Image1Click(Sender: TObject);
 var i: integer;
 begin
-  for i:=1 to kanguruzahl do
+  if ZauberBewegenClicked = false then
   begin
-    kanguru[i].attackradius.visible:=false;
+    for i:=1 to kanguruzahl do
+    begin
+      kanguru[i].attackradius.visible:=false;
+    end;
+    for i:=1 to bogenkanguruzahl do
+    begin
+      bogenkanguru[i].attackradius.visible:=false;
+    end;
+    for i:=1 to eiskanguruzahl do
+    begin
+      eiskanguru[i].attackradius.visible:=false;
+    end;
+    for i:=1 to ninjakanguruzahl do
+    begin
+      ninjakanguru[i].attackradius.visible:=false;
+    end;
+    for i:=1 to zauberkanguruzahl do
+    begin
+      zauberkanguru[i].attackradius.visible:=false;
+    end;
+    Groupbox7.visible:=false;
   end;
-  for i:=1 to bogenkanguruzahl do
-  begin
-    bogenkanguru[i].attackradius.visible:=false;
-  end;
-  for i:=1 to eiskanguruzahl do
-  begin
-    eiskanguru[i].attackradius.visible:=false;
-  end;
-  for i:=1 to ninjakanguruzahl do
-  begin
-    ninjakanguru[i].attackradius.visible:=false;
-  end;
-  for i:=1 to zauberkanguruzahl do
-  begin
-    zauberkanguru[i].attackradius.visible:=false;
-  end;
-  Groupbox7.visible:=false;
 end;
 //Form wechseln
 procedure TForm5.Image2Click(Sender: TObject);
@@ -1095,10 +1098,10 @@ begin
       Groupbox4.visible:=false;
       Groupbox5.visible:=false;
       Groupbox6.visible:=false;
-      zauberkanguru[selectedkangurunumber].zauber.bild.left := Mouse.CursorPos.X-48;
-      zauberkanguru[selectedkangurunumber].zauber.bild.top := Mouse.CursorPos.Y-70;
-      zauberkanguru[selectedkangurunumber].zauber.attackradius.left := Mouse.CursorPos.X  - zauberkanguru[selectedkangurunumber].zauber.range2;
-      zauberkanguru[selectedkangurunumber].zauber.attackradius.Top := Mouse.CursorPos.Y - 12 - zauberkanguru[selectedkangurunumber].zauber.range2;
+      zauberkanguru[selectedkangurunumber].zauber.bild.left := Mouse.CursorPos.X-60;
+      zauberkanguru[selectedkangurunumber].zauber.bild.top := Mouse.CursorPos.Y-80;
+      zauberkanguru[selectedkangurunumber].zauber.attackradius.left := Mouse.CursorPos.X - 2  - zauberkanguru[selectedkangurunumber].zauber.range2;
+      zauberkanguru[selectedkangurunumber].zauber.attackradius.Top := Mouse.CursorPos.Y - 22 - zauberkanguru[selectedkangurunumber].zauber.range2;
       //Feuer rot färben wenn versperrte Position
       for i:=1 to 7 do
       begin
@@ -1345,10 +1348,12 @@ begin
     begin
       panel15.caption := 'Schimmer: Ja';
       button11.caption := 'Max.';
+      button11.enabled := false;
     end
     else
       panel15.caption := 'Schimmer: Nein';
       button11.caption:= '5000$';
+      button11.enabled := true;
   end
   else
   begin
@@ -1356,10 +1361,12 @@ begin
     begin
       panel15.caption := 'Bessere Sicht: Ja';
       button11.caption:= 'Max.';
+      button11.enabled := false;
     end
     else
       panel15.caption := 'Bessere Sicht: Nein';
       button11.caption:= '2000$';
+      button11.enabled := true;
   end;
   //Verkaufspreis
   if selectedkangurutype = 'boxer' then
