@@ -136,7 +136,9 @@ begin
              for j := 1 to Form5.Zauberkanguruzahl do
                  if (Form5.Zauberkanguru[j] <> nil) and (Form5.Zauberkanguru[j].zauber <> nil) then
                 begin
-                  Form5.Zauberkanguru[j].zauber.attack(1, Pinguin, 'Zauber'); //alle anderen so und so viel sekunden idle Bild
+                 if Form5.CheckBox1.checked then
+                  Form5.Zauberkanguru[j].zauber.attack(1, Pinguin, 'Zauber');
+                 Form5.Zauberkanguru[j].zauber.attack(1, Pinguin, 'Zauber');
                 end;
              for j := 1 to Form5.Eiskanguruzahl do
                  if Form5.EisKanguru[j] <> nil then
@@ -155,7 +157,7 @@ begin
                       end;
               //end;
           pinguin.lab.caption := inttostr(pinguin.index);
-          if Form5.CheckBox1.checked = true then  //wenn die checkbox gechecked ist loop parameter erhöhen (2x speed: alles 2x ausgeführt)
+          if Form5.CheckBox1.checked then  //wenn die checkbox gechecked ist loop parameter erhöhen (2x speed: alles 2x ausgeführt)
              begin
                   inc(k);
              end
