@@ -430,34 +430,35 @@ begin
   PlayerHealth := 5;
 end;
 
+
 procedure TForm5.Timer1Timer(Sender: TObject);
 var i, j, switch: integer;
 begin
-   if playerHealth <= 0 then  //Abbruch wenn man keine hp mehr hat
-   begin
-        Timer1.enabled := false;
-        label12.caption := '0';
-        Button12.visible := true;
-        Button13.visible := true;
-   end;
-       //ticks für jeden Pinguin ausführen
-         for i := 1 to 100 do
-         begin
-         if Pinguin[i] <> nil then
-            tick(1, Pinguin[i]);
-         if HelmPinguin[i] <> nil then
-            tick(1, HelmPinguin[i]);
-         if SchildPinguin[i] <> nil then
-            tick(1, SchildPinguin[i]);
-         if BossPinguin[i] <> nil then
-            tick(1, BossPinguin[i]);
-         if TarnPinguin[i] <> nil then
-            tick(1, TarnPinguin[i]);
-         end;
-         Panel1.Caption := inttostr(KilledCount) + ';' + inttostr(PinguinCount) + ';' + inttostr(Form5.currentWave);
-         Panel2.Caption := inttostr(AmountKilled[1]) + ';' + inttostr(AmountKilled[2]);
-         inc(ticksPassed);
-   end;
+  if playerHealth <= 0 then  //Abbruch wenn man keine hp mehr hat
+  begin
+    Timer1.enabled := false;
+    label12.caption := '0';
+    Button12.visible := true;
+    Button13.visible := true;
+  end;
+    //ticks für jeden Pinguin ausführen
+  for i := 1 to 100 do
+  begin
+  if Pinguin[i] <> nil then
+    tick(1, Pinguin[i]);
+  if HelmPinguin[i] <> nil then
+    tick(1, HelmPinguin[i]);
+  if SchildPinguin[i] <> nil then
+    tick(1, SchildPinguin[i]);
+  if BossPinguin[i] <> nil then
+    tick(1, BossPinguin[i]);
+  if TarnPinguin[i] <> nil then
+    tick(1, TarnPinguin[i]);
+  end;
+  Panel1.Caption := inttostr(KilledCount) + ';' + inttostr(PinguinCount) + ';' + inttostr(Form5.currentWave);
+  Panel2.Caption := inttostr(AmountKilled[1]) + ';' + inttostr(AmountKilled[2]);
+  inc(ticksPassed);
+end;
 
 //Angriffsbereich unsichtbar machen
 procedure TForm5.Image1Click(Sender: TObject);
@@ -1089,6 +1090,7 @@ begin
       if (Abs(X - StartX) > DragThreshold) or (Abs(Y - StartY) > DragThreshold) then
       begin
         DragThresholdReached := true;
+        Groupbox7.visible := false;
       end;
     end;
     if DragThresholdReached then
@@ -1143,6 +1145,7 @@ begin
   button8.enabled:= true;
   zauberkanguru[selectedkangurunumber].zauber.DraggingEnabled:= false;
   ZauberBewegenClicked := false;
+  Groupbox7.visible := true; //wichtig, muss rein
   begin
     Collision := false;
     isDragging := False;
