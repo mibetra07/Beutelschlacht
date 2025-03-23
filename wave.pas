@@ -16,7 +16,7 @@ uses map1, map2, Path;
 constructor TWave.create(normal, helm, schild, boss, tarn, map: integer);
 var i, j , k, offsetmultiplier: integer;
 begin
-  offsetmultiplier := 20;
+  offsetmultiplier := 80;
   if map = 1 then
     begin
   for i := 1 to 5 do //Die wegteleportierten Pinguine nach Bedarf zurückrufen und resetten
@@ -74,6 +74,8 @@ end;
 procedure tick(map: integer; Pinguin: TPinguin);
 var i, j, k, speed: integer;
 begin
+  if Form5.playerHealth = 0 then
+     Pinguin.hp := 0;
   k := 0;
   if Form5.tickspassed > 1000000 then //sicherheit falls irgendwer extrem lange spielt
      Form5.tickspassed := 0;
@@ -137,8 +139,6 @@ begin
              for j := 1 to Form5.Zauberkanguruzahl do
                  if (Form5.Zauberkanguru[j] <> nil) and (Form5.Zauberkanguru[j].zauber <> nil) then
                 begin
-                 if Form5.CheckBox1.checked then
-                  Form5.Zauberkanguru[j].zauber.attack(1, Pinguin, 'Zauber');
                  Form5.Zauberkanguru[j].zauber.attack(1, Pinguin, 'Zauber');
                 end;
              for j := 1 to Form5.Eiskanguruzahl do
@@ -153,8 +153,17 @@ begin
               if Form5.ticksPassed - Pinguin.slowedTick > 55 then //wenn der Pinguin eine Zeit gefreezed war: entfreezen
                       begin
                           Pinguin.slowed := false;
-                          Pinguin.bild.picture.loadFromFile(Pinguin.FileName + '.png');
+                          if Pinguin.schimmert then
+                             Pinguin.bild.picture.loadFromFile('Images\Tarnguin_Schimmer.png')
+                          else
+                              Pinguin.bild.picture.loadFromFile(Pinguin.FileName + '.png');
                           Pinguin.speed :=  Pinguin.baseSpeed;
+                      end;
+              if (Pinguin.art = 5) and (Pinguin.schimmert) and (Form5.ticksPassed - Pinguin.schimmertick > 105) then //wenn der Pinguin eine Zeit gefreezed war: entfreezen
+                      begin
+                          Pinguin.schimmert := false;
+                          Pinguin.bild.picture.loadFromFile('Images\Tarnguin.png');
+                          Pinguin.camo := true;
                       end;
               //end;
           pinguin.lab.caption := inttostr(pinguin.index);

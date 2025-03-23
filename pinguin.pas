@@ -7,8 +7,8 @@ interface
 Uses Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls, Path, ComCtrls;
 type TPinguin  = class
       public
-      x, y, width, height, art, armorlvl, hp, basehp, moved, currentPath, position, speed, bildOffset, baseSpeed, slowedTick, index:integer;
-      slowed, camo, canBeSlowed: boolean;
+      x, y, width, height, art, armorlvl, hp, basehp, moved, currentPath, position, speed, bildOffset, baseSpeed, slowedTick, schimmertick, index:integer;
+      slowed, camo, canBeSlowed, schimmert: boolean;
       FileName: string;
       bild: Timage;
       lab: tLabel;
@@ -107,6 +107,7 @@ begin
      self.speed := self.baseSpeed;
      canBeSlowed := true;
      art := 1;
+     schimmert := false;
      end;
    end;
 

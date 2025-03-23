@@ -162,7 +162,7 @@ constructor Tkanguru.create(map, x, y, range : integer);
   begin
     damage := 30;
     range2 := 75;
-    cancamo := true;
+    cancamo := false;
     value := 0;
     self.x2 := x;
     self.y2 := y;
@@ -242,7 +242,7 @@ begin
           <= Sqr(self.attackradius.Width div 2)) or
          (Sqr(Pinguin.X - (self.attackradius.Left + self.attackradius.Width div 2)) +
           Sqr(Pinguin.Y - (self.attackradius.Top + self.attackradius.Height div 2))
-          <= Sqr(self.attackradius.Width div 2))) and ((Pinguin.camo = false) or (self.cancamo)) and ((Pinguin.slowed = false) or (Kanguruart <> 'Zauber')) then   // Prüfen, ob irgendein Teil von `Pinguin` innerhalb des Kreises liegt (von chatgpt) und auf camo überprüufen und Zauberer können gefrorene Pinguine nicht attackieren
+          <= Sqr(self.attackradius.Width div 2))) and ((Pinguin.art <> 5) or (self.cancamo)) and ((Pinguin.slowed = false) or (Kanguruart <> 'Zauber')) then   // Prüfen, ob irgendein Teil von `Pinguin` innerhalb des Kreises liegt (von chatgpt) und auf camo überprüufen und Zauberer können gefrorene Pinguine nicht attackieren
       begin
            if Form5.ticksPassed - self.cooldownTick >= self.attackSpeed then //wenn der Angriifs-Cooldown abgelaufen ist
             begin
@@ -250,14 +250,26 @@ begin
               self.cooldownTick := Form5.ticksPassed;
               if (Kanguruart <> 'Eis') or (Form5.tickspassed - Pinguin.slowedTick > 120) then
               Pinguin.hp := Pinguin.hp - self.damage div 10;
+              if Form5.checkbox1.checked then
+              Pinguin.hp := Pinguin.hp - self.damage div 10;
               Pinguin.hpBar.position := (Pinguin.hp * Pinguin.hpBar.width) div (Pinguin.basehp);
+              if (Kanguruart = 'Zauber') and (Self.cancamo) and (Pinguin.art = 5) then
+              begin
+                Pinguin.bild.picture.loadFromFile('Images\Tarnguin_Schimmer.png');
+                Form5.Panel5.caption := '????';
+                 Pinguin.camo := false;
+                 Pinguin.schimmertick := Form5.tickspassed;
+              end;
                if (Kanguruart = 'Eis') AND (Pinguin.slowed = false) AND (Pinguin.canBeSlowed = true) AND (Form5.ticksPassed - Pinguin.slowedTick > 120) then  //wenn ein eiskanguru angreift; der Pinguin nicht gefroren ist und der Gefrier Cooldown abgelaufen ist
                begin
                  //Pinguin einfrieren; Slowed Tick setzen (Zeitpunkt zu dem der Pinguin gefroren wurde)
                  Pinguin.slowed := true;
                  Pinguin.speed := 0;
                  Pinguin.slowedTick := Form5.ticksPassed;
-                 Pinguin.bild.picture.loadFromFile(Pinguin.FileName + '_freeze' + '.png');
+                 if Pinguin.schimmert then
+                    Pinguin.bild.picture.loadFromFile('Images\Tarnguin_Schimmer_freeze.png')
+                 else
+                     Pinguin.bild.picture.loadFromFile(Pinguin.FileName + '_freeze' + '.png');
                  self.bild.picture.LoadFromFile('Images\Eisguru_Attack.png')
                end
                //Attackframes für die Kangurus
