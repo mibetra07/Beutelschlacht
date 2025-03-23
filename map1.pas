@@ -143,17 +143,14 @@ type
     var isDragging, DragThresholdReached : boolean;
     StartX, StartY : integer;
     const DragThreshold = 96; //minimale Mausbewegung in px, um Dragging/kaufen zu starten
-    UpgradeDamage = 25;
-    UpgradeRange = 25;
-    UpgradeSpeed = 1;
-  //Positionsvariablen zum platzieren der Kängurus
-    var dx, dy: integer;
     procedure InitDrag(X, Y : integer; Button : TMouseButton);
     procedure CheckAllCollision(firstImage : TImage; var CollisionDetected : boolean; Sender : string);
   //KanguruClick und Menü-Zeugs
-    var
-    selectedKangurutype : string;
+    var selectedKangurutype : string;
     selectedKanguruNumber : integer;
+    const UpgradeDamage = 25;
+    UpgradeRange = 25;
+    UpgradeSpeed = 1;
     procedure ShowMenu(kangurutype : string; damage, range, attackspeed, damagelvl, speedlvl, rangelvl: integer; cancamo : boolean);
     procedure sellKanguru();
   //Zauberangriff bewegen
@@ -206,48 +203,33 @@ uses Menu;
 
 procedure TForm5.FormCreate(Sender: TObject);
 begin
-   randomize();
-   ConstructForm();
-   //Weg der Map erstellen(dir, left, top, breit, hoch, map: integer)
-   Path[1] := TPath.create(1, 0, 320, 620, 75, 1);
-   Path[2] := Tpath.create(2, 620, 320, 75, 330, 1);
-   Path[3] := Tpath.create(3, 300, 650, 400, 75, 1);
-   Path[4] := Tpath.create(4, 250, 90, 75, 620, 1);
-   Path[5] := Tpath.create(1, 250, 30, 740, 75, 1);
-   Path[6] := Tpath.create(2, 990, 30, 75, 350, 1);
-   Path[7] := Tpath.create(1, 990, 380, 400, 75, 1);
-   //Paths, nur für Hindernisse (Platzierbarkeit Kängurus einschränken)
-   Path[20] := TPath.create(1, 0, 0, 180, 100, 1);
-   Path[21] := Tpath.create(1, 180, 0, 90, 20, 1);
-   Path[22] := Tpath.create(1, 1290, 0, 180, 100,1);
-   Path[23] := Tpath.create(1, 0, 650, 80, 430, 1);
-   Path[24] := Tpath.create(1, 80, 800, 120, 330, 1);
-   Path[25] := Tpath.create(1, 200, 900, 1200, 120, 1);
-   Path[26] := Tpath.create(1, 1180, 690, 300, 400, 1);
-   Path[27] := Tpath.create(1, 1120, 860, 100, 80, 1);
-   Path[28] := Tpath.create(1, 1385, 550, 80, 80, 1);
-   wave[1] := Twave.create(2, 2, 0, 0, 0, 1);
-   currentWave := 1;
-end;
-
-procedure Tform5.ConstructForm();
-var i, j : integer;
-begin
-  coins := 990000;
-  label6.caption:= inttostr(coins);
-  Pinguincount := 0;
-  Timer1.enabled := false;
-  Timer1.interval := 1;
+  randomize();
+  //Weg der Map erstellen(dir, left, top, breit, hoch, map: integer)
+  Path[1] := TPath.create(1, 0, 320, 620, 75, 1);
+  Path[2] := Tpath.create(2, 620, 320, 75, 330, 1);
+  Path[3] := Tpath.create(3, 300, 650, 400, 75, 1);
+  Path[4] := Tpath.create(4, 250, 90, 75, 620, 1);
+  Path[5] := Tpath.create(1, 250, 30, 740, 75, 1);
+  Path[6] := Tpath.create(2, 990, 30, 75, 350, 1);
+  Path[7] := Tpath.create(1, 990, 380, 400, 75, 1);
+  //Paths, nur für Hindernisse (Platzierbarkeit Kängurus einschränken)
+  Path[20] := TPath.create(1, 0, 0, 180, 100, 1);
+  Path[21] := Tpath.create(1, 180, 0, 90, 20, 1);
+  Path[22] := Tpath.create(1, 1290, 0, 180, 100,1);
+  Path[23] := Tpath.create(1, 0, 650, 80, 430, 1);
+  Path[24] := Tpath.create(1, 80, 800, 120, 330, 1);
+  Path[25] := Tpath.create(1, 200, 900, 1200, 120, 1);
+  Path[26] := Tpath.create(1, 1180, 690, 300, 400, 1);
+  Path[27] := Tpath.create(1, 1120, 860, 100, 80, 1);
+  Path[28] := Tpath.create(1, 1385, 550, 80, 80, 1);
+  wave[1] := Twave.create(2, 2, 0, 0, 0, 1);
+  currentWave := 1;
   //Känguruzählervariablen
   Kanguruzahl := 0;
   Bogenkanguruzahl := 0;
   Eiskanguruzahl := 0;
   Ninjakanguruzahl := 0;
   Zauberkanguruzahl := 0;
-
-  //Platzieren
-  isDragging := false;
-  ZauberBewegenClicked := false;
   //Memos mit Känguruinfos
   //Boxerkänguru
   Memo1.Lines.Clear;
@@ -257,7 +239,6 @@ begin
   Memo1.Lines.add('Schaden: Mittel');
   Memo1.Lines.add('Angriffsgeschwindigkeit: Hoch');
   Groupbox2.visible:=false;
-
   //Bogenkänguru
   Memo2.Lines.Clear;
   Memo2.Lines.add('Großer Fan von Robin Hood - stiehlt den Reichen, verteilt an alle');
@@ -286,7 +267,7 @@ begin
   Memo5.Lines.add('');
   Memo4.Lines.add('Durchschaut jede Verkleidung');
   Groupbox5.visible:=false;
-  //Magie
+  //Zauberkänguru
   Memo5.Lines.Clear;
   Memo5.Lines.add('ᒲᒲᒲ↸⎓ᒲ↸ʖ⍊ ⊣╎ ⊣ʖ∷ᓭ↸ꖌᓭ⎓⍑↸ᓭ⎓');
   Memo5.Lines.add('');
@@ -296,8 +277,6 @@ begin
   Memo5.Lines.add('');
   Memo5.Lines.add('Beschwört Kreis auf der Strecke, der konstant Schaden zufügt');
   Groupbox6.visible:=false;
-
-  Groupbox7.visible:=false;
   //vorkodierte Parameter für die wellen bis 20
   WaveParams[1, 1] := 2; //anzahl normale
   WaveParams[1, 2] := 0; //anzahl helm
@@ -419,7 +398,63 @@ begin
   WaveParams[20, 4] := 1;   // Boss Pinguin
   WaveParams[20, 5] := 3;
 
+  ConstructForm(); //muss am Schluss sein!
+end;
+
+procedure Tform5.ConstructForm();
+var i, j : integer; Pinguintemp: TPinguin;
+begin
+  Timer1.enabled := false;
+  Timer1.interval := 1;
+
+  //Münzen, Leben, Welle
+  coins := 3000;
+  label6.caption:= inttostr(coins);
+  Pinguincount := 0;
+  PlayerHealth := 5;
+  label12.caption:= inttostr(PlayerHealth);
+  wave[1] := Twave.create(2, 2, 0, 0, 0, 1);
+  currentWave := 1;
+  label13.caption:= 'Welle 1/20';
+  //Platzieren
+  isDragging := false;
+  ZauberBewegenClicked := false;
+  //Upgrademenü und Memos schließen
+  Groupbox2.visible:=false;
+  Groupbox3.visible:=false;
+  Groupbox4.visible:=false;
+  Groupbox5.visible:=false;
+  Groupbox6.visible:=false;
+  Groupbox7.visible:=false;
   //Form leeren (Pinguine und Kängurus)
+  //Pinguine wegteleportieren
+  for j := 1 to 5 do
+      for i := 1 to 100 do
+      begin
+        if (j = 1) and (Pinguin[i] <> nil) then
+           Pinguintemp := Pinguin[i]
+        else if (j = 2) and (HelmPinguin[i] <> nil)  then
+           Pinguintemp := HelmPinguin[i]
+        else if (j = 3) and (SchildPinguin[i] <> nil)  then
+           Pinguintemp := SchildPinguin[i]
+        else if (j = 4) and (BossPinguin[i] <> nil)  then
+           Pinguintemp := BossPinguin[i]
+        else if (j = 5) and (TarnPinguin[i] <> nil)  then
+           Pinguintemp := TarnPinguin[i];
+        begin
+          if Pinguintemp.x > -10000 then
+            begin
+               inc(Form5.AmountKilled[Pinguintemp.art]);
+               inc(Form5.killedCount);
+            end;
+               Pinguintemp.currentPath := 100;
+               Pinguintemp.x := -10000;
+               Pinguintemp.bild.left := Pinguintemp.x;
+               Pinguintemp.hpBar.Left := Pinguintemp.x;
+               Pinguintemp.lab.left := Pinguintemp.x;
+               Form5.IndexOfKilled[Pinguintemp.art, Form5.AmountKilled[Pinguintemp.art]] := Pinguintemp.index;
+        end;
+      end;
   for i := 1 to 5 do
      for j := 1 to 100 do
          begin
@@ -427,13 +462,31 @@ begin
               AmountKilled[j] := 0;
          end;
   killedCount := 0;
-  PlayerHealth := 5;
+  //Kängurus löschen
+  for i := 1 to kanguruzahl do
+    kanguru[i].destruct;
+  for i := 1 to bogenkanguruzahl do
+    bogenkanguru[i].destruct;
+  for i := 1 to eiskanguruzahl do
+    eiskanguru[i].destruct;
+  for i := 1 to ninjakanguruzahl do
+    ninjakanguru[i].destruct;
+  for i := 1 to zauberkanguruzahl do
+    zauberkanguru[i].destruct;
+  Kanguruzahl := 0;
+  Bogenkanguruzahl := 0;
+  Eiskanguruzahl := 0;
+  Ninjakanguruzahl := 0;
+  Zauberkanguruzahl := 0;
+  selectedkangurutype := '';
+  selectedkangurunumber := 0;
 end;
 
 
 procedure TForm5.Timer1Timer(Sender: TObject);
 var i, j, switch: integer;
 begin
+  i := 1;
   if playerHealth <= 0 then  //Abbruch wenn man keine hp mehr hat
   begin
     Timer1.enabled := false;
@@ -441,20 +494,22 @@ begin
     Button12.visible := true;
     Button13.visible := true;
   end;
-    //ticks für jeden Pinguin ausführen
-  for i := 1 to 100 do
+  //ticks für jeden Pinguin ausführen
+  repeat
   begin
-  if Pinguin[i] <> nil then
-    tick(1, Pinguin[i]);
-  if HelmPinguin[i] <> nil then
-    tick(1, HelmPinguin[i]);
-  if SchildPinguin[i] <> nil then
-    tick(1, SchildPinguin[i]);
-  if BossPinguin[i] <> nil then
-    tick(1, BossPinguin[i]);
-  if TarnPinguin[i] <> nil then
-    tick(1, TarnPinguin[i]);
+    if Pinguin[i] <> nil then
+      tick(1, Pinguin[i]);
+    if HelmPinguin[i] <> nil then
+      tick(1, HelmPinguin[i]);
+    if SchildPinguin[i] <> nil then
+      tick(1, SchildPinguin[i]);
+    if BossPinguin[i] <> nil then
+      tick(1, BossPinguin[i]);
+    if TarnPinguin[i] <> nil then
+        tick(1, TarnPinguin[i]);
   end;
+  inc(i);
+  until i = 100;
   Panel1.Caption := inttostr(KilledCount) + ';' + inttostr(PinguinCount) + ';' + inttostr(Form5.currentWave);
   Panel2.Caption := inttostr(AmountKilled[1]) + ';' + inttostr(AmountKilled[2]);
   inc(ticksPassed);
@@ -1134,18 +1189,15 @@ var Collision : boolean;
     i : integer;
 begin
   if (Button = mbLeft) and (DragThresholdReached = true) then
-  if  zauberkanguru[selectedkangurunumber].cancamo = true then
-    zauberkanguru[selectedkangurunumber].zauber.bild.Picture.LoadFromFile('images\Feuer_Schimmer.png')
-  else
-    zauberkanguru[selectedkangurunumber].zauber.bild.Picture.LoadFromFile('images\Feuer.png');
+  zauberkanguru[selectedkangurunumber].zauber.bild.Picture.LoadFromFile('images\Feuer.png');
   zauberkanguru[selectedkangurunumber].zauber.active:=true;
   button14.caption:= 'Feuer bewegen';
   bitbtn1.enabled:= true;
   button7.enabled:= true;
   button8.enabled:= true;
+  Groupbox7.visible := true;     //wichtig fürs rüberkopieren
   zauberkanguru[selectedkangurunumber].zauber.DraggingEnabled:= false;
   ZauberBewegenClicked := false;
-  Groupbox7.visible := true; //wichtig, muss rein
   begin
     Collision := false;
     isDragging := False;
@@ -1288,11 +1340,23 @@ begin
   label10.visible := false;
   button14.visible:= false;
   //Besonderheiten
-  if  kangurutype = 'bogen' then
+  if  kangurutype = 'boxer' then
+  begin
+    panel11.caption:= 'Boxerkänguru';
+  end
+  else if  kangurutype = 'bogen' then
   begin
     panel11.caption:= 'Bogenkänguru';
     button11.visible := true;
     label10.visible := true;
+  end
+  else if  kangurutype = 'eis' then
+  begin
+    panel11.caption:= 'Eiskänguru';
+  end
+  else if  kangurutype = 'ninja' then
+  begin
+    panel11.caption:= 'Ninjakänguru';
   end
   else if  kangurutype = 'zauber' then
   begin
@@ -1385,14 +1449,17 @@ begin
 end;
 //Känguru verkaufen
 procedure TForm5.sellKanguru();
-var i : integer;
+var i : integer; GameActive : boolean;
 begin
   //halben Känguruwert erstatten, känguru zerstören, leere Position in Känguruarray mit anderem känguru füllen und känguruzahl um 1 verringern
+  if timer1.enabled = false then        //Timer soll nicht wieder aktiviert werden, wenn das Spiel pausiert ist
+    GameActive := false
+  else
+    GameActive := true;
   timer1.enabled := false;
   sleep(10);
   if selectedkangurutype = 'boxer' then
   begin
-    kanguru[selectedkangurunumber].active := false;
     coins:= coins + (kanguru[selectedkangurunumber].value div 2);
     label6.caption:= inttostr(coins);
     kanguru[selectedkangurunumber].destruct;
@@ -1406,7 +1473,6 @@ begin
   end
   else if  selectedkangurutype = 'bogen' then
   begin
-    bogenkanguru[selectedkangurunumber].active := false;
     coins:= coins + (bogenkanguru[selectedkangurunumber].value div 2);
     label6.caption:= inttostr(coins);
     bogenkanguru[selectedkangurunumber].destruct;
@@ -1419,7 +1485,6 @@ begin
   end
   else if  selectedkangurutype = 'eis' then
   begin
-    eiskanguru[selectedkangurunumber].active := false;
     coins:= coins + (eiskanguru[selectedkangurunumber].value div 2);
     label6.caption:= inttostr(coins);
     eiskanguru[selectedkangurunumber].destruct;
@@ -1432,7 +1497,6 @@ begin
   end
   else if  selectedkangurutype = 'ninja' then
   begin
-    ninjakanguru[selectedkangurunumber].active := false;
     coins:= coins + (ninjakanguru[selectedkangurunumber].value div 2);
     label6.caption:= inttostr(coins);
     ninjakanguru[selectedkangurunumber].destruct;
@@ -1445,7 +1509,6 @@ begin
   end
   else if  selectedkangurutype = 'zauber' then
   begin
-    zauberkanguru[selectedkangurunumber].active := false;
     coins:= coins + (Zauberkanguru[selectedkangurunumber].value div 2);
     label6.caption:= inttostr(coins);
     zauberkanguru[selectedkangurunumber].destruct;
@@ -1457,7 +1520,8 @@ begin
     dec(zauberkanguruzahl);
   end;
   Groupbox7.visible:=false;
-  timer1.enabled := true;
+  if GameActive = true then
+    timer1.enabled := true;
 end;
 
 //Zwischen Beschreibungen wechseln
@@ -1870,89 +1934,17 @@ end;
 
 procedure TForm5.Button12Click(Sender: TObject);
 begin
+  timer1.enabled := false;
   Form1.show;
   Form5.close;
 end;
 //beim erneut versuchen
 procedure TForm5.Button13Click(Sender: TObject);
-var i, j: integer;
-    Pinguintemp: TPinguin;
 begin
-  //alle Kangurus entfernen
-for i := 1 to 100 do
-    begin
-      if Kanguru[i] <> nil then
-      begin
-         selectedkangurutype := 'boxer';
-         selectedKanguruNumber := i;
-         sellkanguru();
-      end;
-      if BogenKanguru[i] <> nil then
-      begin
-         selectedkangurutype := 'bogen';
-         selectedKanguruNumber := i;
-         sellkanguru();
-      end;
-      if EisKanguru[i] <> nil then
-      begin
-         selectedkangurutype := 'eis';
-         selectedKanguruNumber := i;
-         sellkanguru();
-      end;
-      if NinjaKanguru[i] <> nil then
-      begin
-         selectedkangurutype := 'ninja';
-         selectedKanguruNumber := i;
-      end;
-    end;
-      {if ZauberKanguru[i] <> nil then
-      begin
-         selectedkangurutype := 'zauber';
-         selectedKanguruNumber := i;
-      end;}
-      //Pinguine wegteleportieren
-      for j := 1 to 5 do
-          for i := 1 to 100 do
-          begin
-            if (j = 1) and (Pinguin[i] <> nil) then
-               Pinguintemp := Pinguin[i]
-            else if (j = 2) and (HelmPinguin[i] <> nil)  then
-               Pinguintemp := HelmPinguin[i]
-            else if (j = 3) and (SchildPinguin[i] <> nil)  then
-               Pinguintemp := SchildPinguin[i]
-            else if (j = 4) and (BossPinguin[i] <> nil)  then
-               Pinguintemp := BossPinguin[i]
-            else if (j = 5) and (TarnPinguin[i] <> nil)  then
-               Pinguintemp := TarnPinguin[i];
-            begin
-              if Pinguintemp.x > -10000 then
-                begin
-                   inc(Form5.AmountKilled[Pinguintemp.art]);
-                   inc(Form5.killedCount);
-                end;
-                   Pinguintemp.currentPath := 100;
-                   Pinguintemp.x := -10000;
-                   Pinguintemp.bild.left := Pinguintemp.x;
-                   Pinguintemp.hpBar.Left := Pinguintemp.x;
-                   Pinguintemp.lab.left := Pinguintemp.x;
-                   Form5.IndexOfKilled[Pinguintemp.art, Form5.AmountKilled[Pinguintemp.art]] := Pinguintemp.index;
-            end;
-          end;
-     for i := 1 to 5 do
-         for j := 1 to 100 do
-             begin
-                  Form5.IndexOfKilled[i, j] := 0;
-                  Form5.AmountKilled[j] := 0;
-             end;
-     //restlichen nötigen Variablen zutücksetzen
-       currentWave := 1;
-       wave[1] := Twave.create(2, 2, 0, 0, 0, 1);
-       Timer1.enabled := true;
-       ConstructForm();
-       Button12.visible := false;
-       Button13.visible := false;
-
-    end;
+  Button12.visible := false;
+  Button13.visible := false;
+  ConstructForm();
+end;
 
 end.
 

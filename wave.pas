@@ -106,6 +106,7 @@ begin
                     Form5.AmountKilled[j] := 0;
                end;
          inc(Form5.currentWave);
+         Form5.Label13.caption:= 'Welle ' + inttostr(Form5.currentWave) + '/20';      //label zum Anzeigen der momentanen Welle
          Form5.wave[Form5.currentWave] := TWave.create(Form5.waveParams[Form5.currentWave, 1], Form5.waveParams[Form5.currentWave, 2], Form5.waveParams[Form5.currentWave, 3], Form5.waveParams[Form5.currentWave, 4], Form5.waveParams[Form5.currentWave, 5], 1);
          Form5.killedCount := 0;
       end;
