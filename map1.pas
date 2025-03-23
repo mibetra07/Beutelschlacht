@@ -406,7 +406,7 @@ var i, j : integer; Pinguintemp: TPinguin;
 begin
   Timer1.enabled := false;
   Timer1.interval := 1;
-
+  checkbox1.checked := false;
   //Münzen, Leben, Welle
   coins := 3000;
   label6.caption:= inttostr(coins);
