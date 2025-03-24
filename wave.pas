@@ -150,7 +150,7 @@ begin
                           Form5.EisKanguru[1].bild.picture.LoadFromFile('images\Eisguru.png'); //alle anderen so und so viel sekunden idle Bild
                      end;
                 end;
-              if Form5.ticksPassed - Pinguin.slowedTick > 55 then //wenn der Pinguin eine Zeit gefreezed war: entfreezen
+              if (Form5.ticksPassed - Pinguin.slowedTick > 55) and (Pinguin.slowed) then //wenn der Pinguin eine Zeit gefreezed war: entfreezen
                       begin
                           Pinguin.slowed := false;
                           if Pinguin.schimmert then

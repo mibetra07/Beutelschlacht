@@ -11,7 +11,7 @@ uses
 type
 
   { TForm5 }
-
+  //playsound(0, async);
   TForm5 = class(TForm)
     BitBtn1: TBitBtn;
     Button1: TButton;
@@ -222,8 +222,6 @@ begin
   Path[26] := Tpath.create(1, 1180, 690, 300, 400, 1);
   Path[27] := Tpath.create(1, 1120, 860, 100, 80, 1);
   Path[28] := Tpath.create(1, 1385, 550, 80, 80, 1);
-  wave[1] := Twave.create(2, 2, 0, 0, 0, 1);
-  currentWave := 1;
   //Känguruzählervariablen
   Kanguruzahl := 0;
   Bogenkanguruzahl := 0;
@@ -284,11 +282,11 @@ begin
   WaveParams[1, 4] := 0; //anzahl boss
   WaveParams[1, 5] := 0; //anzahl tarn
 
-  WaveParams[2, 1] := 5;
+  WaveParams[2, 1] := 0;
   WaveParams[2, 2] := 0;
   WaveParams[2, 3] := 0;
   WaveParams[2, 4] := 0;
-  WaveParams[2, 5] := 0;
+  WaveParams[2, 5] := 6;
 
   WaveParams[3, 1] := 7;
   WaveParams[3, 2] := 0;
@@ -408,13 +406,13 @@ begin
   Timer1.interval := 1;
   checkbox1.checked := false;
   //Münzen, Leben, Welle
-  coins := 3000;
+  coins := 300300300;
   label6.caption:= inttostr(coins);
   Pinguincount := 0;
   PlayerHealth := 5;
   label12.caption:= inttostr(PlayerHealth);
   wave[1] := Twave.create(2, 2, 0, 0, 0, 1);
-  currentWave := 1;
+  currentWave := 0;
   label13.caption:= 'Welle 1/20';
   //Platzieren
   isDragging := false;
@@ -1920,6 +1918,7 @@ begin
     begin
       coins := coins-5000;
       zauberkanguru[selectedkangurunumber].cancamo := true;
+      zauberkanguru[selectedkangurunumber].zauber.cancamo := true;
       label10.caption:='1/1';
       panel15.Caption:= 'Schimmer: Ja' ;
       button11.enabled:=false;
