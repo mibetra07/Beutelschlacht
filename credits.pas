@@ -5,7 +5,7 @@ unit Credits;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls;
+  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls;
 
 type
 
@@ -13,10 +13,7 @@ type
 
   TForm4 = class(TForm)
     Image1: TImage;
-    Panel1: TPanel;
-    Panel2: TPanel;
-    Panel3: TPanel;
-    Panel4: TPanel;
+    Memo1: TMemo;
     procedure Image1Click(Sender: TObject);
   private
 

@@ -1,45 +1,13 @@
 object Form4: TForm4
-  Left = 2614
+  Left = 499
   Height = 594
-  Top = 202
+  Top = 166
   Width = 1217
   Caption = 'Form4'
-  ClientHeight = 0
-  ClientWidth = 0
+  ClientHeight = 594
+  ClientWidth = 1217
   LCLVersion = '3.4.0.0'
   WindowState = wsFullScreen
-  object Panel1: TPanel
-    Left = 552
-    Height = 50
-    Top = 288
-    Width = 737
-    Caption = 'Von: Miro Trappe, Bennet Grosche'
-    TabOrder = 0
-  end
-  object Panel2: TPanel
-    Left = 552
-    Height = 50
-    Top = 368
-    Width = 737
-    Caption = 'Seminarkurs Informatik'
-    TabOrder = 1
-  end
-  object Panel3: TPanel
-    Left = 552
-    Height = 50
-    Top = 448
-    Width = 737
-    Caption = 'Panel3'
-    TabOrder = 2
-  end
-  object Panel4: TPanel
-    Left = 552
-    Height = 50
-    Top = 528
-    Width = 737
-    Caption = 'Panel4'
-    TabOrder = 3
-  end
   object Image1: TImage
     Left = 8
     Height = 90
@@ -99,5 +67,50 @@ object Form4: TForm4
       ED7FE9FD079A585AFE7BE5E7370000000049454E44AE426082
     }
     Stretch = True
+  end
+  object Memo1: TMemo
+    Left = 648
+    Height = 536
+    Top = 240
+    Width = 624
+    Lines.Strings = (
+      'Beutelschlacht - Angriff der Pinguine'
+      ''
+      'Erstellt von: Miro Trappe, Bennet Grosche'
+      'Kurs: Grundkurs Informatik'
+      'Fachlehrerin: Frau Reichl'
+      'Schule: Theodor-Fontane-Gymnasium Strausberg'
+      'Abgabedatum: 28.03.2025'
+      ''
+      'Zuständigkeiten:'
+      'Menu: '
+      '    Miro Trappe'
+      'ChooseMap: '
+      '    Miro Trappe'
+      'Options: '
+      '    Miro Trappe'
+      'Tutorial: '
+      '    Bennet Grosche'
+      'Map1: '
+      '    Menüs, Memos, Känguru kaufen, Spiel neu starten bei Game Over: Miro Trappe'
+      '    Timer, Pfade, Wellenparameter, 2x Geschwindigkeit, Game Over Screen: Bennet Grosche'
+      'Map2: '
+      '    Miro Trappe (kopiert aus Map1, leicht abgeändert)'
+      'Kanguru: '
+      '    Aufbau der Klasse, Kanguru.create, destruct, setActive: Miro Trappe'
+      '    Zauberkanguru, Kanguru.attack: Bennet Grosche'
+      'Path: '
+      '    Bennet Grosche'
+      'Wave:'
+      '    Bennet Grosche'
+      'Collision: '
+      '    Miro Trappe'
+      'Design der Bilder: '
+      '    Bennet Grosche'
+      'Musik: '
+      '    von Bennet Grosche mit Suno AI erstellt'
+    )
+    ReadOnly = True
+    TabOrder = 0
   end
 end
