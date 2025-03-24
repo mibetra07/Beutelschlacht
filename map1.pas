@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
-  Menus, Buttons, Path, Pinguin, wave, kanguru, Collision;
+  Menus, Buttons, ComCtrls, Path, Pinguin, wave, kanguru, Collision, bass;
 
 type
 
@@ -18,6 +18,11 @@ type
     Button12: TButton;
     Button13: TButton;
     Button14: TButton;
+    Button15: TButton;
+    Button16: TButton;
+    Button17: TButton;
+    Button18: TButton;
+    Button19: TButton;
     Button2: TButton;
     Button3: TButton;
     Button4: TButton;
@@ -29,6 +34,10 @@ type
     Button10: TButton;
     Button11: TButton;
     CheckBox1: TCheckBox;
+    CheckBox2: TCheckBox;
+    CheckBox3: TCheckBox;
+    ComboBox1: TComboBox;
+    GroupBox1: TGroupBox;
     GroupBox2: TGroupBox;
     GroupBox3: TGroupBox;
     GroupBox4: TGroupBox;
@@ -36,6 +45,7 @@ type
     GroupBox6: TGroupBox;
     GroupBox7: TGroupBox;
     Image1: TImage;
+    Image10: TImage;
     Image2: TImage;
     Image3: TImage;
     Image4: TImage;
@@ -47,6 +57,7 @@ type
     Label1: TLabel;
     Label12: TLabel;
     Label13: TLabel;
+    Label15: TLabel;
     Label2: TLabel;
     Label3: TLabel;
     Label4: TLabel;
@@ -64,6 +75,7 @@ type
     Memo5: TMemo;
     Panel1: TPanel;
     Panel10: TPanel;
+    Panel16: TPanel;
     Panel2: TPanel;
     Panel3: TPanel;
     Panel4: TPanel;
@@ -84,12 +96,16 @@ type
     Shape5: TShape;
     Shape6: TShape;
     Timer1: TTimer;
+    TrackBar2: TTrackBar;
     procedure BitBtn1Click(Sender: TObject);
     procedure Button10Click(Sender: TObject);
     procedure Button11Click(Sender: TObject);
     procedure Button12Click(Sender: TObject);
     procedure Button13Click(Sender: TObject);
     procedure Button14Click(Sender: TObject);
+    procedure Button15Click(Sender: TObject);
+    procedure Button16Click(Sender: TObject);
+    procedure Button17Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -139,6 +155,7 @@ type
       Shift: TShiftState; X, Y: Integer);
     procedure Timer1Timer(Sender: TObject);
   private
+    var GameActive : boolean;
     //fürs Platzieren
     var isDragging, DragThresholdReached : boolean;
     StartX, StartY : integer;
@@ -417,13 +434,22 @@ begin
   //Platzieren
   isDragging := false;
   ZauberBewegenClicked := false;
-  //Upgrademenü und Memos schließen
-  Groupbox2.visible:=false;
+  //Musik
+
+  //Pausemenü
+  Image10.SendToBack; //Pausehintergrund, blockt einige Funktionen
+  Checkbox2.checked := true;  //Autostart
+  Checkbox3.checked := false; //Wiederholen
+  Trackbar2.Position := 100;
+  Combobox1.text := 'Songnamevariable';
+  //Menüs und Memos schließen
+  Groupbox1.visible:=false; //Pausemenü
+  Groupbox2.visible:=false; //Memos 1-5
   Groupbox3.visible:=false;
   Groupbox4.visible:=false;
   Groupbox5.visible:=false;
   Groupbox6.visible:=false;
-  Groupbox7.visible:=false;
+  Groupbox7.visible:=false; //Upgrademenü
   //Form leeren (Pinguine und Kängurus)
   //Pinguine wegteleportieren
   for j := 1 to 5 do
@@ -542,11 +568,14 @@ begin
     Groupbox7.visible:=false;
   end;
 end;
-//Form wechseln
+//Pausebutton --> Menü aufrufen
 procedure TForm5.Image2Click(Sender: TObject);
 begin
-  Form1.show;
-  Form5.hide;
+  Groupbox1.visible:= true;
+  Image10.bringtofront;
+  //alle buttons deaktivieren
+  Groupbox1.BringToFront;
+  timer1.enabled := false;
 end;
 
 //Känguru platzieren mit Kollisionsabfrage
@@ -1117,6 +1146,25 @@ begin
   end;
 end;
 
+procedure TForm5.Button15Click(Sender: TObject);
+begin
+  Groupbox1.visible:=false;
+  Image10.SendToBack;
+  if GameActive = true then
+    timer1.Enabled := true;
+end;
+
+procedure TForm5.Button16Click(Sender: TObject);
+begin
+  Form1.show;
+  Form5.hide;
+end;
+
+procedure TForm5.Button17Click(Sender: TObject);
+begin
+  ConstructForm();
+end;
+
 procedure Tform5.ZauberMouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
@@ -1447,13 +1495,9 @@ begin
 end;
 //Känguru verkaufen
 procedure TForm5.sellKanguru();
-var i : integer; GameActive : boolean;
+var i : integer;
 begin
   //halben Känguruwert erstatten, känguru zerstören, leere Position in Känguruarray mit anderem känguru füllen und känguruzahl um 1 verringern
-  if timer1.enabled = false then        //Timer soll nicht wieder aktiviert werden, wenn das Spiel pausiert ist
-    GameActive := false
-  else
-    GameActive := true;
   timer1.enabled := false;
   sleep(10);
   if selectedkangurutype = 'boxer' then
@@ -1578,6 +1622,7 @@ end;
 procedure TForm5.Button1Click(Sender: TObject);
 begin
   Timer1.enabled := true;
+  GameActive:= true;
 end;
 
 procedure TForm5.BitBtn1Click(Sender: TObject);
