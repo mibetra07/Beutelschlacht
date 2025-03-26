@@ -15,12 +15,17 @@ type
 
   TForm7 = class(TForm)
     Button1: TButton;
+    Button2: TButton;
+    Button3: TButton;
     Image1: TImage;
     Image2: TImage;
     Panel1: TPanel;
     Timer1: TTimer;
     procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure Image1Click(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
   private
 
@@ -77,6 +82,11 @@ begin
      display := 0;
 end;
 
+procedure TForm7.Image1Click(Sender: TObject);
+begin
+
+end;
+
 procedure TForm7.Timer1Timer(Sender: TObject);
 var ii, jj: integer;
 begin
@@ -128,6 +138,23 @@ begin
      if currentslide < 5 then
      image1.picture.loadFromFile('Images\Tutorial-'+inttostr(currentslide)+'.png');
      timer1.enabled := true;}
+end;
+
+procedure TForm7.Button2Click(Sender: TObject);
+begin
+     currentslide := 1;
+     image1.picture.loadFromFile('Images\Tutorial-1.png');
+     i := 1;
+     j := 1;
+     tick := 1;
+     displaynow := false;
+     display := 0;
+end;
+
+procedure TForm7.Button3Click(Sender: TObject);
+begin
+   Form7.hide;
+   Form1.show;
 end;
 
 

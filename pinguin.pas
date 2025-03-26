@@ -7,7 +7,7 @@ interface
 Uses Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls, Path, ComCtrls;
 type TPinguin  = class
       public
-      x, y, width, height, art, armorlvl, hp, basehp, moved, currentPath, position, speed, bildOffset, baseSpeed, slowedTick, schimmertick, index:integer;
+      x, y, width, height, art, armorlvl, hp, basehp, moved, currentPath, position, speed, bildOffset, baseSpeed, slowedTick, schimmertick, index, wert:integer;
       slowed, camo, canBeSlowed, schimmert: boolean;
       FileName: string;
       bild: Timage;
@@ -51,12 +51,19 @@ var i: integer;
 begin
      if map = 2 then //grundlegende Form-bezogene Eigenschaften
      begin
-       x := Form6.Path[1].x - offset;
+       x := Form6.Path[1].x - offset ;
        y := Form6.Path[1].y;
        bild := TImage.Create(Form6);
        bild.Parent := Form6;
        hpBar := TProgressbar.create(Form6);
        hpBar.parent := Form6;
+       position := Form6.PinguinCount;
+       inc(Form6.Pinguincount);
+       self.index := Form6.Pinguincount;
+       lab := TLabel.create(Form6);
+       lab.parent := Form6;
+       lab.visible := true;
+       lab.font.color := Clblack;
      end
      else if map = 1 then //grundlegende Form-bezogene Eigenschaften
      begin
@@ -108,6 +115,7 @@ begin
      canBeSlowed := true;
      art := 1;
      schimmert := false;
+     wert := 200;
      end;
    end;
 
@@ -123,6 +131,7 @@ constructor THelmPinguin.create(map, offset: integer);
      self.speed := self.baseSpeed;
      self.art := 2;
      self.basehp := self.hp;
+     self.wert := 350;
    end;
 constructor TSchildPinguin.create(map, offset: integer);
 begin
@@ -135,6 +144,7 @@ begin
      self.speed := self.baseSpeed;
      self.art := 3;
      self.basehp := self.hp;
+     self.wert := 500;
 end;
 constructor TBossPinguin.create(map, offset: integer);
 begin
@@ -158,6 +168,7 @@ begin
      canBeSlowed := false;
      art := 4;
      basehp := hp;
+     wert := 3000;
      end;
 end;
 constructor TTarnPinguin.create(map, offset: integer);
@@ -172,6 +183,7 @@ begin
      self.speed := self.baseSpeed;
      self.art := 5;
      self.basehp := self.hp;
+     wert := 350;
 end;
 
 procedure TPinguin.laufen(map: integer);
@@ -234,62 +246,60 @@ begin
 
     else if map = 2 then
   begin
-         if self.currentPath < 7 then
+       if ((self.width = 192) AND (Form5.tickspassed mod 4 = 0)) OR (self.width <> 192) then // wenn es der bosspinguin ist alle 8 ticks sonst alle 2 ticks
+       begin
+         if self.currentPath < 7 then //solange noch auf den Weg-Paths
          begin
-         if Form6.Path[self.currentPath].direction = 1 then  //wenn nach links
+         if Form5.Path[self.currentPath].direction = 1 then  //wenn nach links
          begin
-         if self.x <= Form6.Path[self.currentPath].x + Form6.Path[self.currentPath].width then  //damit es nur bis Path Ende geht
+         if self.x <= Form5.Path[self.currentPath].x + Form5.Path[self.currentPath].width then  //damit es nur bis Path Ende geht
            begin
              self.x := self.x + self.speed;
-             self.bild.left := self.x;
-             self.hpBar.left := self.x + 24;
            end
            else
              inc(self.currentPath); // wenn ende erreicht -> nächster Path
            end
-         else if Form6.Path[self.currentPath].direction = 2 then  //webb nach unten
+         else if Form5.Path[self.currentPath].direction = 2 then  //webb nach unten
            begin
-           if self.y <= Form6.Path[self.currentPath].y + Form6.Path[self.currentPath].height then //damit es nur bis Path Ende geht
+           if self.y <= Form5.Path[self.currentPath].y + Form5.Path[self.currentPath].height then //damit es nur bis Path Ende geht
            begin
              self.y := self.y + self.speed;
-             self.bild.top := self.y - self.bildOffset;
-             self.hpBar.top := self.y - 100;
            end
            else
           inc(self.currentPath); // wenn ende erreicht -> nächster Path
          end
-         else if Form6.Path[self.currentPath].direction = 3 then //wenn nach links
+         else if Form5.Path[self.currentPath].direction = 3 then //wenn nach links
          begin
-         if self.x >= Form6.Path[self.currentPath].x then //damit es nur bis Path Ende geht
+         if self.x >= Form5.Path[self.currentPath].x - 48 then //damit es nur bis Path Ende geht
          begin
          self.x := self.x - self.speed;
-         self.bild.left := self.x;
-         self.hpBar.left := self.x + 24;
          end
          else
           inc(self.currentPath); // wenn ende erreicht -> nächster Path
          end
-         else if Form6.Path[self.currentPath].direction = 4 then //wenn nach oben
+         else if Form5.Path[self.currentPath].direction = 4 then //wenn nach oben
          begin
-         if self.y >= Form6.Path[self.currentPath].y then    //damit es nur bis Path Ende geht
+         if self.y >= Form5.Path[self.currentPath].y - 48 then    //damit es nur bis Path Ende geht
            begin
            self.y := self.y - self.speed;
-           self.bild.top := self.y - self.bildOffset;
-           self.hpBar.top := self.y - 100;
            end
          else
           inc(self.currentPath); // wenn ende erreicht -> nächster Path
          end;
+         posUpdate(self);
          end
-         else if self.currentPath >=  7 then
+         else if (self.currentPath >= 7) and (self.x > -10000) and (self.hp > 0) then //kriterien für einen durchgekommenen Pinguin
            begin
-           self.currentPath := 100;
-           self.x := -10000;
-           self.bild.left := self.x;
-           self.hpBar.Left := self.x;
+           //Pinguin wegteleportieren, hp vom spieler abziehen, anzeigen
+           self.x := -1000;
+           Form5.playerHealth := Form5.playerHealth - self.hp div 5;
+           Form5.label12.caption := inttostr(Form5.playerHealth);
+           self.hp := 0;
            end;
+       end;
   end;
 end;
+
 procedure posUpdate(Pinguin: TPinguin);
 begin
          Pinguin.bild.left := Pinguin.x;
