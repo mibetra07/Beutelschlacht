@@ -298,120 +298,140 @@ begin
   WaveParams[1, 3] := 0; //anzahl schild
   WaveParams[1, 4] := 0; //anzahl boss
   WaveParams[1, 5] := 0; //anzahl tarn
+  WaveParams[1, 6] := 50; //zufälliger offset beim spawnen der Pinguine
 
-  WaveParams[2, 1] := 0;
+  WaveParams[2, 1] := 4;
   WaveParams[2, 2] := 0;
   WaveParams[2, 3] := 0;
   WaveParams[2, 4] := 0;
-  WaveParams[2, 5] := 6;
+  WaveParams[2, 5] := 0;
+  WaveParams[2, 6] := 30;
 
   WaveParams[3, 1] := 7;
   WaveParams[3, 2] := 0;
   WaveParams[3, 3] := 0;
   WaveParams[3, 4] := 0;
   WaveParams[3, 5] := 0;
+  WaveParams[3, 6] := 20;
 
   WaveParams[4, 1] := 3;
   WaveParams[4, 2] := 2;
   WaveParams[4, 3] := 0;
   WaveParams[4, 4] := 0;
   WaveParams[4, 5] := 0;
+  WaveParams[4, 6] := 60;
 
   WaveParams[5, 1] := 4;
   WaveParams[5, 2] := 4;
   WaveParams[5, 3] := 0;
   WaveParams[5, 4] := 0;
   WaveParams[5, 5] := 0;
+  WaveParams[5, 6] := 50;
 
   WaveParams[6, 1] := 0;
   WaveParams[6, 2] := 7;
   WaveParams[6, 3] := 0;
   WaveParams[6, 4] := 0;
   WaveParams[6, 5] := 0;
+  WaveParams[6, 6] := 50;
 
   WaveParams[7, 1] := 6;   // Normaler Pinguin
   WaveParams[7, 2] := 3;   // Helm Pinguin
   WaveParams[7, 3] := 0;
   WaveParams[7, 4] := 0;
   WaveParams[7, 5] := 0;
+  WaveParams[7, 6] := 30;
 
   WaveParams[8, 1] := 4;
   WaveParams[8, 2] := 5;   // Fokus auf Helm Pinguin
   WaveParams[8, 3] := 0;
   WaveParams[8, 4] := 0;
   WaveParams[8, 5] := 0;
+  WaveParams[8, 6] := 40;
 
   WaveParams[9, 1] := 8;   // Schnelle Welle
   WaveParams[9, 2] := 2;
   WaveParams[9, 3] := 0;
   WaveParams[9, 4] := 0;
   WaveParams[9, 5] := 0;
+  WaveParams[9, 6] := 20;
 
   WaveParams[10, 1] := 3;
   WaveParams[10, 2] := 3;
   WaveParams[10, 3] := 1;  // Einführung Helm und Schild Pinguin
   WaveParams[10, 4] := 0;
   WaveParams[10, 5] := 0;
+  WaveParams[10, 6] := 90;
 
   WaveParams[11, 1] := 6;   // Mischung aus normal und Helm
   WaveParams[11, 2] := 4;
   WaveParams[11, 3] := 1;
   WaveParams[11, 4] := 0;
   WaveParams[11, 5] := 0;
+  WaveParams[11, 6] := 40;
 
   WaveParams[12, 1] := 5;
   WaveParams[12, 2] := 3;
   WaveParams[12, 3] := 3;
   WaveParams[12, 4] := 0;
   WaveParams[12, 5] := 0;
+  WaveParams[12, 6] := 40;
 
   WaveParams[13, 1] := 0;   // Einführung Tarn Pinguin
   WaveParams[13, 2] := 0;
   WaveParams[13, 3] := 0;
   WaveParams[13, 4] := 0;
   WaveParams[13, 5] := 6;
+  WaveParams[13, 6] := 60;
 
   WaveParams[14, 1] := 5;
   WaveParams[14, 2] := 2;
   WaveParams[14, 3] := 2;
   WaveParams[14, 4] := 0;
   WaveParams[14, 5] := 3;
+  WaveParams[14, 6] := 50;
 
   WaveParams[15, 1] := 0;   // Fokus auf Helm-Pinguine und Tarn
   WaveParams[15, 2] := 6;
   WaveParams[15, 3] := 2;
   WaveParams[15, 4] := 0;
   WaveParams[15, 5] := 4;
+  WaveParams[15, 6] := 50;
 
   WaveParams[16, 1] := 8;   // Rückkehr zu schnellen Wellen
   WaveParams[16, 2] := 0;
   WaveParams[16, 3] := 3;
   WaveParams[16, 4] := 0;
   WaveParams[16, 5] := 3;
+  WaveParams[16, 6] := 20;
 
   WaveParams[17, 1] := 0;   // Helm und Schild mit Tarn
   WaveParams[17, 2] := 0;
   WaveParams[17, 3] := 4;
   WaveParams[17, 4] := 0;
   WaveParams[17, 5] := 4;
+  WaveParams[17, 6] := 90;
 
   WaveParams[18, 1] := 4;
   WaveParams[18, 2] := 4;
   WaveParams[18, 3] := 3;
   WaveParams[18, 4] := 0;
   WaveParams[18, 5] := 4;
+  WaveParams[18, 6] := 50;
 
   WaveParams[19, 1] := 0;   // Herausforderung: viele starke Gegner
   WaveParams[19, 2] := 4;
   WaveParams[19, 3] := 5;
   WaveParams[19, 4] := 0;
   WaveParams[19, 5] := 3;
+  WaveParams[19, 6] := 60;
 
   WaveParams[20, 1] := 0;   // Einführung Boss
   WaveParams[20, 2] := 0;
   WaveParams[20, 3] := 4;
   WaveParams[20, 4] := 1;   // Boss Pinguin
   WaveParams[20, 5] := 3;
+  WaveParams[20, 6] := 50;
 
   ConstructForm(); //muss am Schluss sein!
 end;
@@ -428,7 +448,7 @@ begin
   Pinguincount := 0;
   PlayerHealth := 5;
   label12.caption:= inttostr(PlayerHealth);
-  wave[1] := Twave.create(2, 2, 0, 0, 0, 1);
+  wave[1] := Twave.create(2, 2, 0, 0, 0, 1, 80);
   currentWave := 0;
   label13.caption:= 'Welle 1/20';
   //Platzieren
@@ -511,13 +531,6 @@ procedure TForm5.Timer1Timer(Sender: TObject);
 var i, j, switch: integer;
 begin
   i := 1;
-  if playerHealth <= 0 then  //Abbruch wenn man keine hp mehr hat
-  begin
-    Timer1.enabled := false;
-    label12.caption := '0';
-    Button12.visible := true;
-    Button13.visible := true;
-  end;
   //ticks für jeden Pinguin ausführen
   repeat
   begin
@@ -537,6 +550,13 @@ begin
   Panel1.Caption := inttostr(KilledCount) + ';' + inttostr(PinguinCount) + ';' + inttostr(Form5.currentWave);
   Panel2.Caption := inttostr(AmountKilled[1]) + ';' + inttostr(AmountKilled[2]);
   inc(ticksPassed);
+  if playerHealth <= 0 then  //Abbruch wenn man keine hp mehr hat
+  begin
+    Timer1.enabled := false;
+    label12.caption := '0';
+    Button12.visible := true;
+    Button13.visible := true;
+  end;
 end;
 
 //Angriffsbereich unsichtbar machen
@@ -1209,12 +1229,15 @@ begin
       for i:=1 to 7 do
       begin
         CheckCollision(zauberkanguru[selectedkangurunumber].zauber.bild, Path[i].Bild, Collision);
-        if (Collision = true) and  ((Sqr(zauberkanguru[selectedkangurunumber].zauber.bild.left + 48 - (zauberkanguru[selectedkangurunumber].attackradius.Left + zauberkanguru[selectedkangurunumber].attackradius.Width div 2)) +
-          Sqr(zauberkanguru[selectedkangurunumber].zauber.bild.top + 48 - (zauberkanguru[selectedkangurunumber].attackradius.Top + zauberkanguru[selectedkangurunumber].attackradius.Height div 2))
-          <= Sqr(zauberkanguru[selectedkangurunumber].attackradius.Width div 2)) or
-         (Sqr(zauberkanguru[selectedkangurunumber].zauber.bild.left - (zauberkanguru[selectedkangurunumber].attackradius.Left + zauberkanguru[selectedkangurunumber].attackradius.Width div 2)) +
-          Sqr(zauberkanguru[selectedkangurunumber].zauber.bild.top - (zauberkanguru[selectedkangurunumber].attackradius.Top + zauberkanguru[selectedkangurunumber].attackradius.Height div 2))
-          <= Sqr(zauberkanguru[selectedkangurunumber].attackradius.Width div 2))) then
+        if Collision then
+        break;
+      end;
+        if (Collision = true) and  ((Sqr(zauberkanguru[selectedkangurunumber].zauber.bild.left + 48 - (zauberkanguru[selectedkangurunumber].attackradius.Left + zauberkanguru[selectedkangurunumber].attackradius.Width div 2 - 20)) +
+          Sqr(zauberkanguru[selectedkangurunumber].zauber.bild.top + 48 - (zauberkanguru[selectedkangurunumber].attackradius.Top + zauberkanguru[selectedkangurunumber].attackradius.Height div 2 - 20))
+          <= Sqr(zauberkanguru[selectedkangurunumber].attackradius.Width div 2 - 20)) or
+         (Sqr(zauberkanguru[selectedkangurunumber].zauber.bild.left - (zauberkanguru[selectedkangurunumber].attackradius.Left + zauberkanguru[selectedkangurunumber].attackradius.Width div 2 - 20)) +
+          Sqr(zauberkanguru[selectedkangurunumber].zauber.bild.top - (zauberkanguru[selectedkangurunumber].attackradius.Top + zauberkanguru[selectedkangurunumber].attackradius.Height div 2 - 20))
+          <= Sqr(zauberkanguru[selectedkangurunumber].attackradius.Width div 2 - 20))) then
         begin
           if  zauberkanguru[selectedkangurunumber].cancamo = true then
             zauberkanguru[selectedkangurunumber].zauber.bild.Picture.LoadFromFile('images\Feuer_Schimmer.png')
@@ -1227,15 +1250,18 @@ begin
       end;
     end;
   end;
-end;
 
 procedure Tform5.ZauberMouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 var Collision : boolean;
-    i : integer;
+    i, rightpath, multi: integer;
 begin
   if (Button = mbLeft) and (DragThresholdReached = true) then
-  zauberkanguru[selectedkangurunumber].zauber.bild.Picture.LoadFromFile('images\Feuer.png');
+  begin
+  if  zauberkanguru[selectedkangurunumber].cancamo = true then
+    zauberkanguru[selectedkangurunumber].zauber.bild.Picture.LoadFromFile('images\Feuer_Schimmer.png')
+  else
+    zauberkanguru[selectedkangurunumber].zauber.bild.Picture.LoadFromFile('images\Feuer.png');
   zauberkanguru[selectedkangurunumber].zauber.active:=true;
   button14.caption:= 'Feuer bewegen';
   bitbtn1.enabled:= true;
@@ -1244,6 +1270,7 @@ begin
   Groupbox7.visible := true;     //wichtig fürs rüberkopieren
   zauberkanguru[selectedkangurunumber].zauber.DraggingEnabled:= false;
   ZauberBewegenClicked := false;
+  zauberkanguru[selectedkangurunumber].zauber.active:=true;
   begin
     Collision := false;
     isDragging := False;
@@ -1252,7 +1279,27 @@ begin
     begin
       CheckCollision(zauberkanguru[selectedkangurunumber].zauber.bild, Path[i].Bild, Collision);
       if Collision = true then
+      begin
+        if Path[i].direction mod 2 = 0 then //wenn es ein hoch runter path ist
+        begin
+            if zauberkanguru[selectedkangurunumber].zauber.bild.left - Path[i].x > 0 then
+               multi := -1
+            else multi := 1;  //an welcher seite ist das feuer vom path
+            if  Abs(Path[i].x - zauberkanguru[selectedkangurunumber].zauber.bild.left - 30)  > 5 then
+          while Abs(Path[i].x - zauberkanguru[selectedkangurunumber].zauber.bild.left - 30)  > 5 do
+            zauberkanguru[selectedkangurunumber].zauber.bild.left := zauberkanguru[selectedkangurunumber].zauber.bild.left + multi; //bild in richtung des paths bewegen//bis es mittig auf dem path liegt
+        end
+        else
+        begin
+           if zauberkanguru[selectedkangurunumber].zauber.bild.top - Path[i].y > 0 then //gleiches ding wie vorher nur mit seiten paths
+               multi := -1
+           else multi := 1;
+           if  Abs(Path[i].y - zauberkanguru[selectedkangurunumber].zauber.bild.top - 20) > 5 then
+          while Abs(Path[i].y - zauberkanguru[selectedkangurunumber].zauber.bild.top - 20) > 5 do
+            zauberkanguru[selectedkangurunumber].zauber.bild.top := zauberkanguru[selectedkangurunumber].zauber.bild.top + multi;
+        end;
         exit();
+      end;
     end;
     if Collision = false then
     begin
@@ -1261,10 +1308,10 @@ begin
     end
     else
     begin
-      zauberkanguru[selectedkangurunumber].zauber.active:=true;
       zauberkanguru[selectedkangurunumber].zauber.attackradius.left := zauberkanguru[selectedkangurunumber].zauber.bild.left + zauberkanguru[selectedkangurunumber].zauber.attackradius.width div 2;
       zauberkanguru[selectedkangurunumber].zauber.attackradius.top := zauberkanguru[selectedkangurunumber].zauber.bild.top + zauberkanguru[selectedkangurunumber].zauber.attackradius.height div 2;
     end;
+  end;
   end;
 end;
 
@@ -1839,7 +1886,7 @@ begin
       button9.enabled:=false;
       button9.caption:='Max.';
     end;
-    label11.caption:= inttostr(kanguru[selectedkangurunumber].value div 2)+'$';
+    label11.caption:= inttostr(ninjakanguru[selectedkangurunumber].value div 2)+'$';
   end;
   label6.caption:= inttostr(coins);
 end;
