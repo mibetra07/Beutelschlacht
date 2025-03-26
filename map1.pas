@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
-  Menus, Buttons, ComCtrls, Path, Pinguin, wave, kanguru, Collision, bass;
+  Menus, Buttons, ComCtrls, Path, Pinguin, wave, kanguru, Collision, MMSystem;
 
 type
 
@@ -57,7 +57,6 @@ type
     Label1: TLabel;
     Label12: TLabel;
     Label13: TLabel;
-    Label15: TLabel;
     Label2: TLabel;
     Label3: TLabel;
     Label4: TLabel;
@@ -96,7 +95,7 @@ type
     Shape5: TShape;
     Shape6: TShape;
     Timer1: TTimer;
-    TrackBar2: TTrackBar;
+    Timer2: TTimer;
     procedure BitBtn1Click(Sender: TObject);
     procedure Button10Click(Sender: TObject);
     procedure Button11Click(Sender: TObject);
@@ -106,6 +105,8 @@ type
     procedure Button15Click(Sender: TObject);
     procedure Button16Click(Sender: TObject);
     procedure Button17Click(Sender: TObject);
+    procedure Button18Click(Sender: TObject);
+    procedure Button19Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -115,6 +116,7 @@ type
     procedure Button7Click(Sender: TObject);
     procedure Button8Click(Sender: TObject);
     procedure Button9Click(Sender: TObject);
+    procedure ComboBox1Change(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure Image1Click(Sender: TObject);
     procedure Image2Click(Sender: TObject);
@@ -154,8 +156,14 @@ type
     procedure Image7MouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure Timer1Timer(Sender: TObject);
+    procedure Timer2Timer(Sender: TObject);
   private
     var GameActive : boolean;
+    var switch : TPinguin;
+        switch1 : THelmPinguin;
+        switch2 : TSchildPinguin;
+        switch3 : TTarnPinguin;
+        switch4 : TBossPinguin;
     //fürs Platzieren
     var isDragging, DragThresholdReached : boolean;
     StartX, StartY : integer;
@@ -172,6 +180,14 @@ type
     procedure sellKanguru();
   //Zauberangriff bewegen
     var ZauberBewegenClicked : boolean;
+  //Musik
+    var Muted : boolean;
+        CurrentSong : integer;
+        SongTick : integer;
+        Song : array[1..6] of string;
+        SongLength : array[1..6] of integer;
+        Songname : array[1..6] of string;
+    procedure StartMusic();
   public
     var
     ticksPassed, slowedTick : integer;
@@ -204,6 +220,7 @@ type
     Y: Integer);
     procedure ZauberMouseUp(Sender: TObject; Button: TMouseButton;
     Shift: TShiftState; X, Y: Integer);
+    procedure AttackradiusClick(Sender: TObject);
     procedure ConstructForm();
   end;
 
@@ -216,11 +233,31 @@ uses Menu;
 
 { TForm5 }
 
-
-
 procedure TForm5.FormCreate(Sender: TObject);
 begin
   randomize();
+  //Musik
+  Song[1] := 'Music\Tropical\Song_1.wav';
+  Song[2] := 'Music\Tropical\Song_2.wav';
+  Song[3] := 'Music\Tropical\Song_3.wav';
+  Song[4] :=  'Music\Cold\Song_1.wav';
+  Song[5] := 'Music\Cold\Song_2.wav';
+  Song[6] := 'Music\Cold\Song_3.wav';
+
+  SongLength[1] := 115;
+  SongLength[2] := 239;
+  SongLength[3] := 239;
+  SongLength[4] := 144;
+  SongLength[5] := 183;
+  SongLength[6] := 171;
+
+  Songname[1] := 'By the Firelight';
+  Songname[2] := 'Groovin Tropics';
+  Songname[3] := 'Flamenco Fire';
+  Songname[4] := 'Frostbound Strategy';
+  Songname[5] := 'Snowy Peaks';
+  Songname[6] := 'Glacial Glimpse';
+  Muted := false;
   //Weg der Map erstellen(dir, left, top, breit, hoch, map: integer)
   Path[1] := TPath.create(1, 0, 320, 620, 75, 1);
   Path[2] := Tpath.create(2, 620, 320, 75, 330, 1);
@@ -433,7 +470,7 @@ begin
   WaveParams[20, 5] := 3;
   WaveParams[20, 6] := 50;
 
-  ConstructForm(); //muss am Schluss sein!
+
 end;
 
 procedure Tform5.ConstructForm();
@@ -455,13 +492,17 @@ begin
   isDragging := false;
   ZauberBewegenClicked := false;
   //Musik
-
+  CurrentSong := 4;
+  if Muted = false then
+    StartMusic;
   //Pausemenü
   Image10.SendToBack; //Pausehintergrund, blockt einige Funktionen
   Checkbox2.checked := true;  //Autostart
   Checkbox3.checked := false; //Wiederholen
-  Trackbar2.Position := 100;
-  Combobox1.text := 'Songnamevariable';
+  Checkbox2.checked := true;
+  //Reset nach Hauptmenü durch Pausemenü
+  button1.Enabled:=true;
+  Checkbox1.enabled:=true;
   //Menüs und Memos schließen
   Groupbox1.visible:=false; //Pausemenü
   Groupbox2.visible:=false; //Memos 1-5
@@ -470,6 +511,8 @@ begin
   Groupbox5.visible:=false;
   Groupbox6.visible:=false;
   Groupbox7.visible:=false; //Upgrademenü
+  Button12.visible:=false;
+  Button13.visible:=false;
   //Form leeren (Pinguine und Kängurus)
   //Pinguine wegteleportieren
   for j := 1 to 5 do
@@ -526,24 +569,119 @@ begin
   selectedkangurunumber := 0;
 end;
 
-
 procedure TForm5.Timer1Timer(Sender: TObject);
-var i, j, switch: integer;
+var i, j: integer;
 begin
   i := 1;
   //ticks für jeden Pinguin ausführen
   repeat
   begin
+  if BossPinguin[i] <> nil then
+      tick(1, BossPinguin[i]);
+  if SchildPinguin[i] <> nil then
+      tick(1, SchildPinguin[i]);
+  if TarnPinguin[i] <> nil then
+        tick(1, TarnPinguin[i]);
+  if HelmPinguin[i] <> nil then
+      tick(1, HelmPinguin[i]);
     if Pinguin[i] <> nil then
       tick(1, Pinguin[i]);
-    if HelmPinguin[i] <> nil then
-      tick(1, HelmPinguin[i]);
-    if SchildPinguin[i] <> nil then
-      tick(1, SchildPinguin[i]);
-    if BossPinguin[i] <> nil then
-      tick(1, BossPinguin[i]);
-    if TarnPinguin[i] <> nil then
-        tick(1, TarnPinguin[i]);
+
+  end;
+  if (Pinguin[i] <> nil) and (Pinguin[i + 1] <> nil) and (Pinguin[i].currentpath <> 100) and (Pinguin[i].currentpath < Pinguin[i + 1].currentPath) then
+  begin
+     switch := Pinguin[i];
+     Pinguin[i] := Pinguin[i + 1];
+     Pinguin[i + 1] := switch;
+  end
+  else if (Pinguin[i] <> nil) and (Pinguin[i + 1] <> nil) and (Pinguin[i].currentpath <> 100) and (Pinguin[i].currentpath = Pinguin[i + 1].currentpath) and
+  (
+  (
+  (Path[Pinguin[i].currentpath].direction mod 2 = 0) and (Pinguin[i].y < Pinguin[i + 1].y))
+  or (
+  (Path[Pinguin[i].currentpath].direction mod 2 <> 0) and (Pinguin[i].x < Pinguin[i + 1].x)
+  )
+  ) then
+  begin
+     switch := Pinguin[i];
+     Pinguin[i] := Pinguin[i + 1];
+     Pinguin[i + 1] := switch;
+  end;
+  if (HelmPinguin[i] <> nil) and (HelmPinguin[i + 1] <> nil) and (HelmPinguin[i].currentpath <> 100) and (HelmPinguin[i].currentpath < HelmPinguin[i + 1].currentPath) then
+  begin
+     switch1 := HelmPinguin[i];
+     HelmPinguin[i] := HelmPinguin[i + 1];
+     HelmPinguin[i + 1] := switch1;
+  end
+  else if (HelmPinguin[i] <> nil) and (HelmPinguin[i + 1] <> nil) and (HelmPinguin[i].currentpath <> 100) and ((HelmPinguin[i].currentpath = HelmPinguin[i + 1].currentpath) and
+  (
+  (
+  (Path[HelmPinguin[i].currentpath].direction mod 2 = 0) and (HelmPinguin[i].y < HelmPinguin[i + 1].y))
+  or (
+  (Path[HelmPinguin[i].currentpath].direction mod 2 <> 0) and (HelmPinguin[i].x < HelmPinguin[i + 1].x)
+  )
+  ) )then
+  begin
+     switch1 := HelmPinguin[i];
+     HelmPinguin[i] := HelmPinguin[i + 1];
+     HelmPinguin[i + 1] := switch1;
+  end;
+  if (SchildPinguin[i] <> nil) and (SchildPinguin[i + 1] <> nil) and (SchildPinguin[i].currentpath <> 100) and (SchildPinguin[i].currentpath < SchildPinguin[i + 1].currentPath) then
+  begin
+     switch2 := SchildPinguin[i];
+     SchildPinguin[i] := SchildPinguin[i + 1];
+     SchildPinguin[i + 1] := switch2;
+  end
+  else if (SchildPinguin[i] <> nil) and (SchildPinguin[i + 1] <> nil) and (SchildPinguin[i].currentpath <> 100) and ((SchildPinguin[i].currentpath = SchildPinguin[i + 1].currentpath) and
+  (
+  (
+  (Path[SchildPinguin[i].currentpath].direction mod 2 = 0) and (SchildPinguin[i].y < SchildPinguin[i + 1].y))
+  or (
+  (Path[SchildPinguin[i].currentpath].direction mod 2 <> 0) and (SchildPinguin[i].x < SchildPinguin[i + 1].x)
+  )
+  ) )then
+  begin
+     switch2 := SchildPinguin[i];
+     SchildPinguin[i] := SchildPinguin[i + 1];
+     SchildPinguin[i + 1] := switch2;
+  end;
+  if (TarnPinguin[i] <> nil) and (TarnPinguin[i + 1] <> nil) and (TarnPinguin[i].currentpath <> 100) and (TarnPinguin[i].currentpath < TarnPinguin[i + 1].currentPath) then
+  begin
+     switch3 := TarnPinguin[i];
+     TarnPinguin[i] := TarnPinguin[i + 1];
+     TarnPinguin[i + 1] := switch3;
+  end
+  else if (TarnPinguin[i] <> nil) and (TarnPinguin[i + 1] <> nil) and (TarnPinguin[i].currentpath <> 100) and ((TarnPinguin[i].currentpath = TarnPinguin[i + 1].currentpath) and
+  (
+  (
+  (Path[TarnPinguin[i].currentpath].direction mod 2 = 0) and (TarnPinguin[i].y < TarnPinguin[i + 1].y))
+  or (
+  (Path[TarnPinguin[i].currentpath].direction mod 2 <> 0) and (TarnPinguin[i].x < TarnPinguin[i + 1].x)
+  )
+  )) then
+  begin
+     switch3 := TarnPinguin[i];
+     TarnPinguin[i] := TarnPinguin[i + 1];
+     TarnPinguin[i + 1] := switch3;
+  end;
+  if (BossPinguin[i] <> nil) and (BossPinguin[i + 1] <> nil) and (BossPinguin[i].currentpath <> 100) and (BossPinguin[i].currentpath < BossPinguin[i + 1].currentPath) then
+  begin
+     switch4 := BossPinguin[i];
+     BossPinguin[i] := BossPinguin[i + 1];
+     BossPinguin[i + 1] := switch4;
+  end
+  else if (BossPinguin[i] <> nil) and (BossPinguin[i + 1] <> nil) and (BossPinguin[i].currentpath <> 100) and ((BossPinguin[i].currentpath = BossPinguin[i + 1].currentpath) and
+  (
+  (
+  (Path[BossPinguin[i].currentpath].direction mod 2 = 0) and (BossPinguin[i].y < BossPinguin[i + 1].y))
+  or (
+  (Path[BossPinguin[i].currentpath].direction mod 2 <> 0) and (BossPinguin[i].x < BossPinguin[i + 1].x)
+  )
+  )) then
+  begin
+     switch4 := BossPinguin[i];
+     BossPinguin[i] := BossPinguin[i + 1];
+     BossPinguin[i + 1] := switch4;
   end;
   inc(i);
   until i = 100;
@@ -557,6 +695,31 @@ begin
     Button12.visible := true;
     Button13.visible := true;
   end;
+end;
+
+//Musik
+procedure TForm5.Timer2Timer(Sender: TObject);
+begin
+  inc(Songtick);
+  if Songtick >= SongLength[currentSong] then
+  begin
+    if Checkbox3.Checked = false then
+    begin
+      if (CurrentSong >= 6) or (CurrentSong <= 3) then
+        CurrentSong:=4
+      else
+        inc(CurrentSong);
+    end;
+    StartMusic();
+  end;
+end;
+
+procedure Tform5.StartMusic();
+begin
+  Songtick:=0;
+  Timer2.enabled := true;
+  Combobox1.text:= Songname[CurrentSong];
+  PlaySound(PChar(Song[CurrentSong]), 0, SND_ASYNC);
 end;
 
 //Angriffsbereich unsichtbar machen
@@ -588,13 +751,47 @@ begin
     Groupbox7.visible:=false;
   end;
 end;
+
+procedure Tform5.AttackradiusClick(Sender: TObject);
+var i: integer;
+begin
+  if ZauberBewegenClicked = false then
+  begin
+    for i:=1 to kanguruzahl do
+    begin
+      kanguru[i].attackradius.visible:=false;
+    end;
+    for i:=1 to bogenkanguruzahl do
+    begin
+      bogenkanguru[i].attackradius.visible:=false;
+    end;
+    for i:=1 to eiskanguruzahl do
+    begin
+      eiskanguru[i].attackradius.visible:=false;
+    end;
+    for i:=1 to ninjakanguruzahl do
+    begin
+      ninjakanguru[i].attackradius.visible:=false;
+    end;
+    for i:=1 to zauberkanguruzahl do
+    begin
+      zauberkanguru[i].attackradius.visible:=false;
+    end;
+    Groupbox7.visible:=false;
+  end;
+end;
+
 //Pausebutton --> Menü aufrufen
 procedure TForm5.Image2Click(Sender: TObject);
 begin
   Groupbox1.visible:= true;
-  Image10.bringtofront;
-  //alle buttons deaktivieren
   Groupbox1.BringToFront;
+  //alle Eingaben hinter Menü blockieren
+  Image10.bringtofront; //blockiert nicht alles
+  button1.Enabled:=false;
+  Groupbox7.Visible:=false;
+  Checkbox1.enabled:=false;
+
   timer1.enabled := false;
 end;
 
@@ -1169,6 +1366,8 @@ end;
 procedure TForm5.Button15Click(Sender: TObject);
 begin
   Groupbox1.visible:=false;
+  button1.Enabled:=true;
+  Checkbox1.enabled:=true;
   Image10.SendToBack;
   if GameActive = true then
     timer1.Enabled := true;
@@ -1177,12 +1376,48 @@ end;
 procedure TForm5.Button16Click(Sender: TObject);
 begin
   Form1.show;
+  PlaySound(nil, 0, SND_Purge);
+  Form1.StartMenuMusic();
+  timer2.enabled:=false;
+  timer1.enabled:=false;
   Form5.hide;
 end;
 
 procedure TForm5.Button17Click(Sender: TObject);
 begin
   ConstructForm();
+end;
+
+procedure TForm5.Button18Click(Sender: TObject);
+begin
+  if Checkbox3.checked = false then
+  begin
+    if (CurrentSong >= 6) or (CurrentSong <= 3) then
+      CurrentSong:=4
+    else
+      inc(CurrentSong);
+  end;
+  StartMusic();
+end;
+
+procedure TForm5.Button19Click(Sender: TObject);
+begin
+  if Muted = false then
+  begin
+    Muted := true;
+    Button19.Caption:= 'Entstummen';
+    Button18.enabled:= false;
+    Combobox1.enabled:= false;
+    PlaySound(nil, 0, SND_Purge);
+  end
+  else
+  begin
+    Muted := false;
+    Button19.Caption:= 'Stumm';
+    Button18.enabled:=true;
+    Combobox1.enabled:= true;
+    StartMusic();
+  end;
 end;
 
 procedure Tform5.ZauberMouseDown(Sender: TObject; Button: TMouseButton;
@@ -1890,6 +2125,13 @@ begin
   end;
   label6.caption:= inttostr(coins);
 end;
+
+procedure TForm5.ComboBox1Change(Sender: TObject);
+begin
+  CurrentSong := Combobox1.ItemIndex+1;
+  StartMusic();
+end;
+
 //range
 procedure TForm5.Button10Click(Sender: TObject);
 begin
@@ -2032,8 +2274,6 @@ end;
 //beim erneut versuchen
 procedure TForm5.Button13Click(Sender: TObject);
 begin
-  Button12.visible := false;
-  Button13.visible := false;
   ConstructForm();
 end;
 

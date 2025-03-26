@@ -13,6 +13,7 @@ type
 
   TForm3 = class(TForm)
     Image1: TImage;
+    Image2: TImage;
     procedure Image1Click(Sender: TObject);
   private
 

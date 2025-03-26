@@ -115,6 +115,16 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="Collision"/>
       </Unit>
+      <Unit>
+        <Filename Value="playmusic.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="PlayMusic"/>
+      </Unit>
+      <Unit>
+        <Filename Value="music.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="Music"/>
+      </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

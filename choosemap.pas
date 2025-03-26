@@ -16,6 +16,7 @@ type
     Image1: TImage;
     Image2: TImage;
     Image3: TImage;
+    Image4: TImage;
     Panel1: TPanel;
     procedure Image1Click(Sender: TObject);
     procedure Image2Click(Sender: TObject);
@@ -41,6 +42,8 @@ uses Menu;
 procedure TForm2.Image1Click(Sender: TObject);
 begin
   Form5.show;
+  Form1.timer1.enabled:=false;  //Musik aus
+  Form5.ConstructForm();
   Form2.hide;
 end;
 
@@ -50,6 +53,8 @@ end;
 procedure TForm2.Image2Click(Sender: TObject);
 begin
   Form6.show;
+  Form1.timer1.enabled:=false; //Musik aus
+  //Form6.ConstructForm();
   Form2.hide;
 end;
 

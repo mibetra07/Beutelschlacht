@@ -5,7 +5,8 @@ unit Menu;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, chooseMap, map1, map2, options, credits, tutorial;
+  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
+  chooseMap, map1, map2, options, credits, tutorial, MMSystem;
 
 type
 
@@ -17,6 +18,8 @@ type
     Button3: TButton;
     Button4: TButton;
     Button5: TButton;
+    Image1: TImage;
+    Timer1: TTimer;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -24,10 +27,12 @@ type
     procedure Button5Click(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure Timer1Timer(Sender: TObject);
   private
     firstactivate : boolean;
+    var Songtick:integer;
   public
-
+    procedure StartMenuMusic();
   end;
 
 var
@@ -77,6 +82,23 @@ procedure TForm1.FormCreate(Sender: TObject);
 begin
   firstactivate:=true;
 end;
+//Musik
+procedure TForm1.Timer1Timer(Sender: TObject);
+begin
+  inc(Songtick);
+  if Songtick >= 239 then
+  begin
+    Songtick:=0;
+    PlaySound('Music\Menu_Music.wav', 0, SND_ASYNC);
+  end;
+end;
+
+procedure TForm1.StartMenuMusic();
+begin
+  SongTick:=0;
+  timer1.Enabled:= true;
+  PlaySound('Music\Menu_Music.wav', 0, SND_ASYNC);
+end;
 
 //alle Forms laden und schließen
 procedure TForm1.FormActivate(Sender: TObject);
@@ -98,6 +120,7 @@ begin
     Form7.hide;
 
     firstactivate:=false;
+    StartMenuMusic();
   end;
 end;
 end.
