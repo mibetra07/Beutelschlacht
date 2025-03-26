@@ -8,15 +8,14 @@ procedure tick(map: integer; Pinguin: TPinguin);
 type
   TWave  = class
       public
-      constructor create(normal, helm, schild, boss, tarn, map: integer);
+      constructor create(normal, helm, schild, boss, tarn, map, offsetmultiplier: integer);
         end;
 implementation
 uses map1, map2, Path;
 
-constructor TWave.create(normal, helm, schild, boss, tarn, map: integer);
-var i, j , k, offsetmultiplier: integer;
+constructor TWave.create(normal, helm, schild, boss, tarn, map, offsetmultiplier: integer);
+var i, j , k: integer;
 begin
-  offsetmultiplier := 80;
   if map = 1 then
     begin
   for i := 1 to 5 do //Die wegteleportierten Pinguine nach Bedarf zurückrufen und resetten
@@ -74,7 +73,7 @@ end;
 procedure tick(map: integer; Pinguin: TPinguin);
 var i, j, k, speed: integer;
 begin
-  if Form5.playerHealth = 0 then
+  if Form5.playerHealth <= 0 then
      Pinguin.hp := 0;
   k := 0;
   if Form5.tickspassed > 1000000 then //sicherheit falls irgendwer extrem lange spielt
@@ -109,8 +108,13 @@ begin
                end;
          inc(Form5.currentWave);
          Form5.Label13.caption:= 'Welle ' + inttostr(Form5.currentWave) + '/20';      //label zum Anzeigen der momentanen Welle
-         Form5.wave[Form5.currentWave] := TWave.create(Form5.waveParams[Form5.currentWave, 1], Form5.waveParams[Form5.currentWave, 2], Form5.waveParams[Form5.currentWave, 3], Form5.waveParams[Form5.currentWave, 4], Form5.waveParams[Form5.currentWave, 5], 1);
+         Form5.wave[Form5.currentWave] := TWave.create(Form5.waveParams[Form5.currentWave, 1], Form5.waveParams[Form5.currentWave, 2], Form5.waveParams[Form5.currentWave, 3], Form5.waveParams[Form5.currentWave, 4], Form5.waveParams[Form5.currentWave, 5], 1, Form5.waveParams[Form5.currentwave, 6]);
          Form5.killedCount := 0;
+         if not(Form5.checkbox2.checked) then
+         begin
+          Form5.timer1.Enabled := false;
+          break;
+         end;
       end;
 
          // for j := 1 to 50 do   //für jedes Känguru: angriff auf Pinguine
