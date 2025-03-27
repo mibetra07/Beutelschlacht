@@ -31,7 +31,6 @@ begin
                     hp := basehp;
                     bild.left := x;
                     hpBar.Left := x;
-                    lab.left := x;
                   end;
                 end;
               end;
@@ -77,7 +76,6 @@ begin
                     hp := basehp;
                     bild.left := x;
                     hpBar.Left := x;
-                    lab.left := x;
                   end;
                 end;
               end;
@@ -136,7 +134,6 @@ begin
            Pinguin.x := -10000;
            Pinguin.bild.left := Pinguin.x;
            Pinguin.hpBar.Left := Pinguin.x;
-           Pinguin.lab.left := Pinguin.x;
            Form5.IndexOfKilled[Pinguin.art, Form5.AmountKilled[Pinguin.art]] := Pinguin.index;
       end;
       if Form5.KilledCount = Form5.PinguinCount then //Wenn alle Pinguine einer Wave tot sind: Speicher der getöteten Pinguin resetten und die nächste wave starten
@@ -147,16 +144,27 @@ begin
                     Form5.IndexOfKilled[i, j] := 0;
                     Form5.AmountKilled[j] := 0;
                end;
+       if Form5.currentWave < 20 then
+       begin
          inc(Form5.currentWave);
          Form5.Label13.caption:= 'Welle ' + inttostr(Form5.currentWave) + '/20';      //label zum Anzeigen der momentanen Welle
          Form5.wave[Form5.currentWave] := TWave.create(Form5.waveParams[Form5.currentWave, 1], Form5.waveParams[Form5.currentWave, 2], Form5.waveParams[Form5.currentWave, 3], Form5.waveParams[Form5.currentWave, 4], Form5.waveParams[Form5.currentWave, 5], 1, Form5.waveParams[Form5.currentwave, 6]);
          Form5.killedCount := 0;
+         end
+       else
+       begin
+            Form5.Panel17.visible := true;
+            Form5.timer1.enabled:= false;
+            Pinguin.hp := 0;
+            Form5.PlayerHealth := 0;
+       end;
          if not(Form5.checkbox2.checked) then
          begin
           Form5.timer1.Enabled := false;
           break;
          end;
-      end;
+       end;
+
 
          // for j := 1 to 50 do   //für jedes Känguru: angriff auf Pinguine
              // begin
@@ -211,7 +219,6 @@ begin
                           Pinguin.camo := true;
                       end;
               //end;
-          pinguin.lab.caption := inttostr(pinguin.index);
           if Form5.CheckBox1.checked then  //wenn die checkbox gechecked ist loop parameter erhöhen (2x speed: alles 2x ausgeführt)
              begin
                   inc(k);
@@ -226,7 +233,7 @@ begin
      Pinguin.hp := 0;
     repeat
       if Pinguin <> nil then
-             Pinguin.laufen(1);
+             Pinguin.laufen(2);
       if Pinguin.hp <= 0 then //wenn Pinguin tot dann weg
       begin
         if Pinguin.x > -10000 then //wenn der Pinguin noch nicht wegteleportiert wurde: Arrays mit "toten" Pinguinen updaten
@@ -241,7 +248,6 @@ begin
            Pinguin.x := -10000;
            Pinguin.bild.left := Pinguin.x;
            Pinguin.hpBar.Left := Pinguin.x;
-           Pinguin.lab.left := Pinguin.x;
            Form6.IndexOfKilled[Pinguin.art, Form6.AmountKilled[Pinguin.art]] := Pinguin.index;
       end;
       if Form6.KilledCount = Form6.PinguinCount then //Wenn alle Pinguine einer Wave tot sind: Speicher der getöteten Pinguin resetten und die nächste wave starten
@@ -252,10 +258,20 @@ begin
                     Form6.IndexOfKilled[i, j] := 0;
                     Form6.AmountKilled[j] := 0;
                end;
+         if Form6.currentWave < 20 then
+       begin
          inc(Form6.currentWave);
          Form6.Label13.caption:= 'Welle ' + inttostr(Form6.currentWave) + '/20';      //label zum Anzeigen der momentanen Welle
-         Form6.wave[Form6.currentWave] := TWave.create(Form6.waveParams[Form6.currentWave, 1], Form6.waveParams[Form6.currentWave, 2], Form6.waveParams[Form6.currentWave, 3], Form6.waveParams[Form6.currentWave, 4], Form6.waveParams[Form6.currentWave, 5], 2, Form6.waveParams[Form6.currentwave, 6]);
+         Form6.wave[Form6.currentWave] := TWave.create(Form6.waveParams[Form6.currentWave, 1], Form6.waveParams[Form6.currentWave, 2], Form6.waveParams[Form6.currentWave, 3], Form6.waveParams[Form6.currentWave, 4], Form6.waveParams[Form6.currentWave, 5], 1, Form6.waveParams[Form6.currentwave, 6]);
          Form6.killedCount := 0;
+         end
+       else
+       begin
+            Form6.Panel17.visible := true;
+            Form6.timer1.enabled:= false;
+            Pinguin.hp := 0;
+            Form6.PlayerHealth := 0;
+       end;
          if not(Form6.checkbox2.checked) then
          begin
           Form6.timer1.Enabled := false;
@@ -316,7 +332,6 @@ begin
                           Pinguin.camo := true;
                       end;
               //end;
-          pinguin.lab.caption := inttostr(pinguin.index);
           if Form6.CheckBox1.checked then  //wenn die checkbox gechecked ist loop parameter erhöhen (2x speed: alles 2x ausgeführt)
              begin
                   inc(k);
