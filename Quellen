@@ -1,10 +1,12 @@
 Quellen:
+Miro:
+    chatgpt zur Information über Funktionsweise von:
+    MMSystem --> hier Playsound()
+    IniFiles --> hier schreiben, lesen, öffnen, schließen
+    Ereignisse eines während der Laufzeit erstellten Objekts nutzen--> Onclick:= @Form5.KanguruClick
+    
+    Auf Basis von Chatgpts Vorschlägen weiterentwickelt:
+    Känguru Kaufsystem
 
-https://forum.lazarus.freepascal.org/index.php?topic=32500.0
-chatgpt zur Information über Funktionsweise von:
-MMSystem --> hier Playsound()
-IniFiles --> hier schreiben, lesen, öffnen, schließen
-Ereignisse eines während der Laufzeit erstellten Objekts nutzen--> Onclick:= @Form5.KanguruClick
-
-Auf Basis von Chatgpts Vorschlägen weiterentwickelt:
-Känguru Kaufsystem
+Bennet:
+    blabliblu
