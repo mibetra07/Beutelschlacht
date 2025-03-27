@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
-  Menus;
+  Menus, MMSystem, IniFiles;
 
 
 type
@@ -19,22 +19,26 @@ type
     Button3: TButton;
     Image1: TImage;
     Image2: TImage;
+    Image3: TImage;
     Panel1: TPanel;
     Timer1: TTimer;
+    Timer2: TTimer;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure Image1Click(Sender: TObject);
+    procedure Image3Click(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
+    procedure Timer2Timer(Sender: TObject);
   private
-
+    var Songtick : integer;
   public
     currentslide: integer;
     sentences: array[1..7, 1..7] of string;
     temp: array[1..200] of char;
     i, j, tick, display: integer;
     displaynow: boolean;
+    procedure StartTutorialMusic;
   end;
 
 var
@@ -81,10 +85,12 @@ begin
      displaynow := false;
      display := 0;
 end;
-
-procedure TForm7.Image1Click(Sender: TObject);
+procedure TForm7.Image3Click(Sender: TObject);
 begin
-
+  Form1.show;
+  timer2.Enabled:= false;
+  Form1.StartMenuMusic();
+  Form7.hide;
 end;
 
 procedure TForm7.Timer1Timer(Sender: TObject);
@@ -123,6 +129,32 @@ begin
      end;
      if(temp[display] <> '$') and (display <= 200) then
         Panel1.caption := Panel1.caption + temp[display];
+end;
+
+procedure TForm7.Timer2Timer(Sender: TObject);
+begin
+  inc(Songtick);
+  if Songtick >= 183 then
+  begin
+    Songtick:=0;
+    Form1.StartMenuMusic();
+  end;
+end;
+
+procedure TForm7.StartTutorialMusic();
+var Ini: TIniFile;
+begin
+  SongTick:=0;
+  Ini := TIniFile.Create('settings.ini');
+  try
+    if Ini.ReadBool('Musik', 'Stumm', false) = false then
+    begin
+      timer1.Enabled:= true;
+      PlaySound('Music\Cold\Song_2.wav', 0, SND_ASYNC);
+    end;
+  finally
+    Ini.Free;  // Datei schließen
+  end;
 end;
 
 procedure TForm7.Button1Click(Sender: TObject);

@@ -3,7 +3,7 @@ unit Wave;
 {$mode ObjFPC}{$H+}
 
 interface
-Uses Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls, Pinguin;
+Uses Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls, Pinguin, IniFiles;
 procedure tick(map: integer; Pinguin: TPinguin);
 type
   TWave  = class
@@ -108,7 +108,7 @@ begin
   end
 end;
 procedure tick(map: integer; Pinguin: TPinguin);
-var i, j, k, speed: integer;
+var i, j, k, speed: integer; Ini : TIniFile;
 begin
   k := 0;
   if Form5.tickspassed > 1000000 then //sicherheit falls irgendwer extrem lange spielt
@@ -154,6 +154,13 @@ begin
        else
        begin
             Form5.Panel17.visible := true;
+            //Completionstatus update
+            Ini := TIniFile.Create('settings.ini');
+            try
+              Ini.WriteBool('Spielstand', 'map1_done', true);
+            finally
+              Ini.Free;  // Datei schließen
+            end;
             Form5.timer1.enabled:= false;
             Pinguin.hp := 0;
             Form5.PlayerHealth := 0;
@@ -268,6 +275,13 @@ begin
        else
        begin
             Form6.Panel17.visible := true;
+            //Completionstatus update
+            Ini := TIniFile.Create('settings.ini');
+            try
+              Ini.WriteBool('Spielstand', 'map2_done', true);
+            finally
+              Ini.Free;  // Datei schließen
+            end;
             Form6.timer1.enabled:= false;
             Pinguin.hp := 0;
             Form6.PlayerHealth := 0;

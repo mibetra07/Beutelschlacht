@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
-  Menus, Buttons, ComCtrls, Path, Pinguin, wave, kanguru, Collision, MMSystem;
+  Menus, Buttons, ComCtrls, Path, Pinguin, wave, kanguru, Collision, MMSystem, IniFiles;
 
 type
 
@@ -58,7 +58,6 @@ type
     Label11: TLabel;
     Label12: TLabel;
     Label13: TLabel;
-    Label15: TLabel;
     Label2: TLabel;
     Label3: TLabel;
     Label4: TLabel;
@@ -97,7 +96,6 @@ type
     Shape6: TShape;
     Timer1: TTimer;
     Timer2: TTimer;
-    TrackBar2: TTrackBar;
   procedure BitBtn1Click(Sender: TObject);
     procedure Button10Click(Sender: TObject);
     procedure Button11Click(Sender: TObject);
@@ -118,7 +116,6 @@ type
     procedure Button7Click(Sender: TObject);
     procedure Button8Click(Sender: TObject);
     procedure Button9Click(Sender: TObject);
-    procedure CheckBox1Change(Sender: TObject);
     procedure CheckBox2Change(Sender: TObject);
     procedure CheckBox3Change(Sender: TObject);
     procedure ComboBox1Change(Sender: TObject);
@@ -195,7 +192,7 @@ type
     procedure StartMusic();
   public
   ticksPassed, slowedTick : integer;
-    Path: array[1..30] of Tpath;
+    Path: array[1..27] of Tpath;
     Pinguin: array[1..100] of TPinguin;
     HelmPinguin: array[1..100] of THelmPinguin;
     SchildPinguin: array[1..100] of TSchildPinguin;
@@ -262,7 +259,6 @@ begin
   Songname[4] := 'Frostbound Strategy';
   Songname[5] := 'Snowy Peaks';
   Songname[6] := 'Glacial Glimpse';
-  Muted := false;
   Path[1] := TPath.create(1, 0, 300, 320, 100, 2);
    Path[2] := Tpath.create(2, 320, 300, 100, 500, 2);
    Path[3] := Tpath.create(1, 320, 800, 750, 100, 2);
@@ -297,7 +293,7 @@ begin
   Groupbox2.visible:=false;
   //Bogenkänguru
   Memo2.Lines.Clear;
-  Memo2.Lines.add('Großer Fan von Robin Hood - stiehlt den Reichen, verteilt an alle');
+  Memo2.Lines.add('Großer Fan von Robin Hood - liebt das Bogenschießen');
   Memo2.Lines.add('');
   Memo2.Lines.add('Reichweite: Hoch');
   Memo2.Lines.add('Schaden: Hoch');
@@ -305,7 +301,7 @@ begin
   Groupbox3.visible:=false;
   //Eiskänguru
   Memo3.Lines.Clear;
-  Memo3.Lines.add('Etwas zu lang am Nordpol gewesen - hat ein Praktikum beim Weihnachtsmann');
+  Memo3.Lines.add('Etwas zu lang am Nordpol gewesen - Inzwischen komplett gefroren');
   Memo3.Lines.add('');
   Memo3.Lines.add('Reichweite: Gering');
   Memo3.Lines.add('Schaden: Gering');
@@ -475,19 +471,42 @@ begin
   WaveParams[20, 6] := 50;
 
 end;
-
+//Form resetten/initialisieren
 procedure Tform6.ConstructForm();
-var i, j : integer; Pinguintemp: TPinguin;
+var i, j : integer; Pinguintemp: TPinguin; Ini : TIniFile;
 begin
   Panel17.visible := false;
   Timer1.enabled := false;
   Timer1.interval := 1;
   checkbox1.checked := false;
+  //Einstellungen laden
+  Ini := TIniFile.Create('settings.ini');
+  try
+    checkbox2.checked := Ini.ReadBool('Spiel', 'Autostart', true);  //Autostart
+    if Ini.ReadBool('Musik', 'Stumm', false) = true then            //Stummschalten
+    begin
+      Muted:=true;
+      Button19.Caption:= 'Entstummen';
+      Button18.enabled:= false;
+      Combobox1.enabled:= false;
+      PlaySound(nil, 0, SND_Purge);
+    end
+    else
+    begin
+      Muted:=false;
+      Button19.Caption:= 'Stumm';
+      Button18.enabled:=true;
+      Combobox1.enabled:= true;
+    end;
+    checkbox3.checked := Ini.ReadBool('Musik', 'Wiederholen', false); //Wiederholen
+  finally
+    Ini.Free;  // Datei schließen
+  end;
   //Münzen, Leben, Welle
-  coins := 300300300;
+  coins := 3000;
+  PlayerHealth := 250;
   label6.caption:= inttostr(coins);
   Pinguincount := 0;
-  PlayerHealth := 250;
   label12.caption:= inttostr(PlayerHealth);
   wave[1] := Twave.create(2, 0, 0, 0, 0, 2, 80);
   currentWave := 0;
@@ -496,14 +515,12 @@ begin
   isDragging := false;
   ZauberBewegenClicked := false;
   //Musik
+  timer2.enabled:=false;
   CurrentSong := 1;
   if Muted = false then
     StartMusic;
   //Pausemenü
   Image10.SendToBack; //Pausehintergrund, blockt einige Funktionen
-  Checkbox2.checked := true;  //Autostart
-  Checkbox3.checked := false; //Wiederholen
-  Checkbox2.checked := true;
   //Reset nach Hauptmenü durch Pausemenü
   button1.Enabled:=true;
   Checkbox1.enabled:=true;
@@ -570,6 +587,7 @@ begin
   Zauberkanguruzahl := 0;
   selectedkangurutype := '';
   selectedkangurunumber := 0;
+
 end;
 
 procedure TForm6.Timer1Timer(Sender: TObject);
@@ -1404,10 +1422,17 @@ begin
 end;
 
 procedure TForm6.Button19Click(Sender: TObject);
+var Ini: TIniFile;
 begin
   if Muted = false then
   begin
     Muted := true;
+    Ini := TIniFile.Create('settings.ini');
+    try
+      Ini.WriteBool('Musik', 'Stumm', true);
+    finally
+      Ini.Free;  // Datei schließen
+    end;
     Button19.Caption:= 'Entstummen';
     Button18.enabled:= false;
     Combobox1.enabled:= false;
@@ -1416,6 +1441,12 @@ begin
   else
   begin
     Muted := false;
+    Ini := TIniFile.Create('settings.ini');
+    try
+      Ini.WriteBool('Musik', 'Stumm', false);
+    finally
+      Ini.Free;  // Datei schließen
+    end;
     Button19.Caption:= 'Stumm';
     Button18.enabled:=true;
     Combobox1.enabled:= true;
@@ -2142,20 +2173,27 @@ begin
   end;
   label6.caption:= inttostr(coins);
 end;
-
-procedure TForm6.CheckBox1Change(Sender: TObject);
-begin
-
-end;
-
+//Autostart speichern
 procedure TForm6.CheckBox2Change(Sender: TObject);
+var Ini : TIniFile;
 begin
-
+    Ini := TIniFile.Create('settings.ini');
+    try
+      Ini.WriteBool('Spiel', 'Autostart', checkbox2.checked);
+    finally
+      Ini.Free;  // Datei schließen
+    end;
 end;
-
+//Wiederholen speichern
 procedure TForm6.CheckBox3Change(Sender: TObject);
+var Ini : TIniFile;
 begin
-
+    Ini := TIniFile.Create('settings.ini');
+    try
+      Ini.WriteBool('Musik', 'Wiederholen', checkbox3.checked);
+    finally
+      Ini.Free;  // Datei schließen
+    end;
 end;
 
 procedure TForm6.ComboBox1Change(Sender: TObject);

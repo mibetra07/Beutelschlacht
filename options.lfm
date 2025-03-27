@@ -1,11 +1,11 @@
 object Form3: TForm3
-  Left = 351
-  Height = 491
-  Top = 633
-  Width = 929
+  Left = 280
+  Height = 746
+  Top = 909
+  Width = 1187
   Caption = 'Form3'
-  ClientHeight = 491
-  ClientWidth = 929
+  ClientHeight = 746
+  ClientWidth = 1187
   LCLVersion = '3.6.0.0'
   WindowState = wsFullScreen
   object Image2: TImage
@@ -5344,5 +5344,110 @@ object Form3: TForm3
       ED7FE9FD079A585AFE7BE5E7370000000049454E44AE426082
     }
     Stretch = True
+  end
+  object GroupBox1: TGroupBox
+    Left = 688
+    Height = 376
+    Top = 312
+    Width = 549
+    ClientHeight = 356
+    ClientWidth = 545
+    Color = clCream
+    ParentBackground = False
+    ParentColor = False
+    TabOrder = 0
+    object CheckBox2: TCheckBox
+      Left = 189
+      Height = 19
+      Top = 72
+      Width = 167
+      Caption = 'Runden automatisch starten'
+      Checked = True
+      State = cbChecked
+      TabOrder = 0
+      OnChange = CheckBox2Change
+    end
+    object Button19: TButton
+      Left = 188
+      Height = 31
+      Top = 128
+      Width = 171
+      Caption = 'Musik stummschalten'
+      TabOrder = 1
+      OnClick = Button19Click
+    end
+    object CheckBox3: TCheckBox
+      Left = 189
+      Height = 19
+      Top = 168
+      Width = 163
+      Caption = 'Musik im Spiel wiederholen'
+      TabOrder = 2
+      OnChange = CheckBox3Change
+    end
+    object Panel16: TPanel
+      Left = 189
+      Height = 32
+      Top = 7
+      Width = 170
+      Caption = 'Einstellungen'
+      ParentBackground = False
+      TabOrder = 3
+    end
+    object Button1: TButton
+      Left = 188
+      Height = 31
+      Top = 240
+      Width = 171
+      Caption = 'Einstellungen zurücksetzen'
+      TabOrder = 4
+      OnClick = Button1Click
+    end
+    object Button2: TButton
+      Left = 188
+      Height = 31
+      Top = 280
+      Width = 171
+      Caption = 'Spielstand zurücksetzen'
+      TabOrder = 5
+      OnClick = Button2Click
+    end
+    object GroupBox2: TGroupBox
+      Left = 160
+      Height = 121
+      Top = 208
+      Width = 216
+      ClientHeight = 101
+      ClientWidth = 212
+      ParentBackground = False
+      ParentColor = False
+      TabOrder = 6
+      Visible = False
+      object Button3: TButton
+        Left = 18
+        Height = 25
+        Top = 53
+        Width = 75
+        Caption = 'Ja'
+        TabOrder = 0
+        OnClick = Button3Click
+      end
+      object Button4: TButton
+        Left = 112
+        Height = 25
+        Top = 53
+        Width = 75
+        Caption = 'Nein'
+        TabOrder = 1
+        OnClick = Button4Click
+      end
+      object Label1: TLabel
+        Left = 16
+        Height = 15
+        Top = 24
+        Width = 174
+        Caption = 'Spielstand wirklich zurücksetzen?'
+      end
+    end
   end
 end

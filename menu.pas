@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
-  chooseMap, map1, map2, options, credits, tutorial, MMSystem;
+  chooseMap, map1, map2, options, credits, tutorial, MMSystem, IniFiles;
 
 type
 
@@ -48,6 +48,7 @@ implementation
 procedure TForm1.Button1Click(Sender: TObject);
 begin
   Form2.show;
+  Form2.UpdateCompletion();
   Form1.hide;
 end;
 
@@ -55,6 +56,8 @@ end;
 procedure TForm1.Button2Click(Sender: TObject);
 begin
   Form7.show;
+  timer1.enabled:=false; //Menü Musik aus
+  Form7.StartTutorialMusic();
   Form1.hide;
 end;
 
@@ -62,6 +65,7 @@ end;
 procedure TForm1.Button3Click(Sender: TObject);
 begin
   Form3.show;
+  Form3.UpdateSettings();
   Form1.hide;
 end;
 
@@ -94,14 +98,25 @@ begin
 end;
 
 procedure TForm1.StartMenuMusic();
+var Ini : Tinifile;
 begin
   SongTick:=0;
-  timer1.Enabled:= true;
-  PlaySound('Music\Menu_Music.wav', 0, SND_ASYNC);
+  Ini := TIniFile.Create('settings.ini');
+  try
+    if Ini.ReadBool('Musik', 'Stumm', false) = false then
+    begin
+      timer1.Enabled:= true;
+      PlaySound('Music\Menu_Music.wav', 0, SND_ASYNC);
+    end;
+  finally
+    Ini.Free;  // Datei schließen
+  end;
 end;
 
 //alle Forms laden und schließen
 procedure TForm1.FormActivate(Sender: TObject);
+var
+  Ini: TIniFile;
 begin
   if firstactivate=true then
   begin
@@ -120,6 +135,23 @@ begin
     Form7.hide;
 
     firstactivate:=false;
+    //ggf. Einstellungsdatei erstellen
+    if not FileExists('settings.ini') then
+    begin
+      Ini := TIniFile.Create('settings.ini');
+      try
+        // Standardwerte schreiben
+        Ini.WriteBool('Spiel', 'Autostart', true);
+
+        Ini.WriteBool('Musik', 'Stumm', false);
+        Ini.WriteBool('Musik', 'Wiederholen', false);
+
+        Ini.WriteBool('Spielstand', 'map1_done', false);
+        Ini.WriteBool('Spielstand', 'map2_done', false);
+      finally
+        Ini.Free;
+      end;
+    end;
     StartMenuMusic();
   end;
 end;

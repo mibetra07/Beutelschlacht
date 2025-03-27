@@ -1,7 +1,7 @@
 object Form4: TForm4
-  Left = 305
+  Left = 485
   Height = 594
-  Top = 393
+  Top = 229
   Width = 1217
   Caption = 'Form4'
   ClientHeight = 594
@@ -5359,7 +5359,7 @@ object Form4: TForm4
       'Schule: Theodor-Fontane-Gymnasium Strausberg'
       'Abgabedatum: 28.03.2025'
       ''
-      'Zuständigkeiten:'
+      'Zuständigkeiten (grob):'
       'Menu: '
       '    Miro Trappe'
       'ChooseMap: '
@@ -5372,7 +5372,7 @@ object Form4: TForm4
       '    UpgradeMenü, Pausemenü, Memos, Känguru kaufen, Spiel neu starten bei Game Over, Hintergrundmusik: Miro Trappe'
       '    Timer, Pfade, Wellenparameter, 2x Geschwindigkeit, Game Over Screen: Bennet Grosche'
       'Map2: '
-      '    Miro Trappe (kopiert aus Map1, leicht abgeändert)'
+      '    Bennet Grosche, Miro Trappe (kopiert aus Map1, leicht abgeändert)'
       'Kanguru: '
       '    Aufbau der Klasse, Kanguru.create, destruct, setActive: Miro Trappe'
       '    Zauberkanguru, Kanguru.attack: Bennet Grosche'
@@ -5384,7 +5384,7 @@ object Form4: TForm4
       '    Miro Trappe'
       'Design der Bilder: '
       '    Bennet Grosche'
-      'Design des Hintergrunds des Hauptmenüs:'
+      'Design des Hauptmenü-Hintergrunds:'
       '   Bennet Grosche auf Grundlage eines Bildes von ChatGPT'
       'Musik: '
       '    von Bennet Grosche mit Suno AI erstellt'

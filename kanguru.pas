@@ -92,11 +92,13 @@ constructor Tkanguru.create(map, x, y, range : integer);
     begin
       self.bild := TImage.Create(Form5);
       self.bild.Parent := Form5;
+      self.attackradius.OnClick:= @Form5.AttackradiusClick;
     end
     else if map = 2 then
     begin
       self.bild := TImage.Create(Form6);
       self.bild.Parent := Form6;
+      self.attackradius.OnClick:= @Form6.AttackradiusClick
     end;
     //bild formatieren
     self.bild.Width := 96;
@@ -227,8 +229,8 @@ begin
   self.active := true;
   if map = 1 then
   Self.bild.OnClick := @Form5.KanguruClick
-  else if map = 2 then;
-  Self.bild.OnClick := @Form6.KanguruClick
+  else if map = 2 then
+  Self.bild.OnClick := @Form6.KanguruClick;
 end;
 
 
