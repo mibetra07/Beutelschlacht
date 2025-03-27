@@ -123,10 +123,6 @@ type
     procedure CheckBox3Change(Sender: TObject);
     procedure ComboBox1Change(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure Image10MouseDown(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
-    procedure Image10MouseEnter(Sender: TObject);
-    procedure Image10MouseLeave(Sender: TObject);
     procedure Image1Click(Sender: TObject);
     procedure Image2Click(Sender: TObject);
     procedure Image3Click(Sender: TObject);
@@ -478,23 +474,6 @@ begin
   WaveParams[20, 5] := 3;
   WaveParams[20, 6] := 50;
 
-
-end;
-
-procedure TForm6.Image10MouseDown(Sender: TObject; Button: TMouseButton;
-  Shift: TShiftState; X, Y: Integer);
-begin
-
-end;
-
-procedure TForm6.Image10MouseEnter(Sender: TObject);
-begin
-
-end;
-
-procedure TForm6.Image10MouseLeave(Sender: TObject);
-begin
-
 end;
 
 procedure Tform6.ConstructForm();
@@ -516,7 +495,7 @@ begin
   isDragging := false;
   ZauberBewegenClicked := false;
   //Musik
-  CurrentSong := 4;
+  CurrentSong := 1;
   if Muted = false then
     StartMusic;
   //Pausemenü
@@ -728,8 +707,8 @@ begin
   begin
     if Checkbox3.Checked = false then
     begin
-      if (CurrentSong >= 6) or (CurrentSong <= 3) then
-        CurrentSong:=4
+      if (CurrentSong >= 3) then
+        CurrentSong:=1
       else
         inc(CurrentSong);
     end;
@@ -1415,8 +1394,8 @@ procedure TForm6.Button18Click(Sender: TObject);
 begin
   if Checkbox3.checked = false then
   begin
-    if (CurrentSong >= 6) or (CurrentSong <= 3) then
-      CurrentSong:=4
+    if (CurrentSong >= 3) then
+      CurrentSong:=1
     else
       inc(CurrentSong);
   end;

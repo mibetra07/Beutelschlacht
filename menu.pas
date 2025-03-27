@@ -89,7 +89,7 @@ begin
   if Songtick >= 239 then
   begin
     Songtick:=0;
-    PlaySound('Music\Menu_Music.wav', 0, SND_ASYNC);
+    StartMenuMusic();
   end;
 end;
 
