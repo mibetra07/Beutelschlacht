@@ -707,8 +707,6 @@ begin
   end;
   inc(i);
   until i = 100;
-  Panel1.Caption := inttostr(KilledCount) + ';' + inttostr(PinguinCount) + ';' + inttostr(Form5.currentWave);
-  Panel2.Caption := inttostr(AmountKilled[1]) + ';' + inttostr(AmountKilled[2]);
   inc(ticksPassed);
   if playerHealth <= 0 then  //Abbruch wenn man keine hp mehr hat
   begin
@@ -1407,7 +1405,23 @@ begin
 end;
 
 procedure TForm5.Button17Click(Sender: TObject);
+var i: integer;
 begin
+   playerHealth := 0;
+  for i := 1 to 100 do
+  begin
+   if BossPinguin[i] <> nil then
+      tick(1, BossPinguin[i]);
+  if SchildPinguin[i] <> nil then
+      tick(1, SchildPinguin[i]);
+  if TarnPinguin[i] <> nil then
+        tick(1, TarnPinguin[i]);
+  if HelmPinguin[i] <> nil then
+      tick(1, HelmPinguin[i]);
+    if Pinguin[i] <> nil then
+      tick(1, Pinguin[i]);
+  end;
+  timer1.enabled := false;
   ConstructForm();
 end;
 

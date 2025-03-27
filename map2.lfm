@@ -1,7 +1,7 @@
 object Form6: TForm6
-  Left = 155
+  Left = 349
   Height = 991
-  Top = 555
+  Top = 200
   Width = 1902
   Caption = 'Form6'
   ClientHeight = 991
@@ -38819,7 +38819,7 @@ object Form6: TForm6
     Left = 1592
     Height = 19
     Top = 872
-    Width = 64
+    Width = 65
     Caption = '2x Speed'
     TabOrder = 11
   end

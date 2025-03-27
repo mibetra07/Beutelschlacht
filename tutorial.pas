@@ -104,8 +104,16 @@ begin
      end
      else if tick mod 150 = 0 then
      begin
+     if currentslide <= 4 then
+     begin
        inc(currentslide);
        i := currentslide;
+     end
+     else
+         begin
+           timer1.enabled := false;
+           image1.picture.loadFromFile('Images\Tutorial-blank.png')
+         end;
        j := 1;
        tick := 140;
        if currentslide < 5 then

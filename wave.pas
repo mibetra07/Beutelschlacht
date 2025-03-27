@@ -102,10 +102,10 @@ begin
         end;
         for i := 1 to Tarn - Form6.AmountKilled[5] do
         begin
-          Form6.tarnPinguin[i] := TtarnPinguin.create(2, random(offsetmultiplier) * 10 + 100);
+          Form6.tarnPinguin[i] := TtarnPinguin.create(2, random(offsetmultiplier) * 20 + 100);
           Form6.AllPinguin[i + helm + normal + schild + boss] := Form6.TarnPinguin[i];
         end;
-  end
+  end;
 end;
 procedure tick(map: integer; Pinguin: TPinguin);
 var i, j, k, speed: integer; Ini : TIniFile;
@@ -167,6 +167,7 @@ begin
        end;
          if not(Form5.checkbox2.checked) then
          begin
+          if not(Form5.currentwave = 1) then
           Form5.timer1.Enabled := false;
           break;
          end;
@@ -219,7 +220,7 @@ begin
                               Pinguin.bild.picture.loadFromFile(Pinguin.FileName + '.png');
                           Pinguin.speed :=  Pinguin.baseSpeed;
                       end;
-              if (Pinguin.art = 5) and (Pinguin.schimmert) and (Form5.ticksPassed - Pinguin.schimmertick > 105) then //wenn der Pinguin eine Zeit gefreezed war: entfreezen
+              if (Pinguin.art = 5) and (Pinguin.schimmert) and (Form5.ticksPassed - Pinguin.schimmertick > 120) then //wenn der Pinguin eine Zeit gefreezed war: entfreezen
                       begin
                           Pinguin.schimmert := false;
                           Pinguin.bild.picture.loadFromFile('Images\Tarnguin.png');
@@ -265,11 +266,11 @@ begin
                     Form6.IndexOfKilled[i, j] := 0;
                     Form6.AmountKilled[j] := 0;
                end;
-         if Form6.currentWave < 20 then
+       if Form6.currentWave < 20 then
        begin
          inc(Form6.currentWave);
          Form6.Label13.caption:= 'Welle ' + inttostr(Form6.currentWave) + '/20';      //label zum Anzeigen der momentanen Welle
-         Form6.wave[Form6.currentWave] := TWave.create(Form6.waveParams[Form6.currentWave, 1], Form6.waveParams[Form6.currentWave, 2], Form6.waveParams[Form6.currentWave, 3], Form6.waveParams[Form6.currentWave, 4], Form6.waveParams[Form6.currentWave, 5], 1, Form6.waveParams[Form6.currentwave, 6]);
+         Form6.wave[Form6.currentWave] := TWave.create(Form6.waveParams[Form6.currentWave, 1], Form6.waveParams[Form6.currentWave, 2], Form6.waveParams[Form6.currentWave, 3], Form6.waveParams[Form6.currentWave, 4], Form6.waveParams[Form6.currentWave, 5], 2, Form6.waveParams[Form6.currentwave, 6]);
          Form6.killedCount := 0;
          end
        else
@@ -278,7 +279,7 @@ begin
             //Completionstatus update
             Ini := TIniFile.Create('settings.ini');
             try
-              Ini.WriteBool('Spielstand', 'map2_done', true);
+              Ini.WriteBool('Spielstand', 'map1_done', true);
             finally
               Ini.Free;  // Datei schließen
             end;
@@ -288,10 +289,12 @@ begin
        end;
          if not(Form6.checkbox2.checked) then
          begin
+          if not(Form6.currentwave = 1) then
           Form6.timer1.Enabled := false;
           break;
          end;
-      end;
+       end;
+
 
          // for j := 1 to 50 do   //für jedes Känguru: angriff auf Pinguine
              // begin
@@ -339,7 +342,7 @@ begin
                               Pinguin.bild.picture.loadFromFile(Pinguin.FileName + '.png');
                           Pinguin.speed :=  Pinguin.baseSpeed;
                       end;
-              if (Pinguin.art = 5) and (Pinguin.schimmert) and (Form6.ticksPassed - Pinguin.schimmertick > 105) then //wenn der Pinguin eine Zeit gefreezed war: entfreezen
+              if (Pinguin.art = 5) and (Pinguin.schimmert) and (Form6.ticksPassed - Pinguin.schimmertick > 120) then //wenn der Pinguin eine Zeit gefreezed war: entfreezen
                       begin
                           Pinguin.schimmert := false;
                           Pinguin.bild.picture.loadFromFile('Images\Tarnguin.png');
@@ -353,7 +356,7 @@ begin
           else
               k :=2;
         until k = 2;
-  end
+  end;
 end;
 
 
