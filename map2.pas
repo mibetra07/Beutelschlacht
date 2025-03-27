@@ -239,6 +239,7 @@ uses Menu;
 
 procedure TForm6.FormCreate(Sender: TObject);
 begin
+  playerHealth := 250;
   randomize();
   //Musik
   Song[1] := 'Music\Tropical\Song_1.wav';
@@ -262,14 +263,13 @@ begin
   Songname[5] := 'Snowy Peaks';
   Songname[6] := 'Glacial Glimpse';
   Muted := false;
-  //Weg der Map erstellen(dir, left, top, breit, hoch, map: integer)
-   Path[1] := TPath.create(1, 0, 300, 320, 100, 2);
+  Path[1] := TPath.create(1, 0, 300, 320, 100, 2);
    Path[2] := Tpath.create(2, 320, 300, 100, 500, 2);
    Path[3] := Tpath.create(1, 320, 800, 750, 100, 2);
    Path[4] := Tpath.create(4, 1070, 430, 100, 470, 2);
    Path[5] := Tpath.create(3, 820, 430, 350, 100, 2);
    Path[6] := Tpath.create(4, 770, 150, 80, 380, 2);
-   Path[7] := Tpath.create(1, 770, 100, 700, 100, 2);
+   Path[7] := Tpath.create(1, 770, 100, 660, 100, 2);
    //Paths die nur für die Platzierbarkeit der Kängurus zuständig sind
    Path[20] := TPath.create(1, 0, 0, 180, 100, 2);
    Path[21] := Tpath.create(1, 180, 0, 90, 20, 2);
@@ -479,6 +479,7 @@ end;
 procedure Tform6.ConstructForm();
 var i, j : integer; Pinguintemp: TPinguin;
 begin
+  Panel17.visible := false;
   Timer1.enabled := false;
   Timer1.interval := 1;
   checkbox1.checked := false;
@@ -486,9 +487,9 @@ begin
   coins := 300300300;
   label6.caption:= inttostr(coins);
   Pinguincount := 0;
-  PlayerHealth := 5;
+  PlayerHealth := 250;
   label12.caption:= inttostr(PlayerHealth);
-  wave[1] := Twave.create(2, 2, 0, 0, 0, 2, 80);
+  wave[1] := Twave.create(2, 0, 0, 0, 0, 2, 80);
   currentWave := 0;
   label13.caption:= 'Welle 1/20';
   //Platzieren

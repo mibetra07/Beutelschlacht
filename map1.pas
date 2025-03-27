@@ -471,7 +471,6 @@ begin
   WaveParams[20, 5] := 3;
   WaveParams[20, 6] := 50;
 
-
 end;
 
 procedure Tform5.ConstructForm();
@@ -487,7 +486,7 @@ begin
   Pinguincount := 0;
   PlayerHealth := 5000;
   label12.caption:= inttostr(PlayerHealth);
-  wave[1] := Twave.create(2, 2, 0, 0, 0, 1, 80);
+  wave[1] := Twave.create(2, 0, 0, 0, 0, 1, 80);
   currentWave := 0;
   label13.caption:= 'Welle 1/20';
   //Platzieren

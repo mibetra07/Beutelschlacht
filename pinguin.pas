@@ -50,7 +50,7 @@ var i: integer;
 begin
      if map = 2 then //grundlegende Form-bezogene Eigenschaften
      begin
-       x := Form6.Path[1].x - offset ;
+       x := Form6.Path[1].x - 96 - offset ;
        y := Form6.Path[1].y;
        bild := TImage.Create(Form6);
        bild.Parent := Form6;
@@ -62,7 +62,7 @@ begin
      end
      else if map = 1 then //grundlegende Form-bezogene Eigenschaften
      begin
-       x := Form5.Path[1].x - offset ;
+       x := Form5.Path[1].x - 96 - offset ;
        y := Form5.Path[1].y;
        bild := TImage.Create(Form5);
        bild.Parent := Form5;

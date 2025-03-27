@@ -1,10 +1,10 @@
 object Form6: TForm6
-  Left = 260
-  Height = 835
-  Top = 149
+  Left = 685
+  Height = 1112
+  Top = 146
   Width = 1682
   Caption = 'Form6'
-  ClientHeight = 835
+  ClientHeight = 1112
   ClientWidth = 1682
   OnCreate = FormCreate
   LCLVersion = '3.6.0.0'
@@ -38813,7 +38813,7 @@ object Form6: TForm6
     Left = 1176
     Height = 19
     Top = 920
-    Width = 64
+    Width = 65
     Caption = '2x Speed'
     TabOrder = 11
     OnChange = CheckBox1Change
