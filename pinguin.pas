@@ -11,7 +11,6 @@ type TPinguin  = class
       slowed, camo, canBeSlowed, schimmert: boolean;
       FileName: string;
       bild: Timage;
-      lab: tLabel;
       hpBar: TProgressBar;
       constructor create(map, offset: integer);
       procedure laufen(map: integer);
@@ -60,10 +59,6 @@ begin
        position := Form6.PinguinCount;
        inc(Form6.Pinguincount);
        self.index := Form6.Pinguincount;
-       lab := TLabel.create(Form6);
-       lab.parent := Form6;
-       lab.visible := true;
-       lab.font.color := Clblack;
      end
      else if map = 1 then //grundlegende Form-bezogene Eigenschaften
      begin
@@ -76,10 +71,6 @@ begin
        position := Form5.PinguinCount;
        inc(Form5.Pinguincount);
        self.index := Form5.Pinguincount;
-       lab := TLabel.create(Form5);
-       lab.parent := Form5;
-       lab.visible := true;
-       lab.font.color := Clblack;
      end;
      //größe und hp bar
      width := 96;
@@ -243,43 +234,42 @@ begin
            end;
        end;
   end
-
     else if map = 2 then
   begin
-       if ((self.width = 192) AND (Form5.tickspassed mod 4 = 0)) OR (self.width <> 192) then // wenn es der bosspinguin ist alle 8 ticks sonst alle 2 ticks
+       if ((self.width = 192) AND (Form6.tickspassed mod 4 = 0)) OR (self.width <> 192) then // wenn es der bosspinguin ist alle 8 ticks sonst alle 2 ticks
        begin
-         if self.currentPath < 7 then //solange noch auf den Weg-Paths
+         if self.currentPath < 8 then //solange noch auf den Weg-Paths
          begin
-         if Form5.Path[self.currentPath].direction = 1 then  //wenn nach links
+         if Form6.Path[self.currentPath].direction = 1 then  //wenn nach links
          begin
-         if self.x <= Form5.Path[self.currentPath].x + Form5.Path[self.currentPath].width then  //damit es nur bis Path Ende geht
+         if self.x <= Form6.Path[self.currentPath].x + Form6.Path[self.currentPath].width then  //damit es nur bis Path Ende geht
            begin
              self.x := self.x + self.speed;
            end
            else
              inc(self.currentPath); // wenn ende erreicht -> nächster Path
            end
-         else if Form5.Path[self.currentPath].direction = 2 then  //webb nach unten
+         else if Form6.Path[self.currentPath].direction = 2 then  //webb nach unten
            begin
-           if self.y <= Form5.Path[self.currentPath].y + Form5.Path[self.currentPath].height then //damit es nur bis Path Ende geht
+           if self.y <= Form6.Path[self.currentPath].y + Form6.Path[self.currentPath].height then //damit es nur bis Path Ende geht
            begin
              self.y := self.y + self.speed;
            end
            else
           inc(self.currentPath); // wenn ende erreicht -> nächster Path
          end
-         else if Form5.Path[self.currentPath].direction = 3 then //wenn nach links
+         else if Form6.Path[self.currentPath].direction = 3 then //wenn nach links
          begin
-         if self.x >= Form5.Path[self.currentPath].x - 48 then //damit es nur bis Path Ende geht
+         if self.x >= Form6.Path[self.currentPath].x - 48 then //damit es nur bis Path Ende geht
          begin
          self.x := self.x - self.speed;
          end
          else
           inc(self.currentPath); // wenn ende erreicht -> nächster Path
          end
-         else if Form5.Path[self.currentPath].direction = 4 then //wenn nach oben
+         else if Form6.Path[self.currentPath].direction = 4 then //wenn nach oben
          begin
-         if self.y >= Form5.Path[self.currentPath].y - 48 then    //damit es nur bis Path Ende geht
+         if self.y >= Form6.Path[self.currentPath].y - 48 then    //damit es nur bis Path Ende geht
            begin
            self.y := self.y - self.speed;
            end
@@ -288,12 +278,12 @@ begin
          end;
          posUpdate(self);
          end
-         else if (self.currentPath >= 7) and (self.x > -10000) and (self.hp > 0) then //kriterien für einen durchgekommenen Pinguin
+         else if (self.currentPath >= 8) and (self.x > -10000) and (self.hp > 0) then //kriterien für einen durchgekommenen Pinguin
            begin
            //Pinguin wegteleportieren, hp vom spieler abziehen, anzeigen
            self.x := -1000;
-           Form5.playerHealth := Form5.playerHealth - self.hp div 5;
-           Form5.label12.caption := inttostr(Form5.playerHealth);
+           Form6.playerHealth := Form6.playerHealth - self.hp div 5;
+           Form6.label12.caption := inttostr(Form6.playerHealth);
            self.hp := 0;
            end;
        end;
@@ -306,8 +296,6 @@ begin
          Pinguin.hpBar.left := Pinguin.x + 24 + Pinguin.bildOffset;
          Pinguin.bild.top := Pinguin.y - Pinguin.bildOffset;
          Pinguin.hpBar.top := Pinguin.y - 10 - Pinguin.bildOffset;
-         Pinguin.lab.top := Pinguin.y + 100;
-         Pinguin.lab.left := Pinguin.x + 48;
          Pinguin.bild.BringToFront;
 end;
 

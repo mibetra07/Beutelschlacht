@@ -75,6 +75,7 @@ type
     Panel1: TPanel;
     Panel10: TPanel;
     Panel16: TPanel;
+    Panel17: TPanel;
     Panel2: TPanel;
     Panel3: TPanel;
     Panel4: TPanel;
@@ -476,6 +477,7 @@ end;
 procedure Tform5.ConstructForm();
 var i, j : integer; Pinguintemp: TPinguin;
 begin
+  Panel17.visible := false;
   Timer1.enabled := false;
   Timer1.interval := 1;
   checkbox1.checked := false;
@@ -483,7 +485,7 @@ begin
   coins := 300300300;
   label6.caption:= inttostr(coins);
   Pinguincount := 0;
-  PlayerHealth := 5;
+  PlayerHealth := 5000;
   label12.caption:= inttostr(PlayerHealth);
   wave[1] := Twave.create(2, 2, 0, 0, 0, 1, 80);
   currentWave := 0;
@@ -538,7 +540,6 @@ begin
                Pinguintemp.x := -10000;
                Pinguintemp.bild.left := Pinguintemp.x;
                Pinguintemp.hpBar.Left := Pinguintemp.x;
-               Pinguintemp.lab.left := Pinguintemp.x;
                Form5.IndexOfKilled[Pinguintemp.art, Form5.AmountKilled[Pinguintemp.art]] := Pinguintemp.index;
         end;
       end;
@@ -1380,6 +1381,7 @@ begin
   Form1.StartMenuMusic();
   timer2.enabled:=false;
   timer1.enabled:=false;
+  Image10.SendToBack;
   Form5.hide;
 end;
 
@@ -1482,6 +1484,7 @@ begin
         end
         else
           zauberkanguru[selectedkangurunumber].zauber.bild.Picture.LoadFromFile('images\Feuer_invalid.png');
+        exit
       end;
     end;
   end;
@@ -1510,7 +1513,14 @@ begin
     Collision := false;
     isDragging := False;
     DragThresholdReached := False;
-    for i:=1 to 7 do
+    if ((Sqr(zauberkanguru[selectedkangurunumber].zauber.bild.left + 48 - (zauberkanguru[selectedkangurunumber].attackradius.Left + zauberkanguru[selectedkangurunumber].attackradius.Width div 2 - 20)) +
+          Sqr(zauberkanguru[selectedkangurunumber].zauber.bild.top + 48 - (zauberkanguru[selectedkangurunumber].attackradius.Top + zauberkanguru[selectedkangurunumber].attackradius.Height div 2 - 20))
+          <= Sqr(zauberkanguru[selectedkangurunumber].attackradius.Width div 2 - 20)) or
+         (Sqr(zauberkanguru[selectedkangurunumber].zauber.bild.left - (zauberkanguru[selectedkangurunumber].attackradius.Left + zauberkanguru[selectedkangurunumber].attackradius.Width div 2 - 20)) +
+          Sqr(zauberkanguru[selectedkangurunumber].zauber.bild.top - (zauberkanguru[selectedkangurunumber].attackradius.Top + zauberkanguru[selectedkangurunumber].attackradius.Height div 2 - 20))
+          <= Sqr(zauberkanguru[selectedkangurunumber].attackradius.Width div 2 - 20))) then
+         begin
+    for i:=1 to 6 do
     begin
       CheckCollision(zauberkanguru[selectedkangurunumber].zauber.bild, Path[i].Bild, Collision);
       if Collision = true then
@@ -1546,7 +1556,13 @@ begin
       zauberkanguru[selectedkangurunumber].zauber.attackradius.left := zauberkanguru[selectedkangurunumber].zauber.bild.left + zauberkanguru[selectedkangurunumber].zauber.attackradius.width div 2;
       zauberkanguru[selectedkangurunumber].zauber.attackradius.top := zauberkanguru[selectedkangurunumber].zauber.bild.top + zauberkanguru[selectedkangurunumber].zauber.attackradius.height div 2;
     end;
-  end;
+  end
+    else
+    begin
+      zauberkanguru[selectedkangurunumber].zauber.bild.left := StartX;
+      zauberkanguru[selectedkangurunumber].zauber.bild.top := StartY;
+    end;
+    end;
   end;
 end;
 

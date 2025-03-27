@@ -184,9 +184,9 @@ constructor Tkanguru.create(map, x, y, range : integer);
     end
     else if map = 2 then
     begin
-      //self.bild.OnMouseDown := @Form6.ZauberMouseDown;
-      //self.bild.OnMouseMove := @Form6.ZauberMouseMove;
-      //self.bild.OnMouseUp := @Form6.ZauberMouseUp;
+      self.bild.OnMouseDown := @Form6.ZauberMouseDown;
+      self.bild.OnMouseMove := @Form6.ZauberMouseMove;
+      self.bild.OnMouseUp := @Form6.ZauberMouseUp;
     end;
   end;
 
@@ -228,7 +228,7 @@ begin
   if map = 1 then
   Self.bild.OnClick := @Form5.KanguruClick
   else if map = 2 then;
-  //Self.bild.OnClick := @Form6.KanguruClick
+  Self.bild.OnClick := @Form6.KanguruClick
 end;
 
 
@@ -236,6 +236,8 @@ end;
 procedure Tkanguru.attack(map: integer; Pinguin: TPinguin; Kanguruart: string);
 var i, j: integer;
 begin
+  if map = 1 then
+  begin
   if self <> nil then
     begin
       try
@@ -293,7 +295,69 @@ begin
         halt;
         end;
     end;
+  end
+  else if map = 2 then
+  begin
+  if self <> nil then
+    begin
+      try
+      if  (self.active = true)and ((Sqr(Pinguin.X + 48 - (self.attackradius.Left + self.attackradius.Width div 2)) +
+          Sqr(Pinguin.Y + 48 - (self.attackradius.Top + self.attackradius.Height div 2))
+          <= Sqr(self.attackradius.Width div 2)) or
+         (Sqr(Pinguin.X - (self.attackradius.Left + self.attackradius.Width div 2)) +
+          Sqr(Pinguin.Y - (self.attackradius.Top + self.attackradius.Height div 2))
+          <= Sqr(self.attackradius.Width div 2))) and ((Pinguin.camo = false) or (self.cancamo)) and ((Pinguin.slowed = false) or (Kanguruart <> 'Zauber')) then   // Prüfen, ob irgendein Teil von `Pinguin` innerhalb des Kreises liegt (von chatgpt) und auf camo überprüufen und Zauberer können gefrorene Pinguine nicht attackieren
+      begin
+           if Form6.ticksPassed - self.cooldownTick >= self.attackSpeed then //wenn der Angriifs-Cooldown abgelaufen ist
+            begin
+              //neuen Cooldown tick setzen, hp abziehen, hp bar updaten
+              self.cooldownTick := Form6.ticksPassed;
+              if (Kanguruart <> 'Eis') and (Kanguruart <> 'Zauber') or ((Kanguruart = 'Eis') and (Form6.tickspassed - Pinguin.slowedTick > 120)) or ((Kanguruart = 'Zauber') and (Form6.ticksPassed - self.schimmertick > 2)) then
+              begin
+              Pinguin.hp := Pinguin.hp - self.damage div 10;
+              if Kanguruart = 'Zauber' then
+                 Schimmertick := Form6.tickspassed;
+              end;
+              if Form6.checkbox1.checked then
+              Pinguin.hp := Pinguin.hp - self.damage div 10;
+              Pinguin.hpBar.position := (Pinguin.hp * Pinguin.hpBar.width) div (Pinguin.basehp);
+              if (Kanguruart = 'Zauber') and (Self.cancamo) and (Pinguin.art = 5) then
+              begin
+                 Pinguin.schimmert := true;
+                 Pinguin.camo := false;
+                 Pinguin.schimmertick := Form6.tickspassed;
+                 Form6.Panel5.caption := inttostr(Pinguin.schimmertick);
+              end;
+              if Pinguin.schimmert then
+              Pinguin.bild.picture.loadFromFile('Images\Tarnguin_Schimmer.png');
+               if (Kanguruart = 'Eis') AND (Pinguin.slowed = false) AND (Pinguin.canBeSlowed = true) AND (Form6.ticksPassed - Pinguin.slowedTick > 120) then  //wenn ein eiskanguru angreift; der Pinguin nicht gefroren ist und der Gefrier Cooldown abgelaufen ist
+               begin
+                 //Pinguin einfrieren; Slowed Tick setzen (Zeitpunkt zu dem der Pinguin gefroren wurde)
+                 Pinguin.slowed := true;
+                 Pinguin.speed := 0;
+                 Pinguin.slowedTick := Form6.ticksPassed;
+                 if Pinguin.schimmert then
+                    Pinguin.bild.picture.loadFromFile('Images\Tarnguin_Schimmer_freeze.png')
+                 else
+                     Pinguin.bild.picture.loadFromFile(Pinguin.FileName + '_freeze' + '.png');
+                 self.bild.picture.LoadFromFile('Images\Eisguru_Attack.png')
+               end
+               //Attackframes für die Kangurus
+               else if Kanguruart = 'Boxer' then
+                  self.bild.picture.LoadFromFile('Images\Pinguinboxer_Attack.png')
+               else if (Kanguruart = 'Bogen') and (assigned(self)) then
+                    self.bild.picture.LoadFromFile('Images\Bogenguru_Attack.png')
+               else if (Kanguruart = 'Ninja') and (assigned(self)) then
+                    self.bild.picture.LoadFromFile('Images\Ninja_Attack.png')
+           end;
+      end;
+      except
+        halt;
+        end;
+    end;
+  end
 end;
+
 
 end.
 
