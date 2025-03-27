@@ -477,7 +477,7 @@ procedure Tform6.ConstructForm();
 var i, j : integer; Pinguintemp: TPinguin; Ini : TIniFile;
 begin
   wave[1] := TWave.Create(2, 0, 0 , 0, 0, 2, 80);
-   Pinguintemp := nil;
+  Pinguintemp := nil;
   Panel17.visible := false;
   Timer1.enabled := false;
   Timer1.interval := 1;
@@ -506,7 +506,7 @@ begin
     Ini.Free;  // Datei schließen
   end;
   //Münzen, Leben, Welle
-  coins := 6000;
+  coins := 5000;
   PlayerHealth := 250;
   label6.caption:= inttostr(coins);
   label12.caption:= inttostr(PlayerHealth);
@@ -1813,9 +1813,11 @@ begin
       button11.enabled := false;
     end
     else
+    begin
       panel15.caption := 'Schimmer: Nein';
       button11.caption:= '5000$';
       button11.enabled := true;
+    end;
   end
   else
   begin
@@ -1826,9 +1828,11 @@ begin
       button11.enabled := false;
     end
     else
+    begin
       panel15.caption := 'Bessere Sicht: Nein';
       button11.caption:= '2000$';
       button11.enabled := true;
+    end;
   end;
   //Verkaufspreis
   if selectedkangurutype = 'boxer' then

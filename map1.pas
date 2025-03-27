@@ -1810,9 +1810,11 @@ begin
       button11.enabled := false;
     end
     else
+    begin
       panel15.caption := 'Schimmer: Nein';
       button11.caption:= '5000$';
       button11.enabled := true;
+    end;
   end
   else
   begin
@@ -1823,9 +1825,11 @@ begin
       button11.enabled := false;
     end
     else
+    begin
       panel15.caption := 'Bessere Sicht: Nein';
       button11.caption:= '2000$';
       button11.enabled := true;
+    end;
   end;
   //Verkaufspreis
   if selectedkangurutype = 'boxer' then
