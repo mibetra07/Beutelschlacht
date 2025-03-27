@@ -130,7 +130,7 @@ begin
      //Pinguin spezifische Eigenschaften
      self.bild.picture.loadFromFile('images\Pinguin Helm und Schild.png');
      self.FileName := 'images\Pinguin Helm und Schild';
-     self.hp := 500;
+     self.hp := 700;
      self.baseSpeed := 1;
      self.speed := self.baseSpeed;
      self.art := 3;
@@ -231,6 +231,7 @@ begin
            Form5.playerHealth := Form5.playerHealth - self.hp div 5;
            Form5.label12.caption := inttostr(Form5.playerHealth);
            self.hp := 0;
+           self.currentpath := 100;
            end;
        end;
   end
@@ -285,6 +286,7 @@ begin
            Form6.playerHealth := Form6.playerHealth - self.hp div 5;
            Form6.label12.caption := inttostr(Form6.playerHealth);
            self.hp := 0;
+           self.currentpath := 100;
            end;
        end;
   end;
@@ -301,4 +303,5 @@ end;
 
 
 end.
+
 

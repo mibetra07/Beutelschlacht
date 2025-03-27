@@ -74,6 +74,7 @@ begin
   Form6.show;
   Form1.timer1.enabled:=false; //Musik aus
   Form6.ConstructForm();
+  Form6.playerHealth := 250;
   Form2.hide;
 end;
 

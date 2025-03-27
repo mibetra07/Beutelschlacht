@@ -265,7 +265,7 @@ begin
    Path[4] := Tpath.create(4, 1070, 430, 100, 470, 2);
    Path[5] := Tpath.create(3, 820, 430, 350, 100, 2);
    Path[6] := Tpath.create(4, 770, 150, 80, 380, 2);
-   Path[7] := Tpath.create(1, 770, 100, 660, 100, 2);
+   Path[7] := Tpath.create(1, 770, 100, 620, 100, 2);
    //Paths die nur für die Platzierbarkeit der Kängurus zuständig sind
    Path[20] := TPath.create(1, 0, 0, 180, 100, 2);
    Path[21] := Tpath.create(1, 180, 0, 90, 20, 2);
@@ -282,6 +282,7 @@ begin
   Eiskanguruzahl := 0;
   Ninjakanguruzahl := 0;
   Zauberkanguruzahl := 0;
+  Pinguincount := 0;
   //Memos mit Känguruinfos
   //Boxerkänguru
   Memo1.Lines.Clear;
@@ -475,6 +476,8 @@ end;
 procedure Tform6.ConstructForm();
 var i, j : integer; Pinguintemp: TPinguin; Ini : TIniFile;
 begin
+  wave[1] := TWave.Create(2, 0, 0 , 0, 0, 2, 80);
+   Pinguintemp := nil;
   Panel17.visible := false;
   Timer1.enabled := false;
   Timer1.interval := 1;
@@ -503,10 +506,9 @@ begin
     Ini.Free;  // Datei schließen
   end;
   //Münzen, Leben, Welle
-  coins := 3000;
+  coins := 6000;
   PlayerHealth := 250;
   label6.caption:= inttostr(coins);
-  Pinguincount := 0;
   label12.caption:= inttostr(PlayerHealth);
   wave[1] := Twave.create(2, 0, 0, 0, 0, 2, 80);
   currentWave := 0;
@@ -550,16 +552,19 @@ begin
         else if (j = 5) and (TarnPinguin[i] <> nil)  then
            Pinguintemp := TarnPinguin[i];
         begin
-          if Pinguintemp.x > -10000 then
+          if (Pinguintemp <> nil) and (Pinguintemp.x > -10000) then
             begin
                inc(Form6.AmountKilled[Pinguintemp.art]);
                inc(Form6.killedCount);
             end;
+          if Pinguintemp <> nil then
+            begin
                Pinguintemp.currentPath := 100;
                Pinguintemp.x := -10000;
                Pinguintemp.bild.left := Pinguintemp.x;
                Pinguintemp.hpBar.Left := Pinguintemp.x;
                Form6.IndexOfKilled[Pinguintemp.art, Form6.AmountKilled[Pinguintemp.art]] := Pinguintemp.index;
+            end;
         end;
       end;
   for i := 1 to 5 do
@@ -706,8 +711,6 @@ begin
   end;
   inc(i);
   until i = 100;
-  Panel1.Caption := inttostr(KilledCount) + ';' + inttostr(PinguinCount) + ';' + inttostr(Form6.currentWave);
-  Panel2.Caption := inttostr(AmountKilled[1]) + ';' + inttostr(AmountKilled[2]);
   inc(ticksPassed);
   if playerHealth <= 0 then  //Abbruch wenn man keine hp mehr hat
   begin
@@ -1405,7 +1408,23 @@ begin
 end;
 
 procedure TForm6.Button17Click(Sender: TObject);
+var i: integer;
 begin
+  playerHealth := 0;
+  for i := 1 to 100 do
+  begin
+   if BossPinguin[i] <> nil then
+      tick(2, BossPinguin[i]);
+  if SchildPinguin[i] <> nil then
+      tick(2, SchildPinguin[i]);
+  if TarnPinguin[i] <> nil then
+        tick(2, TarnPinguin[i]);
+  if HelmPinguin[i] <> nil then
+      tick(2, HelmPinguin[i]);
+    if Pinguin[i] <> nil then
+      tick(2, Pinguin[i]);
+  end;
+  timer1.enabled := false;
   ConstructForm();
 end;
 
@@ -1651,7 +1670,7 @@ begin
       selectedkangurutype:='eis';
       selectedkangurunumber:=i;
       eiskanguru[i].attackradius.visible:=true;
-      ShowMenu('eis', eiskanguru[i].damage, eiskanguru[i].range2, eiskanguru[i].attackspeed, eiskanguru[i].damagelvl, eiskanguru[i].speedlvl, eiskanguru[i].rangelvl, eiskanguru[i].cancamo);
+      ShowMenu('eis', eiskanguru[i].damage, eiskanguru[i].range2, eiskanguru[i].attackspeed2, eiskanguru[i].damagelvl, eiskanguru[i].speedlvl, eiskanguru[i].rangelvl, eiskanguru[i].cancamo);
     end;
   end;
   for i:=1 to ninjakanguruzahl do
@@ -2140,9 +2159,9 @@ begin
       coins:= coins - (300+eiskanguru[selectedkangurunumber].speedlvl*200);
       eiskanguru[selectedkangurunumber].value := eiskanguru[selectedkangurunumber].value + (300+eiskanguru[selectedkangurunumber].speedlvl*200);
       inc(eiskanguru[selectedkangurunumber].Speedlvl);
-      eiskanguru[selectedkangurunumber].attackSpeed := eiskanguru[selectedkangurunumber].attackSpeed - UpgradeSpeed;
+      eiskanguru[selectedkangurunumber].attackspeed2 := eiskanguru[selectedkangurunumber].attackspeed2 - 10;
       label8.caption:=inttostr(eiskanguru[selectedkangurunumber].Speedlvl) + '/5';
-      panel13.Caption:= 'Angriffsgeschwindigkeit: ' + inttostr(eiskanguru[selectedkangurunumber].attackSpeed);
+      panel13.Caption:= 'Angriffsgeschwindigkeit: ' + inttostr(eiskanguru[selectedkangurunumber].attackspeed2);
       button9.Caption := inttostr(300+eiskanguru[selectedkangurunumber].speedlvl*200)+'$';
     end;
     if eiskanguru[selectedkangurunumber].Speedlvl >=5 then

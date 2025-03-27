@@ -13,7 +13,7 @@ type TKanguru = class
     bild: Timage;
     attackradius : TShape;
     damage, range2 : integer; //range2 weil debugger sonst meckert wegen range in create()
-    attackspeed : integer;
+    attackspeed, attackspeed2 : integer;
     value : integer;
     cancamo : boolean;
     active : boolean;
@@ -114,17 +114,18 @@ constructor Tkanguru.create(map, x, y, range : integer);
     active := false;
     slowness := 1;
     attackspeed := 15;
+    attackspeed2 := 0;
   end;
 
   constructor TBoxerkanguru.create(map, x, y : integer);
   begin
-    damage := 20;
+    damage := 50;
     range2 := 150;
     cancamo := false;
     value := 1000;
     inherited create(map, x, y, range2);
     self.bild.Picture.LoadFromFile('images\Boxerkanguru.png');
-    attackspeed := 8;
+    attackspeed := 9;
   end;
 
   constructor TBogenkanguru.create(map, x, y : integer);
@@ -145,6 +146,7 @@ constructor Tkanguru.create(map, x, y, range : integer);
     cancamo := false;
     value := 3000;
     inherited create(map, x, y, range2);
+    attackspeed2 := 120;
     self.bild.Picture.LoadFromFile('images\Eisguru.png');
     slowness := 2;
     attackspeed := 0;
@@ -152,13 +154,13 @@ constructor Tkanguru.create(map, x, y, range : integer);
 
   constructor TNinjakanguru.create(map, x, y : integer);
   begin
-    damage := 75;
+    damage := 60;
     range2 := 225;
     cancamo := true;
     value := 5000;
     inherited create(map, x, y, range2);
     self.bild.Picture.LoadFromFile('images\Ninja.png');
-    attackspeed := 7;
+    attackspeed := 9;
   end;
 
   constructor TZauberAngriff.create(map, x, y : integer);
@@ -254,14 +256,14 @@ begin
             begin
               //neuen Cooldown tick setzen, hp abziehen, hp bar updaten
               self.cooldownTick := Form5.ticksPassed;
-              if (Kanguruart <> 'Eis') and (Kanguruart <> 'Zauber') or ((Kanguruart = 'Eis') and (Form5.tickspassed - Pinguin.slowedTick > 120)) or ((Kanguruart = 'Zauber') and (Form5.ticksPassed - self.schimmertick > 2)) then
+              if (Kanguruart <> 'Eis') and (Kanguruart <> 'Zauber') or ((Kanguruart = 'Eis') and (Form5.tickspassed - Pinguin.slowedTick > self.attackspeed2)) or ((Kanguruart = 'Zauber') and (Form5.ticksPassed - self.schimmertick > 2)) then
               begin
+              Pinguin.hp := Pinguin.hp - self.damage div 10;
+              if Form5.checkbox1.checked then
               Pinguin.hp := Pinguin.hp - self.damage div 10;
               if Kanguruart = 'Zauber' then
                  Schimmertick := Form5.tickspassed;
               end;
-              if Form5.checkbox1.checked then
-              Pinguin.hp := Pinguin.hp - self.damage div 10;
               Pinguin.hpBar.position := (Pinguin.hp * Pinguin.hpBar.width) div (Pinguin.basehp);
               if (Kanguruart = 'Zauber') and (Self.cancamo) and (Pinguin.art = 5) then
               begin
@@ -272,7 +274,7 @@ begin
               end;
               if Pinguin.schimmert then
               Pinguin.bild.picture.loadFromFile('Images\Tarnguin_Schimmer.png');
-               if (Kanguruart = 'Eis') AND (Pinguin.slowed = false) AND (Pinguin.canBeSlowed = true) AND (Form5.ticksPassed - Pinguin.slowedTick > 120) then  //wenn ein eiskanguru angreift; der Pinguin nicht gefroren ist und der Gefrier Cooldown abgelaufen ist
+               if (Kanguruart = 'Eis') AND (Pinguin.slowed = false) AND (Pinguin.canBeSlowed = true) AND (Form5.ticksPassed - Pinguin.slowedTick > self.attackspeed2) then  //wenn ein eiskanguru angreift; der Pinguin nicht gefroren ist und der Gefrier Cooldown abgelaufen ist
                begin
                  //Pinguin einfrieren; Slowed Tick setzen (Zeitpunkt zu dem der Pinguin gefroren wurde)
                  Pinguin.slowed := true;
@@ -317,11 +319,11 @@ begin
               if (Kanguruart <> 'Eis') and (Kanguruart <> 'Zauber') or ((Kanguruart = 'Eis') and (Form6.tickspassed - Pinguin.slowedTick > 120)) or ((Kanguruart = 'Zauber') and (Form6.ticksPassed - self.schimmertick > 2)) then
               begin
               Pinguin.hp := Pinguin.hp - self.damage div 10;
+              if Form6.checkbox1.checked then
+              Pinguin.hp := Pinguin.hp - self.damage div 10;
               if Kanguruart = 'Zauber' then
                  Schimmertick := Form6.tickspassed;
               end;
-              if Form6.checkbox1.checked then
-              Pinguin.hp := Pinguin.hp - self.damage div 10;
               Pinguin.hpBar.position := (Pinguin.hp * Pinguin.hpBar.width) div (Pinguin.basehp);
               if (Kanguruart = 'Zauber') and (Self.cancamo) and (Pinguin.art = 5) then
               begin
